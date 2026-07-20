@@ -8,337 +8,880 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0D1117;
-  --surface:   #161B27;
-  --surface2:  #1E2535;
-  --border:    rgba(130,150,200,0.12);
-  --text:      #CDD5E0;
-  --strong:    #E8EDFB;
-  --muted:     #6B7A99;
-  --accent:    #3D8EF0;
-  --green:     #2ECC8A;
-  --amber:     #F0A732;
-  --navy:      #1A2744;
+  --bg:       #0D1117;
+  --surf:     #161B27;
+  --surf2:    #1E2535;
+  --surf3:    #263042;
+  --border:   rgba(130,150,200,0.11);
+  --border2:  rgba(130,150,200,0.20);
+  --text:     #CDD5E0;
+  --strong:   #E8EDFB;
+  --muted:    #6B7A99;
+  --accent:   #3D8EF0;
+  --accdim:   rgba(61,142,240,0.10);
+  --green:    #2ECC8A;
+  --grndim:   rgba(46,204,138,0.10);
+  --amber:    #F0A732;
+  --amddim:   rgba(240,167,50,0.10);
+  --red:      #E85576;
+  --reddim:   rgba(232,85,118,0.10);
+  --purple:   #9B7FEF;
 }
 
-html, body {
-  height: 100%;
+html { scroll-behavior: smooth; }
+
+body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  line-height: 1.6;
-}
-
-/* ── Layout ── */
-body {
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
-header {
-  padding: 56px 40px 40px;
-  max-width: 960px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-main {
-  flex: 1;
-  max-width: 960px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 0 40px 80px;
-}
-
-footer {
-  border-top: 1px solid var(--border);
-  padding: 24px 40px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-/* ── Header ── */
-.logo-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.logo-badge {
-  background: var(--accent);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 4px 10px;
+a { color: inherit; text-decoration: none; }
+code {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: var(--surf3);
+  color: var(--accent);
+  padding: 1px 6px;
   border-radius: 4px;
 }
 
-.project-name {
-  font-size: 28px;
+/* ── Wrapper ── */
+.wrap {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+}
+
+/* ── Top nav ── */
+nav {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  background: rgba(13,17,23,0.92);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-weight: 700;
   color: var(--strong);
-  letter-spacing: -0.02em;
+  font-size: 15px;
 }
+.nav-logo .pill {
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.nav-links {
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.nav-links a:hover { color: var(--strong); }
 
-.project-name em {
+/* ── Hero ── */
+header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  align-items: start;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--accent);
-  font-style: normal;
+  margin-bottom: 12px;
 }
-
-.tagline {
+.hero-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--strong);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+.hero-title em { color: var(--accent); font-style: normal; }
+.hero-sub {
   font-size: 15px;
   color: var(--muted);
-  max-width: 560px;
+  max-width: 480px;
   line-height: 1.7;
+  margin-bottom: 22px;
 }
-
 .badges {
   display: flex;
-  gap: 8px;
+  gap: 7px;
   flex-wrap: wrap;
-  margin-top: 18px;
 }
-
 .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   padding: 3px 10px;
   border-radius: 20px;
   border: 1px solid;
+  white-space: nowrap;
+}
+.ba { color: var(--accent); border-color: rgba(61,142,240,0.3); background: var(--accdim); }
+.bg { color: var(--green);  border-color: rgba(46,204,138,0.3); background: var(--grndim); }
+.bam{ color: var(--amber);  border-color: rgba(240,167,50,0.3);  background: var(--amddim); }
+.bp { color: var(--purple); border-color: rgba(155,127,239,0.3); background: rgba(155,127,239,0.08); }
+
+/* ── Stats box ── */
+.stats-box {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border2);
+  overflow: hidden;
+}
+.stats-box > * { background: var(--surf); padding: 16px; }
+.stat-val {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-val.green { color: var(--green); }
+.stat-val.blue  { color: var(--accent); }
+.stat-val.amber { color: var(--amber); }
+.stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.badge-blue  { color: var(--accent); border-color: rgba(61,142,240,0.3); background: rgba(61,142,240,0.07); }
-.badge-green { color: var(--green);  border-color: rgba(46,204,138,0.3); background: rgba(46,204,138,0.07); }
-.badge-amber { color: var(--amber);  border-color: rgba(240,167,50,0.3);  background: rgba(240,167,50,0.07); }
-
-/* ── Section title ── */
+/* ── Sections ── */
+section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+section:last-of-type { border-bottom: none; }
 .section-label {
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
-/* ── Cards ── */
+/* ── Doc cards ── */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin-bottom: 48px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
 }
-
 .card {
-  background: var(--surface);
+  background: var(--surf);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 24px;
-  text-decoration: none;
-  color: inherit;
+  padding: 22px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: border-color 0.15s, background 0.15s, transform 0.15s;
-  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s, background 0.15s;
 }
-
 .card:hover {
-  border-color: rgba(61,142,240,0.4);
-  background: var(--surface2);
+  border-color: rgba(61,142,240,0.35);
+  background: var(--surf2);
   transform: translateY(-2px);
 }
-
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; }
 .card-icon {
-  width: 40px;
-  height: 40px;
+  width: 38px; height: 38px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
   flex-shrink: 0;
 }
-
-.icon-blue   { background: rgba(61,142,240,0.12); }
-.icon-green  { background: rgba(46,204,138,0.12); }
-.icon-amber  { background: rgba(240,167,50,0.12); }
-
+.ci-blue  { background: var(--accdim); }
+.ci-green { background: var(--grndim); }
+.ci-amber { background: var(--amddim); }
+.card-arrow { color: var(--muted); opacity: 0; transition: opacity 0.15s; }
+.card:hover .card-arrow { opacity: 1; }
 .card-title {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px; font-weight: 600; color: var(--strong);
+}
+.card-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; flex: 1; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag {
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--surf2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* ── Architecture flow ── */
+.arch-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.arch-layer {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  align-items: stretch;
+}
+.arch-label {
+  padding: 14px 16px 14px 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.arch-bar {
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.arch-bar.clients  { background: rgba(61,142,240,0.08);  border: 1px solid rgba(61,142,240,0.2); }
+.arch-bar.frontend { background: rgba(155,127,239,0.08); border: 1px solid rgba(155,127,239,0.2); }
+.arch-bar.proxy    { background: rgba(240,167,50,0.08);  border: 1px solid rgba(240,167,50,0.2); }
+.arch-bar.api      { background: rgba(46,204,138,0.08);  border: 1px solid rgba(46,204,138,0.2); }
+.arch-bar.data     { background: rgba(232,85,118,0.08);  border: 1px solid rgba(232,85,118,0.2); }
+.arch-bar.monitor  { background: rgba(130,150,200,0.05); border: 1px dashed var(--border2); }
+.arch-item {
+  font-size: 12.5px;
   color: var(--strong);
+  font-weight: 500;
+}
+.arch-item small { color: var(--muted); font-weight: 400; font-size: 11px; display: block; }
+.arch-sep {
+  grid-column: 2;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 3px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.arch-sep::before, .arch-sep::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Q&A ── */
+.qa-list { display: flex; flex-direction: column; gap: 8px; }
+details {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+details[open] { border-color: var(--border2); }
+details[open] summary { border-bottom: 1px solid var(--border); }
+summary {
+  padding: 15px 18px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--strong);
+  list-style: none;
+  user-select: none;
 }
-
-.card-title svg {
-  opacity: 0;
-  transition: opacity 0.15s;
+summary::-webkit-details-marker { display: none; }
+.sum-left { display: flex; align-items: center; gap: 12px; }
+.q-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
   flex-shrink: 0;
 }
-
-.card:hover .card-title svg {
-  opacity: 1;
-}
-
-.card-desc {
-  font-size: 13px;
+.qt-auth   { background: var(--accdim); color: var(--accent); }
+.qt-archi  { background: var(--amddim); color: var(--amber); }
+.qt-secu   { background: var(--reddim); color: var(--red); }
+.qt-ci     { background: var(--grndim); color: var(--green); }
+.qt-bdd    { background: rgba(155,127,239,0.10); color: var(--purple); }
+.chev {
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  background: var(--surf2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  font-size: 10px;
   color: var(--muted);
+}
+details[open] .chev { transform: rotate(180deg); }
+.qa-body {
+  padding: 18px 18px 18px 18px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.75;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.qa-body p { margin: 0; }
+.qa-body ul { padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+.qa-body li { color: var(--muted); }
+.qa-body li strong { color: var(--text); }
+.qa-body pre {
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: 'Cascadia Code','Fira Code','Consolas',monospace;
+  font-size: 12px;
+  overflow-x: auto;
+  color: var(--text);
   line-height: 1.6;
 }
+.qa-body .kw { color: var(--accent); }
+.qa-body .cm { color: var(--muted); font-style: italic; }
+.qa-body .str{ color: var(--green); }
 
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.tag {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  background: var(--surface2);
-  color: var(--muted);
-  border: 1px solid var(--border);
-}
-
-/* ── Stack info ── */
-.stack-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 10px;
-  margin-bottom: 48px;
-}
-
-.stack-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 16px;
+/* ── Stack table ── */
+.stack-table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 13px;
 }
-
-.stack-item strong {
-  display: block;
-  color: var(--strong);
-  font-size: 12px;
+.stack-table th {
+  text-align: left;
+  font-size: 10.5px;
   font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.stack-item span {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--muted);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.stack-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.stack-table tr:last-child td { border-bottom: none; }
+.stack-table td:first-child { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.stack-table td:nth-child(2) { color: var(--strong); font-weight: 500; }
+.stack-table td:nth-child(3) { color: var(--muted); font-size: 12px; }
+.stack-table tr:hover td { background: var(--surf); }
+.dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.dot-green { background: var(--green); }
+.dot-blue  { background: var(--accent); }
+.dot-amber { background: var(--amber); }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 22px 40px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: auto;
 }
 
-@media (max-width: 600px) {
-  header, main { padding-left: 20px; padding-right: 20px; }
-  header { padding-top: 36px; }
-  .project-name { font-size: 22px; }
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .wrap, .nav-inner, footer { padding-left: 20px; padding-right: 20px; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .stats-box { display: none; }
+  .cards { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-row">
-    <span class="logo-badge">BL3</span>
-    <span class="project-name">(RE)<em>Sources</em> Relationnelles</span>
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="pill">BL3</span>
+      (RE)Sources Relationnelles
+    </div>
+    <div class="nav-links">
+      <a href="#docs">Documents</a>
+      <a href="#archi">Architecture</a>
+      <a href="#qa">Questions</a>
+      <a href="#stack">Stack</a>
+    </div>
   </div>
-  <p class="tagline">Documentation technique du projet BL3 — plateforme de gestion et partage de ressources pédagogiques. Symfony 8 · Next.js 16 · Flutter 3 · Docker.</p>
-  <div class="badges">
-    <span class="badge badge-green">✓ API 44 endpoints</span>
-    <span class="badge badge-blue">JWT RS256</span>
-    <span class="badge badge-blue">RBAC 4 rôles</span>
-    <span class="badge badge-amber">8/10 OWASP</span>
-    <span class="badge badge-green">24/24 tests</span>
+</nav>
+
+<!-- Hero -->
+<header>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">Projet BL3 — 2025/2026</div>
+        <h1 class="hero-title">(RE)<em>Sources</em><br>Relationnelles</h1>
+        <p class="hero-sub">Plateforme complète de gestion et partage de ressources pédagogiques — API REST Symfony 8, front Next.js 16, app mobile Flutter 3, infrastructure Docker avec monitoring Prometheus/Grafana.</p>
+        <div class="badges">
+          <span class="badge bg">✓ 24/24 tests PHPUnit</span>
+          <span class="badge ba">44 endpoints REST</span>
+          <span class="badge ba">JWT RS256</span>
+          <span class="badge ba">RBAC 4 rôles</span>
+          <span class="badge bam">8/10 OWASP</span>
+          <span class="badge bp">SonarCloud A</span>
+        </div>
+      </div>
+      <div class="stats-box">
+        <div>
+          <div class="stat-val green">24/24</div>
+          <div class="stat-label">Tests passés</div>
+        </div>
+        <div>
+          <div class="stat-val blue">44</div>
+          <div class="stat-label">Endpoints API</div>
+        </div>
+        <div>
+          <div class="stat-val amber">4</div>
+          <div class="stat-label">Rôles RBAC</div>
+        </div>
+        <div>
+          <div class="stat-val blue">8/10</div>
+          <div class="stat-label">OWASP couverts</div>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
-<main>
+<main style="flex:1">
 
-  <p class="section-label">Documents</p>
-  <div class="cards">
+  <!-- Documents -->
+  <section id="docs">
+    <div class="wrap">
+      <div class="section-label">Documents</div>
+      <div class="cards">
 
-    <a class="card" href="guide.html">
-      <div class="card-icon icon-blue">📘</div>
-      <div class="card-title">
-        Guide complet BL3
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="card-desc">Référence complète du projet — architecture, sécurité, OWASP Top 10, CI/CD, monitoring, API, base de données.</div>
-      <div class="card-tags">
-        <span class="tag">Architecture</span>
-        <span class="tag">Sécurité</span>
-        <span class="tag">OWASP</span>
-        <span class="tag">API</span>
-        <span class="tag">BDD</span>
-      </div>
-    </a>
+        <a class="card" href="guide.html">
+          <div class="card-top">
+            <div class="card-icon ci-blue">📘</div>
+            <span class="card-arrow">→</span>
+          </div>
+          <div class="card-title">Guide complet BL3</div>
+          <div class="card-desc">Référence technique complète — architecture, sécurité OWASP, CI/CD, monitoring, endpoints API, modèle de données, rôles.</div>
+          <div class="card-tags">
+            <span class="tag">Architecture</span>
+            <span class="tag">OWASP</span>
+            <span class="tag">API</span>
+            <span class="tag">BDD</span>
+            <span class="tag">Monitoring</span>
+          </div>
+        </a>
 
-    <a class="card" href="dashboard.html">
-      <div class="card-icon icon-green">📊</div>
-      <div class="card-title">
-        Dashboard GitHub Issues
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="card-desc">Tableau de bord des issues GitHub — bugs, features et docs par dépôt, avec statuts et labels.</div>
-      <div class="card-tags">
-        <span class="tag">GitHub</span>
-        <span class="tag">Issues</span>
-        <span class="tag">Suivi</span>
-      </div>
-    </a>
+        <a class="card" href="dashboard.html">
+          <div class="card-top">
+            <div class="card-icon ci-green">📊</div>
+            <span class="card-arrow">→</span>
+          </div>
+          <div class="card-title">Dashboard GitHub Issues</div>
+          <div class="card-desc">Suivi des issues GitHub par dépôt — bugs, features, docs. Statuts, labels et priorités en un coup d'œil.</div>
+          <div class="card-tags">
+            <span class="tag">GitHub</span>
+            <span class="tag">Issues</span>
+            <span class="tag">Suivi</span>
+          </div>
+        </a>
 
-    <a class="card" href="cicd.html">
-      <div class="card-icon icon-amber">⚙️</div>
-      <div class="card-title">
-        CI/CD Workflow
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="card-desc">Schéma complet du pipeline d'intégration et déploiement continu — tests, build Docker, SonarCloud, Trivy, déploiement.</div>
-      <div class="card-tags">
-        <span class="tag">CI/CD</span>
-        <span class="tag">GitHub Actions</span>
-        <span class="tag">Docker</span>
-        <span class="tag">SonarCloud</span>
-      </div>
-    </a>
+        <a class="card" href="cicd.html">
+          <div class="card-top">
+            <div class="card-icon ci-amber">⚙️</div>
+            <span class="card-arrow">→</span>
+          </div>
+          <div class="card-title">CI/CD Workflow</div>
+          <div class="card-desc">Pipeline complet GitHub Actions — PHPUnit, build Docker, SonarCloud, Trivy, OWASP Dependency Check, déploiement automatique.</div>
+          <div class="card-tags">
+            <span class="tag">GitHub Actions</span>
+            <span class="tag">Docker</span>
+            <span class="tag">SonarCloud</span>
+            <span class="tag">Trivy</span>
+          </div>
+        </a>
 
-  </div>
+      </div>
+    </div>
+  </section>
 
-  <p class="section-label">Stack technique</p>
-  <div class="stack-grid">
-    <div class="stack-item"><strong>Backend</strong><span>Symfony 8 · PHP 8.4</span></div>
-    <div class="stack-item"><strong>Frontend</strong><span>Next.js 16 · React</span></div>
-    <div class="stack-item"><strong>Mobile</strong><span>Flutter 3.32</span></div>
-    <div class="stack-item"><strong>Base de données</strong><span>MySQL 8.0 (Docker)</span></div>
-    <div class="stack-item"><strong>Stockage</strong><span>Supabase (médias)</span></div>
-    <div class="stack-item"><strong>Auth</strong><span>JWT RS256 · RBAC</span></div>
-    <div class="stack-item"><strong>Reverse proxy</strong><span>Nginx · TLS 1.2+</span></div>
-    <div class="stack-item"><strong>Monitoring</strong><span>Prometheus · Grafana · Loki</span></div>
-    <div class="stack-item"><strong>CI/CD</strong><span>GitHub Actions</span></div>
-    <div class="stack-item"><strong>Qualité</strong><span>SonarCloud · Trivy</span></div>
-    <div class="stack-item"><strong>Infra</strong><span>Docker · Docker Compose</span></div>
-    <div class="stack-item"><strong>Hébergement front</strong><span>Vercel</span></div>
-  </div>
+  <!-- Architecture -->
+  <section id="archi">
+    <div class="wrap">
+      <div class="section-label">Architecture</div>
+      <div class="arch-flow">
+
+        <div class="arch-layer">
+          <div class="arch-label">Clients</div>
+          <div class="arch-bar clients">
+            <div class="arch-item">Navigateur web<small>Citoyen / Admin / Modérateur</small></div>
+            <div class="arch-item">App mobile<small>Android · iOS — Flutter 3.32</small></div>
+          </div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label"></div>
+          <div class="arch-sep">↓ &nbsp;HTTPS · TLS 1.2+ · certificat Let's Encrypt</div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label">Proxy</div>
+          <div class="arch-bar proxy">
+            <div class="arch-item">Nginx<small>Reverse proxy · TLS termination · rate limit headers</small></div>
+          </div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label"></div>
+          <div class="arch-sep">↓ &nbsp;FastCGI — TCP :9000 (réseau bridge Docker)</div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label">Frontend</div>
+          <div class="arch-bar frontend">
+            <div class="arch-item">Next.js 16<small>resources_front · Vercel · SSR + SSG</small></div>
+          </div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label"></div>
+          <div class="arch-sep">↓ &nbsp;Requêtes REST · Authorization: Bearer &lt;JWT RS256&gt;</div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label">API</div>
+          <div class="arch-bar api">
+            <div class="arch-item">Symfony 8 · PHP 8.4-fpm-alpine<small>44 endpoints · RBAC 4 rôles · Voters · Rate Limiter</small></div>
+          </div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label"></div>
+          <div class="arch-sep">↓ &nbsp;Doctrine ORM · requêtes préparées (PDO)</div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label">Données</div>
+          <div class="arch-bar data">
+            <div class="arch-item">MySQL 8.0<small>Docker · volume persistant db_data</small></div>
+            <div class="arch-item">Supabase Storage<small>Médias · bucket Ressources</small></div>
+          </div>
+        </div>
+
+        <div class="arch-layer">
+          <div class="arch-label">Monitoring</div>
+          <div class="arch-bar monitor">
+            <div class="arch-item">Prometheus<small>Métriques applicatives</small></div>
+            <div class="arch-item">Grafana<small>Dashboards · alertes</small></div>
+            <div class="arch-item">Loki + Promtail<small>Logs centralisés</small></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Q&A -->
+  <section id="qa">
+    <div class="wrap">
+      <div class="section-label">Questions techniques</div>
+      <div class="qa-list">
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-auth">Auth</span>Comment fonctionne l'authentification JWT ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>L'authentification utilise <strong>JWT RS256</strong> — asymétrique RSA-2048 bits. La clé privée (<code>private.pem</code>) signe les tokens côté serveur, la clé publique (<code>public.pem</code>) les vérifie. Les deux clés ne sont jamais dans le dépôt git — elles sont injectées via <strong>GitHub Secrets</strong>.</p>
+            <p>Flux complet :</p>
+            <ul>
+              <li><strong>POST /api/login</strong> → Symfony vérifie email + mot de passe (bcrypt cost 13) → retourne un <code>access_token</code> (TTL 3600s) et un <code>refresh_token</code></li>
+              <li>Le client envoie <code>Authorization: Bearer &lt;token&gt;</code> à chaque requête</li>
+              <li>LexikJWTBundle vérifie la signature RSA et l'expiration automatiquement</li>
+              <li><strong>POST /api/token/refresh</strong> → nouveau access_token sans ressaisie du mot de passe</li>
+            </ul>
+            <pre><span class="kw">Header</span>:  { "alg": "RS256", "typ": "JWT" }
+<span class="kw">Payload</span>: { "sub": "uuid", "roles": ["ROLE_CONNECTED"], "iat": 1234, "exp": 1234+3600 }
+<span class="kw">Signature</span>: RSA-SHA256(base64(header) + "." + base64(payload), privateKey)</pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-auth">Auth</span>Comment sont gérés les rôles et les droits d'accès ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>Le système utilise <strong>RBAC</strong> (Role-Based Access Control) avec 4 rôles hiérarchiques — chaque rôle hérite de tous les droits du précédent :</p>
+            <ul>
+              <li><strong>ROLE_CONNECTED</strong> → consulter et télécharger des ressources</li>
+              <li><strong>ROLE_MODERATOR</strong> → gérer le contenu (validation, suppression)</li>
+              <li><strong>ROLE_ADMIN</strong> → gérer les utilisateurs, les catégories, les stats</li>
+              <li><strong>ROLE_SUPER_ADMIN</strong> → accès total, gestion des admins</li>
+            </ul>
+            <p>Deux niveaux de contrôle coexistent dans Symfony :</p>
+            <ul>
+              <li><code>#[IsGranted('ROLE_ADMIN')]</code> sur le contrôleur → bloque avant l'exécution du code</li>
+              <li><strong>Voters</strong> (<code>ResourceVoter</code>) → vérifie que l'utilisateur est propriétaire de la ressource, en plus du rôle</li>
+            </ul>
+            <p>Le <code>security.yaml</code> a un catch-all : tout <code>/api/**</code> non listé en <code>PUBLIC_ACCESS</code> requiert au minimum <code>IS_AUTHENTICATED_FULLY</code>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-secu">Sécu</span>Comment les mots de passe sont-ils stockés ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>Les mots de passe ne sont <strong>jamais stockés en clair</strong>. Symfony utilise <strong>bcrypt cost 13</strong> via le composant <code>PasswordHasher</code>.</p>
+            <ul>
+              <li><strong>bcrypt</strong> : fonction de hachage adaptative. Le "cost" définit le nombre d'itérations (2¹³ = 8192). Plus le cost est élevé, plus le calcul est lent.</li>
+              <li>Cost 13 ≈ <strong>100ms par hash</strong> — un attaquant avec un GPU ne peut tester qu'environ 10 tentatives/seconde, rendant la force brute non viable.</li>
+              <li>Chaque hash inclut un <strong>sel aléatoire unique</strong> — deux utilisateurs avec le même mot de passe ont des hashs différents (protection contre les rainbow tables).</li>
+            </ul>
+            <pre><span class="cm"># Symfony config/packages/security.yaml</span>
+password_hashers:
+  App\Entity\Utilisateur:
+    algorithm: bcrypt
+    cost: 13</pre>
+            <p>Le <strong>rate limiting</strong> sur <code>POST /api/login</code> (5 tentatives / 15 min / IP) est une protection complémentaire côté réseau.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-secu">Sécu</span>Comment les injections SQL sont-elles évitées ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>L'application n'écrit <strong>aucun SQL brut</strong>. Toute la persistance passe par <strong>Doctrine ORM</strong> avec des <strong>requêtes préparées</strong> (prepared statements via PDO).</p>
+            <ul>
+              <li>Les paramètres utilisateur sont transmis séparément de la requête SQL — jamais concaténés dans la chaîne.</li>
+              <li>Le driver PDO les échappe automatiquement selon le type du paramètre.</li>
+              <li>Même les requêtes dynamiques (filtres, tri, pagination) utilisent <code>setParameter()</code> sur le <code>QueryBuilder</code>.</li>
+            </ul>
+            <pre><span class="cm">// Correct — paramètre lié</span>
+$qb->where(<span class="str">'r.title LIKE :q'</span>)->setParameter(<span class="str">'q'</span>, <span class="str">'%'</span>.$search.<span class="str">'%'</span>);
+
+<span class="cm">// Interdit — concaténation directe (injection possible)</span>
+$qb->where(<span class="str">"r.title LIKE '%"</span>.$search.<span class="str">"%'"</span>); <span class="cm">// ← JAMAIS</span></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-ci">CI/CD</span>Comment le déploiement est-il déclenché ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>Le pipeline CI/CD est géré par <strong>GitHub Actions</strong>. Il se déclenche sur chaque <code>push</code> ou <code>pull_request</code> sur les branches <code>main</code> et <code>dev</code>.</p>
+            <p>Les jobs s'enchaînent dans l'ordre suivant :</p>
+            <ul>
+              <li><strong>1. Tests PHPUnit</strong> — 24 tests sur une vraie base MySQL 8 (pas de mock). Si un test échoue, tout s'arrête.</li>
+              <li><strong>2. Analyse SonarCloud</strong> — qualité du code, code smells, couverture. Quality Gate configuré à 80%.</li>
+              <li><strong>3. Audit dépendances</strong> — <code>composer audit</code> + OWASP Dependency Check.</li>
+              <li><strong>4. Build image Docker</strong> — <code>php:8.4-fpm-alpine</code> avec le code Symfony.</li>
+              <li><strong>5. Scan Trivy</strong> — vulnérabilités CVE dans l'image Docker.</li>
+              <li><strong>6. Push Docker Hub</strong> — image taguée avec le SHA du commit (immuable).</li>
+              <li><strong>7. Déploiement</strong> — SSH sur le serveur, pull de la nouvelle image, redémarrage Docker Compose sans downtime.</li>
+            </ul>
+            <p>Les secrets (clés JWT, credentials Docker Hub, SSH) sont stockés dans <strong>GitHub Secrets</strong> et injectés en variables d'environnement — jamais dans les fichiers de config.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-ci">CI/CD</span>Comment le monitoring fonctionne-t-il en production ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>La stack de monitoring est composée de 4 outils déployés en conteneurs Docker dans le même réseau que l'API :</p>
+            <ul>
+              <li><strong>Prometheus</strong> — scrape les métriques exposées par l'API Symfony toutes les 15s (nombre de requêtes, temps de réponse, taux d'erreur, usage mémoire PHP).</li>
+              <li><strong>Grafana</strong> — dashboards visuels en temps réel. Alertes configurées : taux d'erreur 5xx &gt; 5%, latence p95 &gt; 500ms, RAM &gt; 80%.</li>
+              <li><strong>Loki</strong> — base de données de logs (équivalent Elasticsearch, mais plus léger). Indexe les logs par labels (container, level, env).</li>
+              <li><strong>Promtail</strong> — agent qui collecte les logs des containers Docker (<code>/var/lib/docker/containers</code>) et les envoie à Loki en temps réel.</li>
+            </ul>
+            <p>Les logs applicatifs Symfony (niveaux <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>, <code>CRITICAL</code>) sont écrits dans <code>var/log/prod.log</code> en format JSON structuré — Promtail les parse automatiquement.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-bdd">BDD</span>Quelle est la structure de la base de données ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>La base MySQL 8.0 contient les entités principales suivantes :</p>
+            <ul>
+              <li><strong>utilisateur</strong> — <code>uuid</code>, email, password (bcrypt), rôle, <code>is_available</code> (activation admin), avatar_url (Supabase)</li>
+              <li><strong>ressource</strong> — <code>uuid</code>, titre, description, url, type, catégorie, auteur, statut (brouillon/publié/archivé)</li>
+              <li><strong>categorie</strong> — arborescence simple (nom, slug)</li>
+              <li><strong>participation</strong> — relation many-to-many utilisateur ↔ ressource (favoris, consultations)</li>
+              <li><strong>progression</strong> — suivi de lecture par utilisateur + ressource (%, dernière position)</li>
+              <li><strong>commentaire</strong> — texte, auteur, ressource, date, statut modération</li>
+              <li><strong>log_action</strong> — audit trail : 16 types d'actions (créer, modifier, supprimer, modérer…), IP, timestamp</li>
+              <li><strong>log_connexion</strong> — chaque tentative de login (succès ou échec), IP, user agent</li>
+              <li><strong>password_reset_token</strong> — token usage unique, <code>expires_at</code>, <code>used</code></li>
+            </ul>
+            <p>Les identifiants sont des <strong>UUID v4</strong> (pas d'entiers séquentiels) — un attaquant ne peut pas deviner l'ID d'une ressource appartenant à un autre utilisateur.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-bdd">BDD</span>Comment les fichiers médias sont-ils gérés ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>Les médias (images de ressources, avatars) ne sont pas stockés sur le serveur applicatif — ils sont externalisés dans <strong>Supabase Storage</strong>.</p>
+            <ul>
+              <li>À l'upload, l'API Symfony envoie le fichier au bucket <code>Ressources</code> via le SDK Supabase PHP.</li>
+              <li>L'URL publique retournée est stockée dans la colonne <code>url_media</code> de l'entité.</li>
+              <li>La clé Supabase <code>service_role</code> (accès écriture) est stockée dans <strong>GitHub Secrets</strong>, jamais dans le code.</li>
+              <li>Seule la clé <code>anon</code> (lecture publique) pourrait être exposée côté client — mais l'API sert de proxy, donc même ça n'est pas nécessaire.</li>
+            </ul>
+            <p>Ce choix évite de gérer un volume Docker pour les fichiers uploadés et simplifie la scalabilité (pas de rsync entre instances).</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-archi">Archi</span>Pourquoi PHP-FPM et pas un serveur PHP intégré ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p><strong>PHP-FPM</strong> (FastCGI Process Manager) est le mode d'exécution PHP recommandé en production. Il maintient un pool de processus PHP persistants et les réutilise entre les requêtes, au lieu de démarrer un processus à chaque requête.</p>
+            <ul>
+              <li><strong>FastCGI</strong> est le protocole de communication entre Nginx et PHP-FPM (TCP sur le port <code>:9000</code>, réseau bridge Docker interne). Nginx ne sait pas exécuter du PHP — il délègue à PHP-FPM.</li>
+              <li><strong>Isolation</strong> : Nginx (réseau public) et PHP-FPM (réseau interne Docker) sont dans des containers séparés. Un problème sur l'un n'affecte pas l'autre.</li>
+              <li><strong>Performance</strong> : PHP-FPM maintient l'OPcache entre les requêtes — le code PHP est compilé en bytecode une seule fois, pas à chaque requête.</li>
+            </ul>
+            <pre>Client → Nginx :443 → (FastCGI :9000) → PHP-FPM → Symfony → MySQL</pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>
+            <span class="sum-left"><span class="q-tag qt-archi">Archi</span>Pourquoi Flutter pour le mobile et pas React Native ?</span>
+            <span class="chev">▾</span>
+          </summary>
+          <div class="qa-body">
+            <p>Flutter a été choisi pour plusieurs raisons techniques :</p>
+            <ul>
+              <li><strong>Performances natives</strong> : Flutter compile en code natif ARM (pas de bridge JavaScript comme React Native). Les animations et les transitions sont fluidifiées à 60/120fps sans sacrifices.</li>
+              <li><strong>Rendu propre</strong> : Flutter dessine sa propre UI via le moteur graphique Skia/Impeller — pas de composants natifs Android/iOS traduits. L'app a exactement le même look sur les deux plateformes.</li>
+              <li><strong>Dart</strong> : langage typé statiquement, proche de Java/TypeScript, avec une courbe d'apprentissage raisonnable pour un développeur backend.</li>
+              <li><strong>Distribution</strong> : un seul codebase → APK Android + IPA iOS. La release APK est buildée en CI via GitHub Actions.</li>
+            </ul>
+            <p>L'app consomme l'API REST Symfony avec le package <code>dio</code> (HTTP), stocke le JWT dans le <code>FlutterSecureStorage</code> (keychain natif), et implémente le même RBAC que le front web.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Stack -->
+  <section id="stack">
+    <div class="wrap">
+      <div class="section-label">Stack technique</div>
+      <div style="overflow-x:auto">
+        <table class="stack-table">
+          <thead>
+            <tr>
+              <th>Couche</th>
+              <th>Technologie</th>
+              <th>Rôle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Backend API</td><td><span class="dot dot-green"></span>Symfony 8 · PHP 8.4-fpm-alpine</td><td>44 endpoints REST · RBAC · Voters · Rate Limiter · Mailer</td></tr>
+            <tr><td>Frontend web</td><td><span class="dot dot-blue"></span>Next.js 16 · React · TypeScript</td><td>SSR + SSG · Vercel · back-office admin et citoyen</td></tr>
+            <tr><td>Mobile</td><td><span class="dot dot-blue"></span>Flutter 3.32 · Dart</td><td>App Android/iOS · JWT secure storage · RBAC</td></tr>
+            <tr><td>Base de données</td><td><span class="dot dot-green"></span>MySQL 8.0</td><td>Docker · volume persistant <code>db_data</code> · Doctrine ORM</td></tr>
+            <tr><td>Stockage médias</td><td><span class="dot dot-blue"></span>Supabase Storage</td><td>Bucket <code>Ressources</code> · avatars · images</td></tr>
+            <tr><td>Authentification</td><td><span class="dot dot-green"></span>JWT RS256 · LexikJWTBundle</td><td>Clés RSA-2048 · TTL 3600s · refresh token</td></tr>
+            <tr><td>Hachage mdp</td><td><span class="dot dot-green"></span>bcrypt cost 13</td><td>~100ms/hash · sel aléatoire · résiste brute force</td></tr>
+            <tr><td>Reverse proxy</td><td><span class="dot dot-amber"></span>Nginx</td><td>TLS 1.2+ · Let's Encrypt · FastCGI :9000</td></tr>
+            <tr><td>Conteneurisation</td><td><span class="dot dot-amber"></span>Docker · Docker Compose</td><td>5 services : nginx, php-fpm, mysql, monitoring, flutter-build</td></tr>
+            <tr><td>Monitoring</td><td><span class="dot dot-blue"></span>Prometheus · Grafana · Loki · Promtail</td><td>Métriques temps réel · logs centralisés · alertes</td></tr>
+            <tr><td>CI/CD</td><td><span class="dot dot-green"></span>GitHub Actions</td><td>Tests → SonarCloud → Docker build → Trivy → déploiement SSH</td></tr>
+            <tr><td>Qualité code</td><td><span class="dot dot-green"></span>SonarCloud · PHPUnit · PCOV</td><td>Quality Gate A · 24/24 tests · couverture PCOV</td></tr>
+            <tr><td>Sécurité dépendances</td><td><span class="dot dot-amber"></span>Dependabot · Trivy · OWASP DC · composer audit</td><td>CVE scan · mises à jour automatiques</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
 </main>
 
 <footer>
-  (RE)Sources Relationnelles — Projet BL3 · 2025-2026
+  (RE)Sources Relationnelles — Projet BL3 · 2025-2026 · <a href="https://github.com/TxMy-Elu/resources-wiki" style="color:var(--accent)">GitHub</a>
 </footer>
 
 </body>
