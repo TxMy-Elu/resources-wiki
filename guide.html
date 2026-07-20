@@ -1,0 +1,1655 @@
+<title>BL3 — Guide Complet (RE)Sources Relationnelles</title>
+<style>
+:root {
+  --bg: #0D1117;
+  --surface: #161B27;
+  --surface2: #1E2535;
+  --surface3: #263042;
+  --text: #CDD5E0;
+  --text-strong: #E8EDFB;
+  --muted: #6B7A99;
+  --border: rgba(130,150,200,0.10);
+  --accent: #3D8EF0;
+  --accent-dim: rgba(61,142,240,0.11);
+  --green: #2ECC8A;
+  --green-dim: rgba(46,204,138,0.11);
+  --amber: #F0A732;
+  --amber-dim: rgba(240,167,50,0.11);
+  --red: #E85576;
+  --red-dim: rgba(232,85,118,0.11);
+  --purple: #9B7FEF;
+  --purple-dim: rgba(155,127,239,0.11);
+  --r: 7px;
+  --mono: ui-monospace,'SF Mono','Cascadia Code',Consolas,monospace;
+  --sans: system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+}
+@media(prefers-color-scheme:light){:root{
+  --bg:#F2F4F9;--surface:#FFFFFF;--surface2:#EAECf5;--surface3:#DDE0EE;
+  --text:#3A4260;--text-strong:#1A1F35;--muted:#7A84A3;--border:rgba(60,80,140,0.10);
+  --accent:#2274D8;--accent-dim:rgba(34,116,216,0.09);
+  --green:#1BA870;--green-dim:rgba(27,168,112,0.09);
+  --amber:#C8850A;--amber-dim:rgba(200,133,10,0.09);
+  --red:#C83054;--red-dim:rgba(200,48,84,0.09);
+  --purple:#7155C8;--purple-dim:rgba(113,85,200,0.09);
+}}
+:root[data-theme="light"]{
+  --bg:#F2F4F9;--surface:#FFFFFF;--surface2:#EAECf5;--surface3:#DDE0EE;
+  --text:#3A4260;--text-strong:#1A1F35;--muted:#7A84A3;--border:rgba(60,80,140,0.10);
+  --accent:#2274D8;--accent-dim:rgba(34,116,216,0.09);
+  --green:#1BA870;--green-dim:rgba(27,168,112,0.09);
+  --amber:#C8850A;--amber-dim:rgba(200,133,10,0.09);
+  --red:#C83054;--red-dim:rgba(200,48,84,0.09);
+  --purple:#7155C8;--purple-dim:rgba(113,85,200,0.09);
+}
+:root[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B27;--surface2:#1E2535;--surface3:#263042;
+  --text:#CDD5E0;--text-strong:#E8EDFB;--muted:#6B7A99;--border:rgba(130,150,200,0.10);
+  --accent:#3D8EF0;--accent-dim:rgba(61,142,240,0.11);
+  --green:#2ECC8A;--green-dim:rgba(46,204,138,0.11);
+  --amber:#F0A732;--amber-dim:rgba(240,167,50,0.11);
+  --red:#E85576;--red-dim:rgba(232,85,118,0.11);
+  --purple:#9B7FEF;--purple-dim:rgba(155,127,239,0.11);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--text);
+  font-size:15px;line-height:1.7;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh;max-width:1160px;margin:0 auto;gap:0}
+@media(max-width:800px){.layout{grid-template-columns:1fr}}
+
+/* TOC sidebar */
+.toc{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  padding:32px 16px 32px 24px;border-right:1px solid var(--border);
+  background:var(--surface);
+}
+@media(max-width:800px){.toc{display:none}}
+.toc-title{
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:16px;
+}
+.toc ul{list-style:none}
+.toc ul li{margin:2px 0}
+.toc ul li a{
+  display:block;padding:4px 8px;border-radius:5px;
+  font-size:12.5px;color:var(--muted);transition:background .15s,color .15s;
+}
+.toc ul li a:hover,.toc ul li a.active{
+  background:var(--accent-dim);color:var(--accent);text-decoration:none;
+}
+.toc ul li.sub a{padding-left:18px;font-size:12px}
+.toc-sep{height:1px;background:var(--border);margin:10px 0}
+
+/* Main */
+.main{padding:48px 48px 80px;min-width:0}
+@media(max-width:800px){.main{padding:24px 20px 60px}}
+
+/* Header */
+.doc-header{margin-bottom:56px}
+.doc-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent-dim);color:var(--accent);
+  font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;border:1px solid rgba(61,142,240,0.2);
+  margin-bottom:20px;
+}
+.doc-title{
+  font-size:clamp(26px,4vw,38px);font-weight:700;color:var(--text-strong);
+  line-height:1.2;text-wrap:balance;margin-bottom:14px;
+}
+.doc-meta{
+  display:flex;flex-wrap:wrap;gap:20px;color:var(--muted);font-size:13.5px;
+}
+.doc-meta span{display:flex;align-items:center;gap:6px}
+
+/* Section */
+.section{margin-bottom:64px;scroll-margin-top:24px}
+.section-label{
+  display:flex;align-items:center;gap:10px;margin-bottom:22px;
+}
+.section-num{
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--surface2);color:var(--muted);
+  padding:3px 9px;border-radius:4px;
+}
+.section-title{
+  font-size:22px;font-weight:700;color:var(--text-strong);
+  text-wrap:balance;
+}
+.section-divider{height:1px;background:var(--border);margin-top:10px}
+
+.subsection{margin-bottom:40px;scroll-margin-top:24px}
+.subsection-title{
+  font-size:16px;font-weight:600;color:var(--text-strong);
+  margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--border);
+}
+
+/* Callout boxes */
+.callout{border-radius:var(--r);padding:16px 18px;margin:14px 0}
+.callout p,.callout li{font-size:14px;line-height:1.65}
+.callout-title{font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px}
+.callout.concept{background:var(--amber-dim);border-left:3px solid var(--amber)}
+.callout.concept .callout-title{color:var(--amber)}
+.callout.tech{background:var(--accent-dim);border-left:3px solid var(--accent)}
+.callout.tech .callout-title{color:var(--accent)}
+.callout.ok{background:var(--green-dim);border-left:3px solid var(--green)}
+.callout.ok .callout-title{color:var(--green)}
+.callout.warn{background:var(--red-dim);border-left:3px solid var(--red)}
+.callout.warn .callout-title{color:var(--red)}
+
+/* Tables */
+.table-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);margin:14px 0}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+thead tr{background:var(--surface2)}
+thead th{
+  padding:10px 14px;text-align:left;font-weight:600;font-size:12px;
+  letter-spacing:.04em;color:var(--muted);white-space:nowrap;
+  border-bottom:1px solid var(--border);
+}
+tbody tr:nth-child(even){background:var(--surface)}
+tbody tr:nth-child(odd){background:var(--surface2)}
+:root[data-theme="light"] tbody tr:nth-child(odd),:root:not([data-theme="dark"]) @media(prefers-color-scheme:light) tbody tr:nth-child(odd){background:var(--surface2)}
+tbody td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+tbody tr:last-child td{border-bottom:none}
+
+/* Badges */
+.badge{
+  display:inline-block;padding:2px 8px;border-radius:4px;
+  font-size:11.5px;font-weight:600;letter-spacing:.03em;
+}
+.badge.green{background:var(--green-dim);color:var(--green)}
+.badge.red{background:var(--red-dim);color:var(--red)}
+.badge.amber{background:var(--amber-dim);color:var(--amber)}
+.badge.blue{background:var(--accent-dim);color:var(--accent)}
+.badge.purple{background:var(--purple-dim);color:var(--purple)}
+
+/* Code */
+code{
+  font-family:var(--mono);font-size:13px;
+  background:var(--surface3);color:var(--text-strong);
+  padding:1px 5px;border-radius:4px;
+}
+pre{
+  font-family:var(--mono);font-size:12.5px;line-height:1.6;
+  background:var(--surface2);color:var(--text);
+  padding:16px 18px;border-radius:var(--r);
+  border:1px solid var(--border);overflow-x:auto;margin:12px 0;
+}
+
+/* Checklist */
+.checklist{list-style:none;display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.checklist li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:14px;padding:8px 12px;
+  background:var(--surface);border-radius:6px;border:1px solid var(--border);
+}
+.checklist li .icon{flex-shrink:0;margin-top:2px}
+.ok-icon{color:var(--green)}
+.warn-icon{color:var(--amber)}
+.pending-icon{color:var(--muted)}
+
+/* Questions */
+.qa-list{display:flex;flex-direction:column;gap:10px}
+details{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+}
+details[open]{border-color:var(--accent)}
+summary{
+  cursor:pointer;padding:14px 18px;font-size:14.5px;font-weight:500;
+  color:var(--text-strong);display:flex;justify-content:space-between;align-items:center;
+  list-style:none;user-select:none;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"＋";color:var(--muted);font-size:16px;transition:transform .2s}
+details[open] summary::after{content:"－";color:var(--accent)}
+.qa-answer{
+  padding:0 18px 16px;font-size:14px;line-height:1.7;border-top:1px solid var(--border);
+  padding-top:14px;color:var(--text);
+}
+.qa-answer p+p{margin-top:10px}
+.qa-cat{
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin:32px 0 12px;
+}
+
+/* Flow diagram */
+.flow{
+  display:flex;align-items:center;flex-wrap:wrap;gap:0;
+  background:var(--surface2);border-radius:var(--r);padding:18px;
+  border:1px solid var(--border);margin:12px 0;font-size:13px;
+}
+.flow-step{
+  background:var(--surface3);border:1px solid var(--border);
+  border-radius:6px;padding:8px 14px;white-space:nowrap;
+  color:var(--text-strong);font-weight:500;
+}
+.flow-arrow{padding:0 8px;color:var(--muted);font-size:16px}
+
+/* Tags row */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+
+/* Two-col grid */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+@media(max-width:640px){.two-col{grid-template-columns:1fr}}
+.info-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 16px;
+}
+.info-card h4{font-size:13.5px;font-weight:600;color:var(--text-strong);margin-bottom:6px}
+.info-card p,.info-card li{font-size:13px;color:var(--text);line-height:1.6}
+
+p+p{margin-top:10px}
+ul{padding-left:20px}
+ul li{margin-bottom:4px;font-size:14px}
+</style>
+
+<div class="layout">
+
+<!-- ─── TOC ─── -->
+<nav class="toc">
+  <div class="toc-title">Sommaire</div>
+  <ul>
+    <li><a href="#intro">Introduction</a></li>
+    <div class="toc-sep"></div>
+    <li><a href="#deploy">Plan de Déploiement</a></li>
+    <li class="sub"><a href="#git">Git & Versioning</a></li>
+    <li class="sub"><a href="#ci">Intégration Continue (CI)</a></li>
+    <li class="sub"><a href="#docker">Conteneurisation Docker</a></li>
+    <li class="sub"><a href="#cd">Déploiement Continu (CD)</a></li>
+    <li class="sub"><a href="#envs">Environnements</a></li>
+    <li class="sub"><a href="#secrets">Gestion des secrets</a></li>
+    <li class="sub"><a href="#observabilite">Observabilité</a></li>
+    <div class="toc-sep"></div>
+    <li><a href="#secu">Plan de Sécurisation</a></li>
+    <li class="sub"><a href="#jwt">JWT RS256</a></li>
+    <li class="sub"><a href="#owasp">OWASP Top 10</a></li>
+    <li class="sub"><a href="#stride">STRIDE</a></li>
+    <li class="sub"><a href="#rgpd">RGPD</a></li>
+    <li class="sub"><a href="#sonar">SonarCloud SAST</a></li>
+    <li class="sub"><a href="#chiffrement">Chiffrement</a></li>
+    <li class="sub"><a href="#logs">Logs & Alertes</a></li>
+    <li class="sub"><a href="#sauvegardes">Sauvegardes</a></li>
+    <div class="toc-sep"></div>
+    <li><a href="#maintenance">Dossier Maintenance</a></li>
+    <li class="sub"><a href="#types-maint">Types de maintenance</a></li>
+    <li class="sub"><a href="#github-issues">GitHub Issues</a></li>
+    <li class="sub"><a href="#veille">Veille technologique</a></li>
+    <div class="toc-sep"></div>
+    <li><a href="#questions">Questions possibles</a></li>
+  </ul>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+<!-- Header -->
+<header class="doc-header" id="intro">
+  <div class="doc-badge">BL3 · INFCDAAL3 · NexHuman</div>
+  <h1 class="doc-title">Guide complet — Déploiement, Sécurisation & Maintenance</h1>
+  <div class="doc-meta">
+    <span>📦 Projet (RE)Sources Relationnelles</span>
+    <span>👥 Vogel · Nehir · Houpert · Doguet</span>
+    <span>📅 Juillet 2026</span>
+  </div>
+  <div style="margin-top:20px">
+    <p>Ce document explique tout ce qui a été mis en place dans le cadre du BL3. Chaque sujet est d'abord expliqué en termes simples (ce que c'est, pourquoi on le fait), puis décrit techniquement (ce qu'on a concrètement mis en œuvre).</p>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════
+     SECTION 1 — PLAN DE DÉPLOIEMENT
+══════════════════════════════════════ -->
+<section class="section" id="deploy">
+  <div class="section-label">
+    <span class="section-num">Section 1</span>
+    <h2 class="section-title">Plan de Déploiement</h2>
+  </div>
+  <div class="section-divider"></div>
+  <p style="margin-top:16px">Le déploiement, c'est le processus qui fait passer le code écrit par les développeurs jusqu'aux utilisateurs finaux, de manière contrôlée, automatisée et sécurisée.</p>
+
+  <!-- GIT -->
+  <div class="subsection" id="git" style="margin-top:32px">
+    <h3 class="subsection-title">1.1 Gestion de versions — Git & Git Flow</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Pourquoi gérer les versions ?</div>
+      <p>Imaginez 4 développeurs qui modifient tous le même fichier en même temps, sans coordination. C'est le chaos : qui a la bonne version ? Qui a écrasé le travail de qui ? <strong>Git</strong> est un outil qui enregistre l'historique complet de chaque modification, qui l'a faite, quand, et pourquoi. Il permet de travailler en parallèle sans se marcher dessus et de revenir en arrière en cas de problème.</p>
+    </div>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Ce qu'on a mis en place</div>
+      <p>3 dépôts GitHub, un par composant :</p>
+      <ul>
+        <li><code>ressources_api</code> — API Symfony (back-end)</li>
+        <li><code>resources_front</code> — Frontend Next.js</li>
+        <li><code>re_flutter</code> — Application mobile Flutter</li>
+      </ul>
+      <p style="margin-top:8px">Branches <strong>main</strong> et <strong>dev</strong> protégées : aucun push direct autorisé. Tout changement passe par une Pull Request avec au moins 1 reviewer.</p>
+    </div>
+
+    <h4 style="margin-top:20px;margin-bottom:10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Git Flow simplifié</h4>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Git Flow</div>
+      <p>Git Flow est une convention d'organisation des branches. Au lieu d'avoir tout le monde qui pousse directement sur la branche principale, chaque fonctionnalité a sa propre branche isolée. Ça évite que le travail en cours d'une personne casse le travail d'une autre.</p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">feature/ma-fonc</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">dev (intégration)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">main (production)</div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Branche</th><th>Rôle</th><th>Protection</th></tr></thead>
+        <tbody>
+          <tr><td><code>main</code></td><td>Production stable — ce que voient les utilisateurs</td><td>Merge via PR + CI verte obligatoire</td></tr>
+          <tr><td><code>dev</code></td><td>Intégration continue — travail en cours</td><td>Merge via PR obligatoire</td></tr>
+          <tr><td><code>feature/*</code></td><td>Une branche par fonctionnalité</td><td>Libre</td></tr>
+          <tr><td><code>fix/*</code></td><td>Corrections de bugs non urgents</td><td>Libre</td></tr>
+          <tr><td><code>hotfix/*</code></td><td>Correctifs urgents en production</td><td>Merge sur main ET dev</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin-top:20px;margin-bottom:10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Semantic Versioning (SemVer)</h4>
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept</div>
+      <p>SemVer est une convention de numérotation des versions : <strong>MAJEUR.MINEUR.PATCH</strong> (ex: 1.4.2). Chaque chiffre a une signification précise, permettant à n'importe qui de comprendre l'ampleur d'une mise à jour rien qu'en regardant le numéro.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="info-card">
+        <h4>v<span style="color:var(--red)">2</span>.0.0 — MAJEUR</h4>
+        <p>Changement incompatible. L'ancienne API ne fonctionne plus. Ex : refonte complète de l'authentification.</p>
+      </div>
+      <div class="info-card">
+        <h4>v1.<span style="color:var(--amber)">1</span>.0 — MINEUR</h4>
+        <p>Nouvelle fonctionnalité rétrocompatible. L'existant continue de fonctionner.</p>
+      </div>
+      <div class="info-card">
+        <h4>v1.0.<span style="color:var(--green)">1</span> — PATCH</h4>
+        <p>Correction de bug. Rien de nouveau, juste une réparation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CI -->
+  <div class="subsection" id="ci">
+    <h3 class="subsection-title">1.2 Intégration Continue (CI)</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce que la CI ?</div>
+      <p>La CI (Continuous Integration) est un système automatique qui vérifie chaque modification de code dès qu'elle est poussée. Imaginez un contrôleur qualité invisible qui, à chaque fois qu'un développeur envoie du code, lance automatiquement tous les tests, vérifie le style du code et cherche des failles de sécurité. Si quelque chose ne va pas, il bloque la livraison et prévient l'équipe immédiatement — avant que le problème n'atteigne les utilisateurs.</p>
+      <p style="margin-top:8px">La CI tourne sur des <strong>runners GitHub Actions</strong> : des machines virtuelles temporaires hébergées chez GitHub, qui démarrent vierges à chaque pipeline, font leur travail, et disparaissent. Aucun serveur à gérer.</p>
+    </div>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Ce qu'on a mis en place</div>
+      <p><strong>Outil :</strong> GitHub Actions — fichiers YAML dans <code>.github/workflows/</code> de chaque dépôt. Déclenché automatiquement sur chaque push ou ouverture de Pull Request.</p>
+    </div>
+
+    <!-- CI API -->
+    <h4 style="margin:22px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">🐘 CI — API Backend (Symfony)</h4>
+    <p style="font-size:13.5px;margin-bottom:12px">Déclenchée sur chaque push ou PR vers <code>dev</code> ou <code>main</code>. Trois jobs parallèles s'enchaînent :</p>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+      <div class="info-card">
+        <h4>Job <code>test</code> — Tests automatisés</h4>
+        <p>GitHub Actions crée une machine virtuelle avec <strong>PHP 8.4</strong> et démarre un conteneur <strong>MySQL 8.0</strong> en service (une base de données temporaire, juste pour ce pipeline). Puis :</p>
+        <ul style="margin-top:8px">
+          <li><code>composer install</code> — télécharge toutes les dépendances PHP</li>
+          <li>Création du fichier <code>.env.test</code> avec l'URL de la BDD temporaire</li>
+          <li><code>php bin/console doctrine:migrations:migrate</code> — crée les tables en BDD</li>
+          <li><code>php bin/phpunit</code> — lance les <strong>30 tests E2E</strong> : chaque test simule une vraie requête HTTP (login, création de ressource, modération…) et vérifie la réponse. Si un test échoue, le job échoue et bloque tout.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Job <code>lint</code> — Qualité du code</h4>
+        <p>Vérifie que le code respecte les règles de l'équipe, sans l'exécuter :</p>
+        <ul style="margin-top:8px">
+          <li><strong>PHP-CS-Fixer</strong> : vérifie que le code PHP suit le standard PSR-12 (indentation, espaces, accolades). C'est comme le "correcteur de style" — si on écrit <code>function foo(){</code> au lieu de <code>function foo() {</code>, ça échoue.</li>
+          <li><strong>symfony lint:yaml</strong> : valide que tous les fichiers YAML de config (routes, services, doctrine) sont syntaxiquement corrects.</li>
+          <li><strong>symfony lint:container</strong> : vérifie que l'injection de dépendances Symfony est cohérente — pas de service déclaré mais non implémenté.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Job <code>sonar</code> — Analyse de sécurité SAST</h4>
+        <p>Envoie l'intégralité du code source à <strong>SonarCloud</strong> pour une analyse statique approfondie :</p>
+        <ul style="margin-top:8px">
+          <li>Recherche de vulnérabilités connues dans les patterns de code</li>
+          <li>Détection de code dupliqué, fonctions trop complexes, classes trop longues</li>
+          <li>Vérification de la couverture de tests (% du code couvert)</li>
+          <li>Si le <strong>Quality Gate</strong> n'est pas passé (note en dessous du seuil défini), le job échoue et bloque le merge.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce qu'un test E2E ?</div>
+      <p>E2E (End-to-End = bout en bout) signifie que le test simule un vrai parcours utilisateur : il envoie une vraie requête HTTP <code>POST /api/login</code>, récupère le JWT dans la réponse, puis envoie une requête <code>GET /api/ressources</code> avec ce JWT, et vérifie que la réponse est correcte. Contrairement à un test unitaire qui teste une seule fonction isolée, l'E2E teste toute la chaîne : routeur → contrôleur → service → base de données → réponse.</p>
+    </div>
+
+    <!-- CI FRONT -->
+    <h4 style="margin:22px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">⚡ CI — Frontend Web (Next.js)</h4>
+    <p style="font-size:13.5px;margin-bottom:12px">Déclenchée sur chaque push ou PR vers <code>main</code> ou <code>dev</code>. Deux jobs :</p>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+      <div class="info-card">
+        <h4>Job <code>lint</code> — Qualité TypeScript/React</h4>
+        <p>Sur un runner Node 22 avec pnpm 9 :</p>
+        <ul style="margin-top:8px">
+          <li><code>pnpm install --frozen-lockfile</code> — installe les dépendances JS en mode strict (si le lockfile ne correspond pas au package.json, échec immédiat — ça évite les surprises de versions)</li>
+          <li><strong>ESLint</strong> : analyse statique du TypeScript/React. Détecte les variables non utilisées, les imports manquants, les props incorrectes, les appels de hooks React mal placés. Règles Next.js spécifiques activées.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Job <code>build</code> — Build de production</h4>
+        <p>Simule exactement le build qui partira en production :</p>
+        <ul style="margin-top:8px">
+          <li>Injection des variables d'environnement depuis les <strong>GitHub Secrets</strong> : <code>NEXT_PUBLIC_API_URL</code>, <code>NEXT_PUBLIC_SUPABASE_URL</code>, <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></li>
+          <li><code>pnpm build</code> — compile tout le TypeScript, génère les pages SSR, optimise les images, crée les bundles JS minifiés</li>
+          <li>Si le build échoue (erreur TypeScript, import cassé, page qui plante), la CI échoue. C'est le même build que Vercel utilisera — si ça passe ici, ça passera en prod.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CI MOBILE -->
+    <h4 style="margin:22px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">📱 CI — Application Mobile (Flutter)</h4>
+    <p style="font-size:13.5px;margin-bottom:12px">Déclenchée sur chaque push ou PR vers <code>main</code> ou <code>dev</code>. Trois jobs :</p>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+      <div class="info-card">
+        <h4>Job <code>lint</code> — Analyse statique Dart</h4>
+        <ul style="margin-top:4px">
+          <li><code>flutter pub get</code> — télécharge les dépendances Dart/Flutter</li>
+          <li><code>flutter analyze --no-fatal-infos --no-fatal-warnings</code> — analyse statique du code Dart. Détecte les types incorrects, les appels dépréciés, les imports inutilisés. Les warnings simples ne bloquent pas, seules les erreurs bloquent.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Job <code>test</code> — Tests unitaires Dart</h4>
+        <ul style="margin-top:4px">
+          <li><code>flutter test --no-pub</code> — lance tous les tests unitaires Flutter. <code>--no-pub</code> pour ne pas retélécharger les dépendances déjà installées par le job lint.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Job <code>build-android</code> — APK de production</h4>
+        <ul style="margin-top:4px">
+          <li>Environnement Java 17 (Temurin) requis par Gradle (outil de build Android)</li>
+          <li><code>flutter build apk --release --no-pub</code> — compile le code Dart en bytecode natif Android, crée l'APK signé</li>
+          <li>L'APK est archivé comme <strong>artefact GitHub Actions</strong> (rétention 7 jours). Téléchargeable depuis l'interface GitHub pour tests internes — pas encore distribué sur le Play Store.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce qu'un "lint" ?</div>
+      <p>Le lint analyse le code sans l'exécuter, pour trouver des erreurs de style ou de logique. C'est comme un correcteur orthographique pour le code. Si le développeur oublie une accolade, utilise une variable non définie ou ne respecte pas les conventions de l'équipe, le lint le détecte. Le nom vient de l'outil <code>lint</code> des années 70 qui nettoyait le code C — comme enlever les peluches (lint en anglais) d'un vêtement.</p>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Étapes bloquantes communes — récapitulatif</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Étape</th><th>Outil</th><th>Projet</th><th>Bloquant</th></tr></thead>
+        <tbody>
+          <tr><td>Checkout du code</td><td><code>actions/checkout@v4</code></td><td>Tous</td><td><span class="badge green">Oui</span></td></tr>
+          <tr><td>Installation des dépendances</td><td>composer / pnpm 9 / flutter pub get</td><td>Tous</td><td><span class="badge green">Oui</span></td></tr>
+          <tr><td>Lint & analyse statique</td><td>PHP-CS-Fixer / ESLint / flutter analyze</td><td>Tous</td><td><span class="badge green">Oui</span></td></tr>
+          <tr><td>Tests automatisés</td><td>PHPUnit 30 tests E2E / flutter test</td><td>API, Mobile</td><td><span class="badge green">Oui</span></td></tr>
+          <tr><td>Audit CVE dépendances</td><td>composer audit / pnpm audit / pub outdated</td><td>Tous</td><td><span class="badge green">Oui</span></td></tr>
+          <tr><td>SAST (analyse sécurité)</td><td>SonarCloud</td><td>API</td><td><span class="badge amber">Quality Gate</span></td></tr>
+          <tr><td>Build production</td><td>Docker / pnpm build / APK release</td><td>Tous</td><td><span class="badge green">Oui</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DOCKER -->
+  <div class="subsection" id="docker">
+    <h3 class="subsection-title">1.3 Conteneurisation Docker</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce qu'un conteneur ?</div>
+      <p>Un conteneur, c'est comme une boîte hermétique qui contient une application et tout ce dont elle a besoin pour fonctionner (PHP, ses extensions, la configuration). Cette boîte est identique sur la machine du développeur, sur le serveur de test, et en production. Plus jamais le problème "ça marche sur mon PC" : si ça tourne dans le conteneur, ça tourne partout. Docker est la technologie qui crée et gère ces boîtes.</p>
+      <p style="margin-top:8px"><strong>Différence conteneur / machine virtuelle :</strong> une VM simule un ordinateur complet avec son propre OS (lourd, lent à démarrer). Un conteneur partage le noyau Linux du serveur hôte et ne contient que ce dont l'application a besoin — il démarre en quelques secondes et pèse bien moins lourd.</p>
+    </div>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Réseau interne Docker (bridge)</div>
+      <p>Par défaut, les conteneurs Docker sont isolés d'Internet. Pour qu'ils se parlent entre eux, on crée un réseau interne appelé <strong>bridge</strong>. Sur ce réseau, chaque conteneur a un nom qui sert d'adresse (ex: <code>resources_db</code> est joignable par PHP à l'adresse <code>resources_db:3306</code>). Depuis l'extérieur (Internet), seuls les ports qu'on a explicitement ouverts sont accessibles. C'est un pare-feu automatique.</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">Les 5 conteneurs et leur rôle détaillé</h4>
+
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:16px">
+
+      <div class="info-card" style="border-left:3px solid var(--accent)">
+        <h4>🌐 <code>resources_nginx</code> — nginx:alpine | Port 8080→80</h4>
+        <p><strong>Rôle :</strong> Reverse proxy + terminaison SSL. C'est la <em>porte d'entrée unique</em> de toute l'infrastructure.</p>
+        <div class="callout concept" style="margin-top:10px;margin-bottom:10px">
+          <div class="callout-title">💡 Qu'est-ce qu'un reverse proxy ?</div>
+          <p>Un proxy normal, c'est un intermédiaire côté client (ex: proxy d'entreprise qui filtre le trafic sortant). Un <strong>reverse proxy</strong> est l'inverse : il se place côté serveur et reçoit toutes les requêtes des clients à la place des vrais serveurs. Les clients ne connaissent que l'adresse du reverse proxy — jamais l'adresse de PHP ou de MySQL. Nginx reçoit la requête HTTP, regarde l'URL, et décide où l'envoyer : si c'est <code>/api/*</code>, il transfère à PHP-FPM. Si c'est un fichier statique, il le sert lui-même directement (beaucoup plus rapide que PHP).</p>
+        </div>
+        <ul>
+          <li><strong>Terminaison SSL :</strong> Nginx gère le chiffrement HTTPS. PHP reçoit les requêtes en HTTP simple en interne — plus rapide et plus simple. Nginx s'occupe de déchiffrer/chiffrer avec le certificat Let's Encrypt.</li>
+          <li><strong>Gestion des fichiers statiques :</strong> images, CSS, JS du front Symfony sont servis directement par Nginx sans passer par PHP (Nginx est 10× plus rapide pour ça).</li>
+          <li><strong>Buffering des requêtes :</strong> Nginx accumule les requêtes lentes des clients et les transmet à PHP d'un coup — PHP-FPM n'est pas bloqué par les connexions lentes.</li>
+          <li><strong>Image alpine :</strong> version ultra-légère de Linux — l'image ne pèse que ~25 MB contre ~150 MB pour l'image standard.</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="border-left:3px solid var(--purple)">
+        <h4>🐘 <code>resources_php</code> — php:8.4-fpm | Port interne uniquement</h4>
+        <p><strong>Rôle :</strong> Runtime PHP — exécute le code Symfony (l'API REST).</p>
+        <div class="callout concept" style="margin-top:10px;margin-bottom:10px">
+          <div class="callout-title">💡 Qu'est-ce que PHP-FPM ?</div>
+          <p>PHP peut fonctionner de plusieurs façons. En mode CLI, PHP exécute un script et s'arrête. En mode <strong>FPM (FastCGI Process Manager)</strong>, PHP tourne en permanence en arrière-plan avec un <em>pool de workers</em> prêts à traiter des requêtes. Quand Nginx reçoit une requête pour <code>/api/login</code>, il la passe à PHP-FPM via le protocole FastCGI. Un worker PHP-FPM disponible la prend, exécute le contrôleur Symfony, et renvoie la réponse à Nginx. Avec FPM, on peut configurer combien de workers PHP tournent simultanément, évitant de surcharger le serveur.</p>
+        </div>
+        <ul>
+          <li><strong>Extensions installées :</strong> <code>pdo_mysql</code> (connexion MySQL), <code>intl</code> (internationalisation), <code>opcache</code> (cache du bytecode PHP — ne recompile pas le PHP à chaque requête)</li>
+          <li><strong>Utilisateur non-root :</strong> PHP tourne en tant qu'utilisateur <code>symfony</code> (UID 1001). Si quelqu'un exploite une faille dans l'API, il n'obtient pas les droits root sur le serveur.</li>
+          <li><strong>HEALTHCHECK :</strong> Docker teste régulièrement que PHP-FPM répond (<code>php-fpm -t</code>). Si ce n'est plus le cas, Docker redémarre automatiquement le conteneur.</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="border-left:3px solid var(--green)">
+        <h4>🗄️ <code>resources_db</code> — mysql:8.0 | Port 3307→3306 (dev uniquement)</h4>
+        <p><strong>Rôle :</strong> Base de données relationnelle — stocke toutes les données de l'application.</p>
+        <div class="callout concept" style="margin-top:10px;margin-bottom:10px">
+          <div class="callout-title">💡 Qu'est-ce qu'une base de données relationnelle ?</div>
+          <p>MySQL est un SGBDR (Système de Gestion de Base de Données Relationnelle). Les données sont organisées en <strong>tables</strong> (comme des feuilles Excel) reliées entre elles par des <strong>clés étrangères</strong>. Par exemple : une table <code>users</code>, une table <code>ressources</code>, une table <code>categories</code>. Doctrine ORM (intégré à Symfony) traduit les objets PHP en requêtes SQL automatiquement — les développeurs manipulent des objets PHP, pas du SQL brut.</p>
+        </div>
+        <ul>
+          <li><strong>Le port 3306 est exposé en dev (3307→3306)</strong> pour permettre la connexion depuis un outil comme DBeaver ou TablePlus. <strong>En production, aucun port MySQL n'est exposé</strong> — la BDD n'est accessible que depuis le réseau bridge interne Docker.</li>
+          <li><strong>Volume persistant :</strong> les données MySQL sont stockées dans un volume Docker nommé. Si le conteneur est supprimé et recréé, les données survivent.</li>
+          <li>3 bases distinctes : <code>resources</code> (dev local), <code>resources_preprod</code> (préprod), <code>resources_prod</code> (production).</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="border-left:3px solid var(--amber)">
+        <h4>🖥️ <code>resources_pma</code> — phpmyadmin | Port 8081→80 | Dev uniquement</h4>
+        <p><strong>Rôle :</strong> Interface web pour administrer MySQL visuellement.</p>
+        <div class="callout concept" style="margin-top:10px;margin-bottom:10px">
+          <div class="callout-title">💡 Qu'est-ce que phpMyAdmin ?</div>
+          <p>phpMyAdmin est une application web qui permet de naviguer dans les tables MySQL, d'exécuter des requêtes SQL, d'importer/exporter des données, sans écrire de commande en ligne. C'est un outil de commodité pour les développeurs : au lieu de se connecter en SSH et de taper <code>mysql -u root -p</code>, on ouvre <code>localhost:8081</code> dans son navigateur. En production, ce conteneur n'existe pas — trop risqué d'exposer une interface d'admin.</p>
+        </div>
+        <ul>
+          <li>Accessible uniquement sur la machine du développeur, jamais exposé vers l'extérieur.</li>
+          <li>Absent des environnements préprod et production (<code>docker-compose.override.yaml</code> uniquement).</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="border-left:3px solid var(--red)">
+        <h4>📧 <code>resources_mail</code> — axllent/mailpit | Port 8025 | Dev uniquement</h4>
+        <p><strong>Rôle :</strong> Faux serveur SMTP — intercepte tous les emails envoyés par l'application en dev.</p>
+        <div class="callout concept" style="margin-top:10px;margin-bottom:10px">
+          <div class="callout-title">💡 Pourquoi un faux serveur mail ?</div>
+          <p>L'application envoie des emails réels : email d'activation de compte, reset de mot de passe, notifications. En développement, on ne veut surtout pas envoyer de vrais emails à de vraies adresses (risque de spammer des gens, d'exposer des données, et la configuration SMTP réelle n'est pas disponible). Mailpit fait semblant d'être un serveur SMTP : Symfony lui envoie les emails, et ils sont capturés et affichés dans une interface web sur <code>localhost:8025</code>. Le développeur peut voir exactement ce que l'email contiendrait, sans qu'il parte vraiment.</p>
+        </div>
+        <ul>
+          <li>Interface web intégrée pour visualiser les emails capturés (<code>localhost:8025</code>).</li>
+          <li>En production, le vrai SMTP Gmail est configuré via les variables d'environnement.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Dockerfile multi-stage — pourquoi deux étapes ?</h4>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Dockerfile multi-stage</div>
+      <p>Un build multi-stage, c'est comme construire une voiture dans une usine en plusieurs étapes, mais en ne livrant au client que la voiture finie — pas l'atelier, les outils, et les pièces de rechange. On installe les dépendances dans un premier conteneur "de construction" (qui a composer, des outils de build…), puis on ne copie que le résultat final dans l'image légère qui part en production. Résultat : l'image de production est bien plus petite (pas de composer, pas de dépendances de dev) et sa surface d'attaque est réduite.</p>
+    </div>
+
+    <pre>Stage 1 — "builder" (image composer:2)
+  └─ composer install --no-dev --optimize-autoloader
+     ↳ Installe uniquement les dépendances de PRODUCTION (pas les outils de test)
+     ↳ --optimize-autoloader : génère une map de classes pour accélérer l'autoloading
+
+Stage 2 — "runtime" (image php:8.4-fpm-alpine — ~50 MB)
+  ├─ Installe uniquement les extensions PHP nécessaires : pdo_mysql, intl, opcache
+  ├─ Crée l'utilisateur non-root : symfony (UID 1001)
+  ├─ Copie uniquement /vendor/ depuis Stage 1 (pas composer lui-même)
+  ├─ Copie le code source de l'application
+  └─ HEALTHCHECK : docker vérifie que php-fpm répond toutes les 30s</pre>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Points clés sécurité conteneurs</div>
+      <ul>
+        <li><strong>Utilisateur non-root :</strong> PHP tourne en tant qu'utilisateur <code>symfony</code> (UID 1001) — si l'API est compromise, l'attaquant n'a pas les droits root sur le serveur hôte.</li>
+        <li><strong>Réseau bridge isolé :</strong> tous les conteneurs communiquent via <code>symfony_network</code>. Seul Nginx expose des ports vers l'extérieur. MySQL et PHP-FPM sont totalement invisibles depuis Internet.</li>
+        <li><strong>Images Alpine :</strong> basées sur Alpine Linux (~5 MB) au lieu de Debian/Ubuntu (~150 MB) — moins de packages installés = moins de vulnérabilités potentielles.</li>
+        <li><strong>HEALTHCHECK automatique :</strong> Docker surveille les conteneurs et les redémarre si nécessaire, sans intervention humaine.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CD -->
+  <div class="subsection" id="cd">
+    <h3 class="subsection-title">1.4 Déploiement Continu (CD)</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — CI vs CD</div>
+      <p><strong>CI</strong> = vérifier que le code est correct (tests, lint, sécurité). <strong>CD</strong> = automatiser la livraison de ce code vérifié jusqu'aux serveurs. Le CD s'enchaîne après la CI : si tous les contrôles sont au vert, le code est automatiquement emballé et expédié vers l'environnement cible. Pour la production, une approbation manuelle est obligatoire — un humain doit valider avant que la mise en prod se lance.</p>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">API Backend (GHCR + SSH)</h4>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce que GHCR ?</div>
+      <p>GHCR (GitHub Container Registry) est un entrepôt de stockage d'images Docker, intégré à GitHub. Au lieu de pousser une image sur Docker Hub (public), on la pousse sur GHCR lié à notre organisation. Accès contrôlé, gratuit pour les repos publics, et intégré directement aux pipelines GitHub Actions.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Job CD</th><th>Condition</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><code>build-push</code></td><td>CI + Security verts sur main</td><td>Build Docker → <code>ghcr.io/txmy-elu/ressources_api:sha</code></td></tr>
+          <tr><td><code>deploy-preprod</code></td><td><code>PREPROD_ENABLED = true</code></td><td>SSH → docker compose pull + migrate + cache:clear</td></tr>
+          <tr><td><code>deploy-production</code></td><td><code>PROD_ENABLED = true</code> + <strong>approbation manuelle</strong></td><td>SSH → docker compose pull + migrate + cache:clear</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Frontend (Vercel)</h4>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Vercel</div>
+      <p>Vercel est une plateforme d'hébergement spécialisée pour Next.js. Pour chaque Pull Request, elle crée automatiquement une URL de prévisualisation unique (ex: <code>resources-front-pr-42.vercel.app</code>). Ça permet à l'équipe de voir le résultat visuel avant de merger, sans toucher à la production.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Job CD</th><th>Déclencheur</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><code>deploy-preview</code></td><td>CI vert sur tout push/PR vers main</td><td>vercel deploy → URL preview unique par PR</td></tr>
+          <tr><td><code>deploy-production</code></td><td>PROD_ENABLED + approbation manuelle</td><td>vercel deploy --prod → production</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">⚠️ Mobile — Pas de CD automatisé</div>
+      <p>L'APK release est archivé comme artefact GitHub Actions (rétention 7 jours). La distribution sur les stores (Google Play / App Store) nécessite un processus de validation manuel distinct.</p>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Responsabilités de déploiement</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tâche</th><th>Responsable</th><th>Outil</th></tr></thead>
+        <tbody>
+          <tr><td>Merge PR et protection branches</td><td>Doguet (lead)</td><td>GitHub branch rules</td></tr>
+          <tr><td>Pipeline CI — tests + lint + audit</td><td>Toute l'équipe (auto)</td><td>GitHub Actions</td></tr>
+          <tr><td>Build image Docker production</td><td>Houpert</td><td>GitHub Actions + GHCR</td></tr>
+          <tr><td>Deploy préprod (SSH)</td><td>Nehir</td><td>GitHub Actions CD</td></tr>
+          <tr><td>Validation préprod + approbation</td><td>Doguet</td><td>GitHub Environments</td></tr>
+          <tr><td>Deploy production (SSH)</td><td>Vogel</td><td>GitHub Actions CD</td></tr>
+          <tr><td>Deploy frontend (Vercel)</td><td>Doguet</td><td>GitHub Actions + Vercel</td></tr>
+          <tr><td>Rotation des secrets</td><td>Doguet</td><td>GitHub Secrets</td></tr>
+          <tr><td>Monitoring et alertes</td><td>Nehir + Houpert</td><td>Grafana + Prometheus</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ENVIRONNEMENTS -->
+  <div class="subsection" id="envs">
+    <h3 class="subsection-title">1.5 Gestion des environnements</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Pourquoi plusieurs environnements ?</div>
+      <p>On ne teste pas un nouveau pont en y faisant circuler des voitures en même temps qu'on le construit. De la même façon, on ne teste pas du nouveau code directement en production. Les environnements sont des "copies" de l'application à différents stades de maturité. Si quelque chose casse en préprod, seuls les développeurs le voient — pas les 10 000 utilisateurs réels.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Environnement</th><th>Rôle</th><th>API</th><th>Frontend</th><th>BDD</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge blue">Dev</span></td><td>Codage local</td><td>localhost:8000</td><td>localhost:3000</td><td>resources (Docker local)</td></tr>
+          <tr><td><span class="badge purple">Tests/QA</span></td><td>CI automatique</td><td>GitHub Actions</td><td>GitHub Actions</td><td>Conteneurs éphémères</td></tr>
+          <tr><td><span class="badge amber">Preview</span></td><td>Validation par PR</td><td>—</td><td>Vercel URL/PR unique</td><td>—</td></tr>
+          <tr><td><span class="badge amber">Préprod</span></td><td>Répétition générale</td><td>Serveur SSH :8082</td><td>Vercel preview</td><td>resources_preprod</td></tr>
+          <tr><td><span class="badge green">Production</span></td><td>Utilisateurs réels</td><td>Serveur SSH :443</td><td>Vercel (.app)</td><td>resources_prod</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECRETS -->
+  <div class="subsection" id="secrets">
+    <h3 class="subsection-title">1.6 Gestion des secrets</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Pourquoi ne jamais mettre de secrets dans le code ?</div>
+      <p>Un secret dans le code, c'est comme écrire votre code de carte bleue sur le ticket de caisse et le laisser traîner. Le code source est souvent partagé, versionné, et parfois public. Un mot de passe de base de données dans un fichier <code>.env</code> commité sur GitHub peut être trouvé par des robots en quelques minutes. GitHub Secrets stocke ces valeurs de façon chiffrée et ne les injecte que dans les pipelines CI/CD au moment de l'exécution — elles n'apparaissent jamais dans les logs.</p>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">🔒 Règle absolue du projet</div>
+      <p>Les fichiers <code>.env*</code>, <code>config/jwt/</code> et <code>generate_keys.php</code> sont dans le <code>.gitignore</code> et ne sont JAMAIS commités. Les secrets viennent uniquement des GitHub Secrets. Un scan Gitleaks tourne en CI pour détecter tout secret accidentellement introduit dans l'historique git.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Variable</th><th>Projet</th><th>Contenu</th></tr></thead>
+        <tbody>
+          <tr><td><code>DATABASE_URL</code></td><td>API</td><td>Connexion MySQL complète</td></tr>
+          <tr><td><code>JWT_SECRET_KEY / PUBLIC_KEY</code></td><td>API</td><td>Clés PEM RSA-2048 (encodées base64)</td></tr>
+          <tr><td><code>JWT_PASSPHRASE</code></td><td>API</td><td>Passphrase de la clé privée JWT</td></tr>
+          <tr><td><code>APP_SECRET</code></td><td>API</td><td>Hash aléatoire Symfony (CSRF, cookies)</td></tr>
+          <tr><td><code>SONAR_TOKEN</code></td><td>API</td><td>Token d'authentification SonarCloud</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>Front</td><td>Clé publique Supabase (peut être lue côté client)</td></tr>
+          <tr><td><code>VERCEL_TOKEN</code></td><td>Front</td><td>Token déploiement Vercel</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OBSERVABILITÉ -->
+  <div class="subsection" id="observabilite">
+    <h3 class="subsection-title">1.7 Observabilité (stack monitoring)</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce que l'observabilité ?</div>
+      <p>Savoir que votre application fonctionne, c'est bien. Savoir pourquoi elle est lente, combien de requêtes elle reçoit, quelle table SQL prend du temps, et être prévenu avant que ça casse — c'est l'observabilité. C'est comme les capteurs dans une voiture : le tableau de bord vous dit la vitesse, la température du moteur, le niveau d'essence. Sans ça, vous roulez à l'aveugle.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Conteneur</th><th>Rôle</th><th>Accès</th></tr></thead>
+        <tbody>
+          <tr><td><code>resources_prometheus</code></td><td>Collecte et stocke les métriques (temps de réponse, erreurs, CPU…) — rétention 30 j</td><td>Interne</td></tr>
+          <tr><td><code>resources_grafana</code></td><td>Dashboard visuel : graphes, alertes, visualisation métriques + logs</td><td>Port 3001</td></tr>
+          <tr><td><code>resources_loki</code></td><td>Stockage et indexation des logs applicatifs</td><td>Interne</td></tr>
+          <tr><td><code>resources_promtail</code></td><td>Agent qui lit les logs Docker et les envoie à Loki</td><td>Interne</td></tr>
+          <tr><td><code>resources_node_exporter</code></td><td>Métriques système : CPU, RAM, disque du serveur</td><td>Interne</td></tr>
+          <tr><td><code>resources_mysql_exporter</code></td><td>Métriques MySQL : QPS, connexions actives, InnoDB</td><td>Interne</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 2 — PLAN DE SÉCURISATION
+══════════════════════════════════════ -->
+<section class="section" id="secu">
+  <div class="section-label">
+    <span class="section-num">Section 2</span>
+    <h2 class="section-title">Plan de Sécurisation</h2>
+  </div>
+  <div class="section-divider"></div>
+  <p style="margin-top:16px">La sécurité n'est pas une fonctionnalité ajoutée à la fin — c'est une démarche intégrée dès la conception. Cette section détaille toutes les mesures mises en place pour protéger l'application, les données et les utilisateurs.</p>
+
+  <!-- JWT -->
+  <div class="subsection" id="jwt" style="margin-top:32px">
+    <h3 class="subsection-title">2.1 Authentification — JWT RS256</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce qu'un JWT ?</div>
+      <p>Un JWT (JSON Web Token) est comme un badge d'accès signé. Quand vous vous connectez, le serveur vous donne un badge contenant votre identité et vos droits, signé cryptographiquement. À chaque requête suivante, vous présentez ce badge. Le serveur vérifie la signature sans aller interroger la base de données — c'est plus rapide et "stateless" (sans état côté serveur).</p>
+    </div>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — RS256 vs HS256 : pourquoi des clés asymétriques ?</div>
+      <p>HS256 utilise la même clé pour signer et vérifier (comme une serrure dont tout le monde a la même clé). RS256 utilise une paire de clés : la clé <strong>privée</strong> signe (seul le serveur l'a), la clé <strong>publique</strong> vérifie (peut être partagée). Si un attaquant vole la clé publique, il ne peut pas forger des tokens. C'est nettement plus sécurisé dans un système distribué (web + mobile).</p>
+    </div>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Ce qu'on a mis en place</div>
+      <ul>
+        <li><strong>Bundle :</strong> LexikJWTBundle (Symfony)</li>
+        <li><strong>Algorithme :</strong> RSA-2048 bits, signature RS256</li>
+        <li><strong>TTL :</strong> 3600 secondes (1 heure)</li>
+        <li><strong>Clés :</strong> fichiers PEM dans <code>config/jwt/</code>, exclus du git, stockés en GitHub Secrets (base64)</li>
+        <li><strong>Reset mot de passe :</strong> token unique, usage unique, validité 1 heure</li>
+        <li><strong>Compte inactif :</strong> <code>is_available = false</code> jusqu'à activation admin</li>
+      </ul>
+    </div>
+
+    <div class="flow" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="flow-step">POST /api/login</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Vérif. bcrypt</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Génération JWT (clé privée)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Réponse au client</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="flow-step">GET /api/ressources</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Header: Bearer &lt;JWT&gt;</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Vérif. signature (clé publique)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Accès autorisé</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OWASP -->
+  <div class="subsection" id="owasp">
+    <h3 class="subsection-title">2.2 OWASP Top 10</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Qu'est-ce que l'OWASP Top 10 ?</div>
+      <p>L'<strong>OWASP</strong> (Open Web Application Security Project) est une fondation à but non lucratif qui produit des ressources libres sur la sécurité des applications web. Son document le plus connu, le <strong>Top 10</strong>, liste les 10 catégories de vulnérabilités les plus critiques et les plus répandues. Il est mis à jour tous les 3-4 ans à partir de données réelles de milliers d'applications auditées. C'est devenu la référence mondiale : les certifications (OSCP, CEH), les audits de sécurité et les cahiers des charges exigent systématiquement qu'une application y réponde. Notre bilan : <strong>8/10 couverts, 2/10 partiels</strong>.</p>
+    </div>
+
+    <div class="two-col" style="margin-bottom:24px">
+      <div class="callout ok" style="margin:0">
+        <div class="callout-title">✅ 8/10 Couverts</div>
+        <p>A01, A02, A03, A04, A06, A07, A09, A10 — mesures techniques en production.</p>
+      </div>
+      <div class="callout warn" style="margin:0">
+        <div class="callout-title">⚠️ 2/10 Partiels</div>
+        <p>A05 (CSP manquant côté Next.js) · A08 (pas de signature des releases GitHub) — identifiés, non critiques à ce stade.</p>
+      </div>
+    </div>
+
+    <!-- A01 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A01 — Contrôle d'accès défaillant &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Un contrôle d'accès, c'est la règle qui décide qui a le droit de faire quoi. Une défaillance de contrôle d'accès signifie qu'un utilisateur peut accéder à des données ou des actions auxquelles il ne devrait pas avoir accès. C'est la vulnérabilité numéro 1 depuis 2021. Exemples concrets : un utilisateur normal qui accède à <code>/api/admin/users</code> et voit tous les comptes, ou qui modifie la ressource d'un autre utilisateur en changeant l'ID dans l'URL (<code>/api/ressources/42</code> au lieu de <code>/api/ressources/17</code>). C'est souvent simplement parce que le développeur a oublié de vérifier le droit d'accès côté serveur (en pensant que le front-end "cachait" le bouton).</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>RBAC (Role-Based Access Control) — 4 rôles :</strong> <code>ROLE_CONNECTED</code>, <code>ROLE_MODERATOR</code>, <code>ROLE_ADMIN</code>, <code>ROLE_SUPER_ADMIN</code>. Chaque rôle hérite des précédents (hiérarchie Symfony). Un admin a automatiquement tous les droits d'un modérateur.</li>
+        <li><strong>Voters Symfony :</strong> pour les ressources, le contrôle ne s'arrête pas au rôle — on vérifie aussi que l'utilisateur est bien le propriétaire de la ressource (<code>ResourceVoter::canEdit()</code>). Un utilisateur lambda ne peut pas modifier la ressource d'un autre même s'il connaît son ID.</li>
+        <li><strong><code>#[IsGranted]</code> sur chaque contrôleur :</strong> chaque endpoint a son attribut de contrôle. Si quelqu'un essaie d'accéder à <code>/api/admin/users</code> sans être admin, Symfony retourne 403 automatiquement, avant même d'exécuter le code métier.</li>
+        <li><strong><code>security.yaml</code> — catch-all :</strong> tout <code>/api</code> non explicitement listé comme PUBLIC_ACCESS requiert au minimum <code>ROLE_CONNECTED</code>. Une route oubliée est bloquée par défaut, pas ouverte.</li>
+      </ul>
+    </div>
+
+    <!-- A02 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A02 — Défaillances cryptographiques &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Cette catégorie couvre tous les cas où des données sensibles transitent ou sont stockées sans chiffrement suffisant, ou avec un chiffrement trop faible. Exemples : stocker les mots de passe en clair (ou en MD5) dans la base de données, transmettre des données en HTTP (non HTTPS), utiliser un vieux protocole TLS 1.0 cassé, ou utiliser un token d'authentification non signé. C'est souvent la porte d'entrée vers des fuites de données massives — quand la base de données est volée, les mots de passe doivent être illisibles.</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>TLS 1.2+ :</strong> toutes les communications client-serveur passent par HTTPS. TLS (Transport Layer Security) chiffre le flux réseau — même si quelqu'un intercepte les paquets sur le réseau, il ne voit que du bruit. Le certificat SSL est géré par Nginx + Let's Encrypt (renouvellement automatique).</li>
+        <li><strong>bcrypt cost 13 :</strong> les mots de passe ne sont jamais stockés en clair. bcrypt applique une fonction de hachage avec "sel" (une chaîne aléatoire unique par mot de passe, pour éviter les attaques par rainbow table). Le cost 13 signifie 2¹³ = 8192 itérations — chaque vérification prend ~100ms, rendant la force brute non viable (10 tentatives/s max). MD5 : des milliards de tentatives/seconde.</li>
+        <li><strong>JWT RS256 :</strong> les tokens sont signés avec RSA-2048 bits. Ni stockés dans la base de données, ni transmis via URL (uniquement dans le header <code>Authorization: Bearer</code>).</li>
+        <li><strong>Clés privées hors du code :</strong> les clés PEM RSA ne sont jamais dans le dépôt git. Elles sont stockées dans GitHub Secrets et injectées en variable d'environnement au déploiement.</li>
+      </ul>
+    </div>
+
+    <!-- A03 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A03 — Injection &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Une injection, c'est quand un attaquant envoie des données qui vont être interprétées comme des commandes par le système. L'exemple classique : l'injection SQL. Si une application construit sa requête SQL en concaténant directement ce que l'utilisateur tape, un attaquant peut "injecter" du SQL. Exemple : si le login fait <code>"SELECT * FROM users WHERE email = '" + email + "'"</code> et qu'on envoie <code>' OR '1'='1</code> comme email, la requête devient <code>SELECT * FROM users WHERE email = '' OR '1'='1'</code> — qui retourne tous les utilisateurs. L'attaquant peut se connecter sans mot de passe, voire supprimer toute la base.</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>Doctrine ORM :</strong> on n'écrit jamais de SQL brut. Doctrine traduit les objets PHP en requêtes SQL en utilisant des <strong>requêtes préparées</strong> (prepared statements). Les paramètres utilisateur sont transmis séparément de la requête — jamais concaténés. Le driver PDO les échappe automatiquement. Un attaquant ne peut pas "sortir" de la requête.</li>
+        <li><strong>QueryBuilder Doctrine :</strong> même quand on construit des requêtes dynamiques (filtres, recherches), on utilise <code>->setParameter()</code> — jamais d'interpolation de chaîne directe.</li>
+        <li><strong>Validation des entrées :</strong> le Validator Symfony vérifie le format des données avant qu'elles atteignent la couche de persistance (email valide, longueurs respectées, types corrects).</li>
+      </ul>
+    </div>
+
+    <!-- A04 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A04 — Conception non sécurisée &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Cette catégorie, introduite en 2021, vise les failles qui viennent non pas d'un bug de code, mais d'un mauvais design de l'application. Par exemple : permettre à n'importe qui de créer un compte admin, ne pas limiter le nombre de tentatives de connexion (brute force), envoyer le token de reset de mot de passe par email sans expiration, ou créer une API où on peut deviner les IDs des autres utilisateurs (ID séquentiel). Ce sont des erreurs de conception qui ouvrent des brèches même si le code est techniquement correct.</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>Activation des comptes par un admin :</strong> un nouvel utilisateur ne peut pas se connecter immédiatement après l'inscription. Un administrateur doit activer manuellement le compte (<code>is_available = false</code> par défaut). Cela empêche la création automatisée de comptes malveillants.</li>
+        <li><strong>Rate limiting (limitation du débit) :</strong> le composant Symfony Rate Limiter bloque automatiquement une IP après 5 tentatives de login en 15 minutes. Même chose pour l'inscription (10/heure) et le reset de mot de passe (3/heure). Même si l'attaquant connaît l'email, il ne peut pas tester 10 000 mots de passe.</li>
+        <li><strong>Token de reset usage unique :</strong> le token envoyé par email pour réinitialiser un mot de passe est à usage unique (<code>used = false → true</code> après utilisation) et expire après 1 heure. On ne peut pas le réutiliser.</li>
+        <li><strong>UUID comme identifiants :</strong> les ressources utilisent des UUIDs (identifiants aléatoires) plutôt que des entiers séquentiels (1, 2, 3…). Un attaquant ne peut pas deviner l'ID d'une ressource appartenant à un autre utilisateur.</li>
+      </ul>
+    </div>
+
+    <!-- A05 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--amber)">
+      <h4 style="margin-bottom:8px">A05 — Mauvaise configuration de sécurité &nbsp;<span class="badge amber">Partiel</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Cette catégorie couvre toutes les erreurs de configuration du serveur, du framework ou de l'application qui créent des failles. Exemples : laisser le mode debug activé en production (qui affiche le code source et les variables internes), exposer des ports inutiles, ne pas configurer les headers de sécurité HTTP, laisser les comptes par défaut (admin/admin), ou avoir un CORS trop permissif (<code>Access-Control-Allow-Origin: *</code> qui autorise n'importe quel site à faire des requêtes). Les headers HTTP de sécurité sont des instructions que le serveur envoie au navigateur pour le "verrouiller".</p>
+      </div>
+      <p><strong>Ce qu'on a fait :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>APP_ENV=prod en production :</strong> le mode debug est désactivé. Symfony n'affiche pas les erreurs détaillées aux utilisateurs — seulement un message générique.</li>
+        <li><strong>CORS configuré (NelmioCorsBundle) :</strong> seuls les domaines autorisés (Vercel front, app mobile) peuvent faire des requêtes cross-origin à l'API. <code>Access-Control-Allow-Origin</code> n'est pas <code>*</code>.</li>
+        <li><strong>Ports fermés :</strong> seul le port 443 (HTTPS) est ouvert vers l'extérieur. MySQL, PHP-FPM, et les outils de monitoring sont uniquement accessibles depuis le réseau bridge Docker interne.</li>
+      </ul>
+      <div class="callout warn" style="margin-top:10px">
+        <div class="callout-title">⚠️ Ce qui manque — CSP (Content Security Policy)</div>
+        <p>Un header <strong>CSP</strong> est une instruction que le serveur envoie au navigateur pour lui dire d'où il est autorisé à charger du JavaScript, des images, des styles. Sans CSP, si un attaquant réussit à injecter du HTML dans la page (XSS), le navigateur exécutera n'importe quel script, même chargé depuis un domaine externe malveillant. Avec un CSP, le navigateur refusera ce script. À implémenter dans <code>next.config.js</code> :</p>
+        <pre style="margin-top:8px">headers: [{ key: 'Content-Security-Policy',
+  value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';" }]</pre>
+      </div>
+    </div>
+
+    <!-- A06 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A06 — Composants vulnérables et obsolètes &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Une application moderne utilise des dizaines de bibliothèques tierces (dépendances). Chacune peut avoir des vulnérabilités découvertes après coup. Si on ne met pas à jour les dépendances, on peut se retrouver avec une faille critique connue publiquement (CVE — Common Vulnerabilities and Exposures) qu'un attaquant peut exploiter. Log4Shell (2021) est l'exemple parfait : une faille dans la bibliothèque Java log4j a touché des millions de serveurs dans le monde. Les entreprises qui avaient fait leur audit de dépendances l'ont corrigée rapidement. Les autres ont été compromises.</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>Dependabot (GitHub) :</strong> bot automatique configuré sur chaque dépôt. Dès qu'une dépendance a une mise à jour ou une CVE connue, Dependabot ouvre automatiquement une Pull Request. L'équipe n'a plus à surveiller manuellement les mises à jour.</li>
+        <li><strong><code>composer audit</code> :</strong> commande Composer qui interroge la base de données des CVE PHP et signale si une dépendance installée a une vulnérabilité connue. Lancé en CI à chaque push.</li>
+        <li><strong><code>pnpm audit</code> :</strong> équivalent pour les dépendances JavaScript (Next.js, bibliothèques React). Lance l'audit de la base npm security advisory.</li>
+        <li><strong>Trivy :</strong> scanner de vulnérabilités qui analyse l'image Docker (php:8.4-fpm-alpine) et remonte les CVE dans les paquets système Alpine. Intégré en CI sur le job de build Docker.</li>
+        <li><strong>SonarCloud :</strong> détecte aussi les dépendances connues vulnérables via son analyse statique.</li>
+      </ul>
+    </div>
+
+    <!-- A07 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A07 — Identification et authentification de mauvaise qualité &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Cette catégorie couvre les failles dans le processus d'authentification lui-même : sessions qui ne s'invalidement pas à la déconnexion, tokens qui ne expirent jamais, mots de passe faibles acceptés, possibilité de réutiliser un token de reset, ou absence de protection contre la force brute. Concrètement : si un token JWT n'expire jamais et qu'il est volé (via une fuite de logs, une XSS, un ordinateur partagé), l'attaquant a un accès permanent. C'est pour ça que les tokens doivent expirer.</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>JWT TTL 3600s (1 heure) :</strong> les tokens expirent automatiquement après 1 heure. Passé ce délai, le client doit se reconnecter ou utiliser le refresh token. Si un token est volé, la fenêtre d'exploitation est limitée à 1 heure maximum.</li>
+        <li><strong>Refresh token :</strong> plutôt que d'obliger l'utilisateur à retaper son mot de passe toutes les heures, le système propose un refresh token (durée plus longue) pour obtenir un nouveau JWT sans saisie de mot de passe. Le refresh token est stocké côté serveur et peut être révoqué.</li>
+        <li><strong>Token de reset usage unique :</strong> le token envoyé par email pour réinitialiser le mot de passe est invalidé dès son utilisation (colonne <code>used</code> dans la table <code>password_reset_token</code>). Il ne peut pas être utilisé deux fois.</li>
+        <li><strong>RS256 asymétrique :</strong> un token JWT ne peut pas être forgé sans la clé privée (connue uniquement du serveur). Même si quelqu'un décode le JWT (c'est encodé en base64, pas chiffré), il ne peut pas modifier le payload et recalculer une signature valide.</li>
+        <li><strong>Rate limiting sur le login :</strong> 5 tentatives par 15 minutes par IP — protection contre la force brute sur les mots de passe.</li>
+      </ul>
+    </div>
+
+    <!-- A08 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--amber)">
+      <h4 style="margin-bottom:8px">A08 — Manque d'intégrité des données et du logiciel &nbsp;<span class="badge amber">Partiel</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Cette catégorie couvre les cas où on fait confiance à du code ou des données sans vérifier qu'ils n'ont pas été altérés. L'exemple le plus courant : les mises à jour automatiques. Si une application télécharge et installe automatiquement une mise à jour sans vérifier sa signature cryptographique, un attaquant qui compromet le serveur de distribution peut faire installer un logiciel malveillant. Même chose pour les releases GitHub : si personne ne peut vérifier qu'une release v1.2.0 est authentique (publiée par l'équipe), un attaquant qui compromet le compte GitHub peut publier une release modifiée.</p>
+      </div>
+      <p><strong>Ce qu'on a fait :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong><code>composer.lock</code> versionné :</strong> le fichier <code>composer.lock</code> fixe exactement la version de chaque dépendance PHP (pas seulement la contrainte, mais le hash exact du paquet). En CI, <code>composer install</code> installe exactement ces versions — impossible d'installer silencieusement une version différente.</li>
+        <li><strong><code>pnpm-lock.yaml</code> versionné :</strong> même principe pour les dépendances JavaScript.</li>
+        <li><strong>Images Docker taguées par SHA :</strong> en CI, on référence les images Docker par leur hash SHA256 (immuable) plutôt que par un tag <code>:latest</code> qui peut pointer vers des versions différentes selon le moment.</li>
+      </ul>
+      <div class="callout warn" style="margin-top:10px">
+        <div class="callout-title">⚠️ Ce qui manque — Signature GPG des releases</div>
+        <p>Les releases GitHub ne sont pas signées cryptographiquement. Signer une release, c'est apposer une "empreinte digitale" cryptographique qui prouve que c'est bien l'équipe qui l'a publiée. À implémenter : <code>git tag -s v1.2.0 -m "Release 1.2.0"</code> (l'option <code>-s</code> signe avec GPG). N'importe qui peut alors vérifier l'authenticité avec <code>git tag -v v1.2.0</code>. Dans notre cas le risque est faible (pas de distribution automatique aux utilisateurs), mais c'est une bonne pratique à adopter.</p>
+      </div>
+    </div>
+
+    <!-- A09 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A09 — Carence en journalisation et surveillance &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>Si quelqu'un s'introduit dans votre application, comment le savez-vous ? Si vous n'avez pas de logs, vous ne le saurez pas — ou trop tard. La journalisation (logging) consiste à enregistrer tous les événements significatifs : connexions, tentatives échouées, modifications de données, erreurs. La surveillance (monitoring) consiste à analyser ces logs en temps réel et à alerter quand quelque chose d'anormal se produit. Sans ça, un attaquant peut passer des semaines dans le système sans être détecté. La règle des 72h de notification RGPD (en cas de fuite de données) est impossible à respecter si on n'a pas de logs pour savoir ce qui s'est passé.</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>Table <code>log_action</code> :</strong> 16 types d'actions loguées en base de données : création/modification/suppression de ressource, changement de rôle, modération, etc. Chaque log contient : utilisateur, action, entité concernée, IP, timestamp.</li>
+        <li><strong>Table <code>log_connexion</code> :</strong> chaque tentative de connexion (réussie ou non) est loguée avec l'IP et le timestamp. Permet de détecter une attaque par force brute même si le rate limiter l'a bloquée.</li>
+        <li><strong>Table <code>log_systeme</code> :</strong> logs des événements système (démarrage, erreurs critiques, jobs planifiés).</li>
+        <li><strong>Stack Loki + Promtail :</strong> les logs applicatifs Symfony (fichiers <code>var/log/</code>) et les logs Docker sont collectés par Promtail et stockés dans Loki (base de données de logs). Grafana permet de les consulter, de filtrer et de créer des alertes en temps réel.</li>
+        <li><strong>Prometheus + Grafana :</strong> métriques en temps réel — nombre de requêtes par seconde, temps de réponse moyen, taux d'erreurs 4xx/5xx, usage CPU/RAM. Une alerte se déclenche si le taux d'erreur dépasse un seuil.</li>
+      </ul>
+    </div>
+
+    <!-- A10 -->
+    <div class="info-card" style="margin-bottom:14px;border-left:3px solid var(--green)">
+      <h4 style="margin-bottom:8px">A10 — Falsification de requête côté serveur (SSRF) &nbsp;<span class="badge green">Couvert</span></h4>
+      <div class="callout concept" style="margin:0 0 10px">
+        <div class="callout-title">💡 C'est quoi ?</div>
+        <p>SSRF (Server-Side Request Forgery) est une attaque où un attaquant fait faire au serveur des requêtes HTTP que lui-même ne pourrait pas faire. Exemple : une API qui permet d'entrer une URL pour "prévisualiser un lien". Si l'API fait une requête HTTP vers cette URL sans restriction, l'attaquant peut lui faire appeler <code>http://169.254.169.254/latest/meta-data/</code> (l'API de métadonnées des serveurs AWS) et récupérer les clés d'accès cloud. Ou cibler des services internes (<code>http://localhost:6379</code> pour Redis, <code>http://database:3306</code> pour MySQL) auxquels seul le serveur a accès. C'est souvent utilisé pour "pivoter" depuis un service exposé vers des services internes protégés.</p>
+      </div>
+      <p><strong>Ce qu'on a mis en place :</strong></p>
+      <ul style="margin-top:6px">
+        <li><strong>Aucun appel HTTP initié par des entrées utilisateur :</strong> l'API Symfony ne fait aucune requête HTTP vers des URLs fournies par l'utilisateur. Il n'y a pas de fonctionnalité de "preview de lien", de "webhook URL", ni de "fetch d'image distante à partir d'une URL". La surface d'attaque SSRF est donc nulle.</li>
+        <li><strong>Les seuls appels HTTP sortants :</strong> l'envoi d'emails (SMTP) et les appels Supabase pour le stockage de fichiers. Ces URLs sont fixées dans la configuration serveur, jamais contrôlées par l'utilisateur.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- STRIDE -->
+  <div class="subsection" id="stride">
+    <h3 class="subsection-title">2.3 Modélisation des menaces — STRIDE</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce que STRIDE ?</div>
+      <p>STRIDE est une méthode créée par Microsoft pour recenser systématiquement les menaces auxquelles un système peut être exposé. Chaque lettre représente un type de menace. L'idée : en parcourant chaque catégorie, on s'assure de ne rien oublier. C'est une grille d'analyse, pas une solution — pour chaque menace identifiée, on définit une contre-mesure.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Lettre</th><th>Menace</th><th>Exemple sur notre projet</th><th>Contre-mesure</th><th>Priorité</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S</strong>poofing</td><td>Usurpation d'identité</td><td>Se faire passer pour un admin</td><td>bcrypt + activation admin + reset sécurisé</td><td><span class="badge red">Haute</span></td></tr>
+          <tr><td><strong>T</strong>ampering</td><td>Falsification des données</td><td>Modifier le payload JWT pour changer son rôle</td><td>Signature RSA-2048 RS256 — toute modification invalide le token</td><td><span class="badge red">Haute</span></td></tr>
+          <tr><td><strong>R</strong>epudiation</td><td>Nier avoir fait une action</td><td>"Ce n'est pas moi qui ai supprimé cette ressource"</td><td>log_action : IP + horodatage + utilisateur + action</td><td><span class="badge amber">Moyenne</span></td></tr>
+          <tr><td><strong>I</strong>nformation Disclosure</td><td>Fuite de données</td><td>Un utilisateur voit les données d'un autre</td><td>CORS + HTTPS + filtrage par rôle sur chaque endpoint</td><td><span class="badge red">Haute</span></td></tr>
+          <tr><td><strong>D</strong>enial of Service</td><td>Saturation du service</td><td>Envoyer 10 000 requêtes de login en 1 seconde</td><td>Rate limiting : 5 tentatives/15min</td><td><span class="badge amber">Moyenne</span></td></tr>
+          <tr><td><strong>E</strong>levation of Privilege</td><td>Escalade de droits</td><td>Un ROLE_CONNECTED accède aux endpoints admin</td><td><code>#[IsGranted]</code> + hiérarchie Symfony</td><td><span class="badge red">Haute</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RGPD -->
+  <div class="subsection" id="rgpd">
+    <h3 class="subsection-title">2.4 Conformité RGPD</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce que le RGPD ?</div>
+      <p>Le RGPD (Règlement Général sur la Protection des Données) est une loi européenne qui régit la façon dont les entreprises collectent et utilisent les données personnelles. Elle s'applique à toute application traitant des données d'utilisateurs européens. Le non-respect peut entraîner des amendes allant jusqu'à 4% du chiffre d'affaires mondial. Les principes clés : collecter le minimum nécessaire, informer les utilisateurs, leur permettre d'exercer leurs droits.</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h4 style="font-size:13.5px;font-weight:600;color:var(--text-strong);margin-bottom:10px">Données collectées et base légale</h4>
+        <div class="table-wrap" style="margin:0">
+          <table>
+            <thead><tr><th>Donnée</th><th>Finalité</th><th>Rétention</th><th>Base légale</th></tr></thead>
+            <tbody>
+              <tr><td>Nom, prénom</td><td>Identification</td><td>Durée du compte</td><td>Consentement</td></tr>
+              <tr><td>Email</td><td>Auth, notifications</td><td>Durée du compte</td><td>Consentement</td></tr>
+              <tr><td>IP connexion</td><td>Sécurité</td><td>12 mois</td><td>Intérêt légitime</td></tr>
+              <tr><td>Logs d'actions</td><td>Audit, modération</td><td>12 mois</td><td>Intérêt légitime</td></tr>
+              <tr><td>Favoris</td><td>Personnalisation</td><td>Durée du compte</td><td>Consentement</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:13.5px;font-weight:600;color:var(--text-strong);margin-bottom:10px">Droits des utilisateurs</h4>
+        <div class="table-wrap" style="margin:0">
+          <table>
+            <thead><tr><th>Droit RGPD</th><th>Implémentation</th></tr></thead>
+            <tbody>
+              <tr><td>Droit d'accès</td><td><code>GET /api/me</code></td></tr>
+              <tr><td>Droit de rectification</td><td><code>PUT /api/me</code></td></tr>
+              <tr><td>Droit à l'effacement</td><td><code>DELETE /api/admin/users/{id}</code> — anonymisation</td></tr>
+              <tr><td>Droit à la portabilité</td><td>Export JSON (à implémenter)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Hiérarchie des rôles (Secure by Design)</h4>
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Principe du moindre privilège</div>
+      <p>Tout est bloqué par défaut. Un utilisateur ne peut accéder qu'à ce dont il a explicitement besoin. Cette hiérarchie est implémentée dans Symfony avec <code>#[IsGranted]</code> sur chaque route — il est impossible d'oublier de protéger un endpoint.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Rôle</th><th>Droits</th></tr></thead>
+        <tbody>
+          <tr><td><code>ROLE_CONNECTED</code></td><td>Lecture ressources publiques, profil, création de ressources</td></tr>
+          <tr><td><code>ROLE_MODERATOR</code></td><td>+ Validation/rejet de ressources et modération commentaires</td></tr>
+          <tr><td><code>ROLE_ADMIN</code></td><td>+ Gestion utilisateurs, catégories, statistiques, logs</td></tr>
+          <tr><td><code>ROLE_SUPER_ADMIN</code></td><td>Accès total — création de comptes à privilèges</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SONARCLOUD -->
+  <div class="subsection" id="sonar">
+    <h3 class="subsection-title">2.5 Analyse SAST — SonarCloud</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce que le SAST ?</div>
+      <p>Le SAST (Static Application Security Testing) est une analyse de sécurité du code source sans l'exécuter. L'outil lit le code ligne par ligne et cherche des patterns connus dangereux : une requête SQL construite avec des données utilisateur, un mot de passe codé en dur, une fonction cryptographique obsolète. SonarCloud est un service SaaS (zéro maintenance serveur) intégré directement dans le pipeline CI.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Métrique SonarCloud</th><th>Résultat</th><th>Signification</th></tr></thead>
+        <tbody>
+          <tr><td>Sécurité</td><td><span class="badge green">A — 0 issue</span></td><td>Aucune vulnérabilité détectée dans le code</td></tr>
+          <tr><td>Security Hotspots</td><td><span class="badge green">A — 0</span></td><td>Aucun point sensible nécessitant review manuelle</td></tr>
+          <tr><td>Fiabilité</td><td><span class="badge green">A — 0 bug</span></td><td>Aucun bug logique détecté</td></tr>
+          <tr><td>Maintenabilité</td><td><span class="badge amber">A — 67 code smells</span></td><td>Fonctions sans PHPDoc ou trop de responsabilités</td></tr>
+          <tr><td>Quality Gate</td><td><span class="badge green">PASSED</span></td><td>Le déploiement est autorisé</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Les 67 code smells expliqués</div>
+      <p>Ces 67 signalements correspondent principalement à des fonctions sans PHPDoc (documentation des méthodes publiques). La convention a depuis été appliquée : PHPDoc sur toutes les classes et méthodes publiques (API Symfony) et JSDoc sur les fonctions exportées (Next.js). La maintenabilité reste en note A.</p>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Autres scans de sécurité en CI</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Outil</th><th>Ce qu'il détecte</th><th>Fréquence</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Trivy</strong></td><td>CVE dans les images Docker et les dépendances — résultat en SARIF GitHub Security</td><td>Chaque push</td></tr>
+          <tr><td><strong>Gitleaks</strong></td><td>Secrets accidentellement commités dans l'historique git</td><td>Chaque push</td></tr>
+          <tr><td><strong>OWASP Dependency Check</strong></td><td>CVE dans les dépendances PHP/JS/Flutter connues dans la base NVD</td><td>Nightly + push main</td></tr>
+          <tr><td><strong>composer audit</strong></td><td>Vulnérabilités PHP Advisory Database</td><td>Chaque push/PR</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CHIFFREMENT -->
+  <div class="subsection" id="chiffrement">
+    <h3 class="subsection-title">2.6 Chiffrement des données</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — En transit vs Au repos</div>
+      <p><strong>En transit</strong> = les données pendant qu'elles voyagent sur le réseau (entre le navigateur et le serveur). Sans chiffrement, n'importe qui sur le même réseau peut lire votre mot de passe. <strong>TLS</strong> (le "S" de HTTPS) chiffre ce tunnel. <strong>Au repos</strong> = les données stockées sur disque (base de données, fichiers). Si quelqu'un vole le disque dur, les données ne doivent pas être lisibles. Le hachage bcrypt et AES-256 assurent ça.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Périmètre</th><th>Mécanisme</th><th>Responsable/Outil</th></tr></thead>
+        <tbody>
+          <tr><td>En transit — API/Frontend</td><td>TLS 1.2+ (HTTPS obligatoire en prod, HSTS)</td><td>Nginx + Let's Encrypt</td></tr>
+          <tr><td>En transit — Auth JWT</td><td>Signature RSA-2048 RS256, token expire 3600s</td><td>LexikJWTBundle</td></tr>
+          <tr><td>En transit — Supabase Storage</td><td>TLS imposé par Supabase (CDN HTTPS)</td><td>Supabase (géré)</td></tr>
+          <tr><td>Au repos — Mots de passe</td><td>bcrypt (cost 13) — jamais stockés en clair</td><td>Symfony PasswordHasher</td></tr>
+          <tr><td>Au repos — Clés JWT</td><td>Fichiers PEM hors git (config/jwt/), .gitignore</td><td>Git + .gitignore</td></tr>
+          <tr><td>Au repos — Secrets CI/CD</td><td>Chiffrés au repos par GitHub (AES-256)</td><td>GitHub Secrets</td></tr>
+          <tr><td>Au repos — Fichiers Supabase</td><td>Chiffrement AES-256 at rest géré par Supabase</td><td>Supabase (géré)</td></tr>
+          <tr><td>Au repos — BDD MySQL</td><td>Pas de chiffrement natif du volume Docker ; isolé sur réseau privé bridge (aucun port exposé en prod)</td><td>Docker bridge + firewall SSH</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce que bcrypt ?</div>
+      <p>bcrypt est un algorithme de hachage <em>volontairement lent</em>. Contrairement à MD5 ou SHA-1, il est conçu pour prendre du temps (le "cost" ajuste la lenteur). Sur un GPU moderne, craquer 1 milliard de mots de passe MD5/seconde est possible. Avec bcrypt cost 13, le même GPU ne peut en tester que quelques milliers. Le hachage est aussi "salé" : deux utilisateurs avec le même mot de passe auront des hachés différents.</p>
+    </div>
+  </div>
+
+  <!-- LOGS -->
+  <div class="subsection" id="logs">
+    <h3 class="subsection-title">2.7 Logs & Alertes</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Pourquoi logger ?</div>
+      <p>Sans logs, une application est une boîte noire. Si quelqu'un essaie de s'authentifier 500 fois en 10 minutes, si un utilisateur accède à des données qui ne lui appartiennent pas, si une erreur serveur se produit — sans logs, on ne sait rien. Les logs permettent la détection d'incidents en temps réel, les audits de sécurité, et le diagnostic post-incident ("que s'est-il passé ?").</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Table</th><th>Contenu</th><th>Rétention</th></tr></thead>
+        <tbody>
+          <tr><td><code>log_action</code></td><td>Actions métier (16 types : create, save, moderate, delete…) + utilisateur + IP + horodatage</td><td>12 mois</td></tr>
+          <tr><td><code>log_connexion</code></td><td>Connexions succès/échec/logout + IP + horodatage</td><td>12 mois</td></tr>
+          <tr><td><code>log_message</code></td><td>Actions sur commentaires (création, modération, suppression)</td><td>12 mois</td></tr>
+          <tr><td><code>log_systeme</code></td><td>Erreurs techniques (info/warning/error/critical)</td><td>6 mois</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SAUVEGARDES -->
+  <div class="subsection" id="sauvegardes">
+    <h3 class="subsection-title">2.8 Sauvegardes & Continuité de service</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — RPO vs RTO</div>
+      <p><strong>RPO (Recovery Point Objective)</strong> : en cas de catastrophe, jusqu'où peut-on perdre des données ? Un RPO de 24h signifie qu'on accepte de perdre au maximum 24h de données. <strong>RTO (Recovery Time Objective)</strong> : combien de temps pour remettre le service en ligne après une panne ? Un RTO de 4h signifie que l'application doit être de nouveau accessible en moins de 4 heures.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Mesure</th><th>Modalité</th><th>Objectif</th></tr></thead>
+        <tbody>
+          <tr><td>Sauvegarde BDD quotidienne</td><td>mysqldump automatisé + volume persistant, rétention 30 jours</td><td>RPO ≤ 24h</td></tr>
+          <tr><td>Test de restauration</td><td>Restauration mensuelle vérifiée sur préprod</td><td>Sauvegardes exploitables</td></tr>
+          <tr><td>Rollback applicatif</td><td>Images Docker versionnées sur GHCR — redéploiement du tag précédent en SSH</td><td>RTO ≤ 4h</td></tr>
+          <tr><td>Supervision</td><td>Prometheus + Grafana + Loki, alertes sur indisponibilité</td><td>Détection précoce</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 3 — DOSSIER DE MAINTENANCE
+══════════════════════════════════════ -->
+<section class="section" id="maintenance">
+  <div class="section-label">
+    <span class="section-num">Section 3</span>
+    <h2 class="section-title">Dossier de Maintenance</h2>
+  </div>
+  <div class="section-divider"></div>
+  <p style="margin-top:16px">La maintenance est ce qui se passe après la livraison. Un produit non maintenu vieillit mal : les dépendances deviennent vulnérables, les fonctionnalités évoluent, les bugs s'accumulent. Ce dossier formalise comment on gère tout ça.</p>
+
+  <!-- TYPES DE MAINTENANCE -->
+  <div class="subsection" id="types-maint" style="margin-top:32px">
+    <h3 class="subsection-title">3.1 Types de maintenance</h3>
+
+    <div class="two-col">
+      <div class="callout ok" style="margin:0">
+        <div class="callout-title">🛡️ Préventive — Anticiper</div>
+        <p>Actions régulières pour éviter les problèmes avant qu'ils surviennent. Mise à jour des dépendances, rotation des clés, vérification des logs, sauvegarde BDD. C'est comme la révision régulière d'une voiture.</p>
+      </div>
+      <div class="callout tech" style="margin:0">
+        <div class="callout-title">🚀 Évolutive — Faire évoluer</div>
+        <p>Nouvelles fonctionnalités, intégrations tierces, refontes partielles. Chaque évolution est estimée en jours et tarifiée (TJM : 350 €HT/j). Garantie 30 jours contre régressions.</p>
+      </div>
+      <div class="callout warn" style="margin:0">
+        <div class="callout-title">🔧 Corrective — Réparer</div>
+        <p>Correction des anomalies remontées. 4 niveaux de sévérité avec SLA différents : de 2h (critique) à 3 jours ouvrés (cosmétique).</p>
+      </div>
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Planning maintenance préventive</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tâche</th><th>Fréquence</th><th>Responsable</th></tr></thead>
+        <tbody>
+          <tr><td>Mise à jour dépendances PHP (<code>composer update</code>)</td><td>Mensuelle</td><td>Développeur back-end</td></tr>
+          <tr><td>Mise à jour dépendances JS (<code>pnpm update</code>)</td><td>Mensuelle</td><td>Développeur front-end</td></tr>
+          <tr><td>Mise à jour Flutter (<code>flutter pub upgrade</code>)</td><td>Mensuelle</td><td>Développeur mobile</td></tr>
+          <tr><td>Audit CVE automatisé (CI)</td><td>Chaque push/PR</td><td>CI/CD</td></tr>
+          <tr><td>Rotation des clés JWT</td><td>Trimestrielle</td><td>Admin système</td></tr>
+          <tr><td>Sauvegarde de la base de données</td><td>Quotidienne</td><td>Script automatisé</td></tr>
+          <tr><td>Vérification des logs système</td><td>Hebdomadaire</td><td>Développeur</td></tr>
+          <tr><td>Tests de non-régression (CI)</td><td>Chaque PR</td><td>CI/CD</td></tr>
+          <tr><td>Vérification espace disque Docker</td><td>Mensuelle</td><td>Admin système</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">SLA maintenance corrective</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Niveau</th><th>Définition</th><th>Prise en charge</th><th>Résolution</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge red">Critique</span></td><td>App inaccessible, perte de données, faille sécurité</td><td>2 heures</td><td>24 heures</td></tr>
+          <tr><td><span class="badge amber">Majeur</span></td><td>Fonctionnalité clé inopérante (auth, publication)</td><td>4 heures</td><td>48 heures</td></tr>
+          <tr><td><span class="badge blue">Mineur</span></td><td>Bug sans blocage, affichage incorrect</td><td>1 jour ouvré</td><td>5 jours ouvrés</td></tr>
+          <tr><td><span class="badge purple">Cosmétique</span></td><td>Problème visuel, texte incorrect</td><td>3 jours ouvrés</td><td>10 jours ouvrés</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- GITHUB ISSUES -->
+  <div class="subsection" id="github-issues">
+    <h3 class="subsection-title">3.2 Outil de gestion — GitHub Issues</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Pourquoi un outil de gestion de tickets ?</div>
+      <p>Un bug signalé par email ou par oral, ça se perd. Un outil de ticketing centralise toutes les demandes, les priorise, les assigne, suit leur progression et conserve l'historique. GitHub Issues est intégré directement au dépôt de code : un ticket peut référencer un commit (<code>fixes #33</code> dans un message de commit ferme automatiquement l'issue), une PR peut être liée à une issue. Pas besoin d'un outil tiers séparé.</p>
+    </div>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Ce qu'on a mis en place sur ressources_api</div>
+      <p><strong>14 labels</strong> avec descriptions en français, <strong>1 milestone "BL3"</strong> regroupant toutes les issues du livrable (7 au total : 3 fermées, 4 ouvertes), et un <strong>format d'issue structuré</strong> avec préfixe et template.</p>
+    </div>
+
+    <h4 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">Les 14 labels du projet</h4>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — À quoi servent les labels ?</div>
+      <p>Un label est une étiquette colorée attachée à une issue. Ils permettent de filtrer rapidement : "montre-moi toutes les issues de sécurité ouvertes" (<code>is:open label:security</code>). Un label peut aussi signaler l'état : <code>wontfix</code> signifie qu'on a décidé de ne pas corriger ce point.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Label</th><th>Description</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge red">bug</span></td><td>Dysfonctionnement</td><td>Quelque chose ne fonctionne pas comme prévu</td></tr>
+          <tr><td><span class="badge blue">ci</span></td><td>CI/CD</td><td>Issues liées aux pipelines GitHub Actions, déploiement</td></tr>
+          <tr><td><span class="badge purple">dependencies</span></td><td>Mise à jour de dépendance</td><td>Bumps de versions (Dependabot, composer update…)</td></tr>
+          <tr><td><span class="badge blue">docker</span></td><td>Images et compose</td><td>Conteneurs, Dockerfile, docker-compose</td></tr>
+          <tr><td><span class="badge blue">documentation</span></td><td>Documentation</td><td>Rédaction de docs, wiki, plans BL3</td></tr>
+          <tr><td><span class="badge amber">duplicate</span></td><td>Doublon</td><td>Issue ou PR déjà existante — fermée sans action</td></tr>
+          <tr><td><span class="badge green">enhancement</span></td><td>Nouvelle fonctionnalité</td><td>Évolution, amélioration, feature request</td></tr>
+          <tr><td><span class="badge green">good first issue</span></td><td>Bon point d'entrée</td><td>Facile à prendre pour un nouveau contributeur</td></tr>
+          <tr><td><span class="badge amber">help wanted</span></td><td>Aide extérieure bienvenue</td><td>L'équipe cherche des contributions</td></tr>
+          <tr><td><span class="badge amber">invalid</span></td><td>Signalement non reproductible</td><td>Bug non reproductible ou hors sujet</td></tr>
+          <tr><td><span class="badge purple">java</span></td><td>Backend Spring Boot</td><td>Issues spécifiques au backend Java (repo api_zen)</td></tr>
+          <tr><td><span class="badge blue">question</span></td><td>Demande de clarification</td><td>Question, besoin d'info avant de coder</td></tr>
+          <tr><td><span class="badge red">security</span></td><td>Sécurité / CVE</td><td>Vulnérabilité, faille, problème de sécurité</td></tr>
+          <tr><td><span class="badge amber">wontfix</span></td><td>Ne sera pas corrigé</td><td>Hors périmètre ou décision de ne pas traiter</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">Milestone BL3</h4>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce qu'un milestone ?</div>
+      <p>Un milestone (jalon) est un regroupement d'issues qui appartiennent toutes à la même livraison ou au même sprint. GitHub affiche automatiquement le pourcentage de complétion. Quand toutes les issues du milestone sont fermées, le livrable est considéré comme terminé.</p>
+    </div>
+
+    <div class="info-card" style="margin:12px 0">
+      <h4>🏁 Milestone "BL3" — Bloc 3 - sécurisation, déploiement, maintenance</h4>
+      <p>7 issues au total · 3 fermées · 4 ouvertes · <strong>42% complété</strong></p>
+      <div style="background:var(--surface2);border-radius:4px;height:8px;margin:10px 0;overflow:hidden">
+        <div style="background:var(--green);height:100%;width:42%"></div>
+      </div>
+    </div>
+
+    <h4 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">Format des issues — convention de nommage</h4>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Préfixes de titre</div>
+      <p>Toutes les issues suivent un préfixe <code>[Type]</code> pour identifier immédiatement la nature du ticket dans la liste :</p>
+      <ul style="margin-top:8px">
+        <li><code>[Bug]</code> — anomalie à corriger</li>
+        <li><code>[Feature]</code> — nouvelle fonctionnalité ou évolution</li>
+        <li><code>[Docs]</code> — documentation à rédiger ou mettre à jour</li>
+      </ul>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Template d'issue — structure type</h4>
+
+    <pre>## Besoin
+Description du problème ou du besoin constaté.
+
+## User story
+En tant que [rôle], je veux [action] afin que [bénéfice].
+
+## Critères d'acceptation
+- [ ] Critère 1 mesurable et vérifiable
+- [ ] Critère 2
+- [ ] Testé sur [environnement]
+
+## Périmètre
+Frontend (Next.js) / API (Symfony) / Mobile (Flutter) / Infra
+
+## Notes techniques
+Contraintes, liens vers la doc, fichiers concernés.</pre>
+
+    <h4 style="margin:20px 0 12px;font-size:15px;font-weight:700;color:var(--text-strong)">Issues réelles du milestone BL3</h4>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+
+      <div class="info-card" style="border-left:3px solid var(--green)">
+        <h4>✅ Fermées (3)</h4>
+        <ul style="margin-top:6px">
+          <li><code>[Bug]</code> Reconnexion impossible après réinitialisation du mot de passe</li>
+          <li><code>[Docs]</code> Mettre à jour le wiki CESIZen</li>
+          <li><code>[Bug]</code> Dependabot bumpe jjwt-jackson sans jjwt-api ni jjwt-impl</li>
+        </ul>
+      </div>
+
+      <div class="info-card" style="border-left:3px solid var(--accent)">
+        <h4>🔵 Ouvertes (4)</h4>
+        <ul style="margin-top:6px">
+          <li><code>[Feature]</code> <strong>#33</strong> Headers de sécurité côté Next.js — <span class="badge green">enhancement</span> <span class="badge red">security</span></li>
+          <li><code>[Feature]</code> <strong>#34</strong> Supervision externe de /actuator/health + status page — <span class="badge blue">ci</span> <span class="badge green">enhancement</span></li>
+          <li><code>[Docs]</code> <strong>#36</strong> Rédiger le plan de sécurisation, déploiement et dossier maintenance — <span class="badge blue">documentation</span> <span class="badge red">security</span></li>
+          <li><code>[Docs]</code> <strong>#37</strong> Veille technologique — 3 fiches — <span class="badge blue">documentation</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Filtres utiles (requêtes GitHub Issues)</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Besoin</th><th>Filtre GitHub Issues</th></tr></thead>
+        <tbody>
+          <tr><td>Bugs ouverts</td><td><code>is:open label:bug</code></td></tr>
+          <tr><td>Issues de sécurité ouvertes</td><td><code>is:open label:security</code></td></tr>
+          <tr><td>Tout le milestone BL3</td><td><code>milestone:BL3</code></td></tr>
+          <tr><td>BL3 non terminées</td><td><code>is:open milestone:BL3</code></td></tr>
+          <tr><td>Évolutions à planifier</td><td><code>is:open label:enhancement</code></td></tr>
+          <tr><td>Issues CI/CD</td><td><code>is:open label:ci</code></td></tr>
+          <tr><td>Mises à jour de dépendances</td><td><code>is:open label:dependencies</code></td></tr>
+          <tr><td>Fermées cette semaine</td><td><code>is:closed closed:>2026-07-01</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VEILLE TECH -->
+  <div class="subsection" id="veille">
+    <h3 class="subsection-title">3.3 Veille technologique</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Pourquoi faire de la veille ?</div>
+      <p>Les frameworks et bibliothèques évoluent en permanence. Une version de Symfony peut corriger 5 failles de sécurité critiques. Une mise à jour de Flutter peut améliorer les performances de 30%. Sans veille, on continue d'utiliser des versions vulnérables par ignorance. La veille technologique, c'est rester informé pour savoir quand agir.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Source</th><th>Type</th><th>Fréquence</th></tr></thead>
+        <tbody>
+          <tr><td>symfony.com/blog</td><td>Blog officiel Symfony</td><td>Hebdomadaire</td></tr>
+          <tr><td>nextjs.org/blog</td><td>Blog officiel Next.js</td><td>Mensuelle</td></tr>
+          <tr><td>flutter.dev/release/release-notes</td><td>Notes de version Flutter</td><td>Mensuelle</td></tr>
+          <tr><td>owasp.org</td><td>Sécurité web (OWASP Top 10)</td><td>Trimestrielle</td></tr>
+          <tr><td>github.com/advisories</td><td>CVE GitHub Advisory (Dependabot)</td><td>Automatique</td></tr>
+          <tr><td>php.net/releases</td><td>Sorties PHP</td><td>Mensuelle</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin:16px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">État des versions — Juillet 2026</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Technologie</th><th>Version projet</th><th>Stable</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr><td>PHP</td><td>8.4</td><td>8.4.x</td><td><span class="badge green">À jour</span></td></tr>
+          <tr><td>Symfony</td><td>8.x</td><td>8.x</td><td><span class="badge green">À jour</span></td></tr>
+          <tr><td>Next.js</td><td>16.x</td><td>16.x</td><td><span class="badge green">À jour</span></td></tr>
+          <tr><td>Flutter</td><td>3.32.0</td><td>3.32.x</td><td><span class="badge green">À jour</span></td></tr>
+          <tr><td>MySQL</td><td>8.0</td><td>8.4</td><td><span class="badge amber">Montée version à planifier</span></td></tr>
+          <tr><td>LexikJWTBundle</td><td>3.x</td><td>3.x</td><td><span class="badge green">À jour</span></td></tr>
+          <tr><td>Kotlin</td><td>1.9.25</td><td>2.x</td><td><span class="badge amber">Upgrade possible (vérif. compat. Flutter)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECTION 4 — QUESTIONS POSSIBLES
+══════════════════════════════════════ -->
+<section class="section" id="questions">
+  <div class="section-label">
+    <span class="section-num">Section 4</span>
+    <h2 class="section-title">Questions possibles à l'oral</h2>
+  </div>
+  <div class="section-divider"></div>
+  <p style="margin-top:16px">Cliquez sur une question pour afficher la réponse.</p>
+
+  <div class="qa-cat">Déploiement & Infrastructure</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Pourquoi utiliser Git Flow plutôt que de pousser directement sur main ?</summary>
+      <div class="qa-answer">
+        <p>Pousser directement sur main présente plusieurs risques : du code non testé peut partir en production, deux développeurs peuvent créer des conflits impossibles à résoudre, et il est impossible de revenir en arrière proprement. Git Flow impose que tout travail passe par une branche dédiée et une Pull Request avec review humaine + CI verte avant d'être intégré. Ça garantit que rien de cassé n'atteint la production.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Quelle est la différence entre la CI et le CD ?</summary>
+      <div class="qa-answer">
+        <p>La CI (Intégration Continue) vérifie automatiquement que le code est correct : elle lance les tests, le lint, les audits de sécurité et le build à chaque push. C'est la phase de validation. Le CD (Déploiement Continu) prend le code validé par la CI et l'envoie automatiquement vers les serveurs. C'est la phase de livraison. Les deux s'enchaînent : CI d'abord, CD seulement si tout est vert.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi Docker plutôt qu'une installation directe sur le serveur ?</summary>
+      <div class="qa-answer">
+        <p>Une installation directe sur le serveur crée des problèmes : "ça marche sur ma machine" mais pas sur le serveur à cause de différences de versions PHP ou d'extensions manquantes. Docker encapsule l'application et tout son environnement dans une image identique partout. De plus, Docker permet de lancer plusieurs versions simultanément (préprod + prod sur le même serveur), d'isoler les services via un réseau interne, et de revenir à une version précédente en changeant simplement le tag de l'image.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi avoir besoin d'une approbation manuelle pour la mise en production ?</summary>
+      <div class="qa-answer">
+        <p>Même si la CI est verte, il peut y avoir des raisons humaines de ne pas déployer : un autre déploiement est en cours, c'est vendredi soir avant un week-end, un autre bug critique vient d'être découvert, ou on attend de grouper plusieurs changements. L'approbation manuelle via GitHub Environments crée un point de contrôle humain dans un processus par ailleurs entièrement automatisé. Le "qui" approuve est tracé dans l'historique GitHub.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Que se passe-t-il si la CI échoue ?</summary>
+      <div class="qa-answer">
+        <p>Le pipeline s'arrête à l'étape en échec et tout le reste est bloqué. Le merge de la PR est verrouillé (GitHub bloque le bouton merge si des checks sont rouges). Le développeur reçoit une notification. Les étapes sont bloquantes dans l'ordre : si les tests échouent, le build Docker ne se lance pas. Si le build échoue, le déploiement ne se lance pas. C'est un filet de sécurité automatique.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>À quoi sert Vercel pour une preview par PR ?</summary>
+      <div class="qa-answer">
+        <p>Pour chaque Pull Request, Vercel déploie automatiquement le frontend sur une URL unique (ex: <code>resources-front-pr-42.vercel.app</code>). Ça permet à n'importe quel membre de l'équipe — y compris non-technique — de voir visuellement les changements sans installer quoi que ce soit. Le lien est posté automatiquement dans la PR. Une fois la PR mergée, l'URL de preview est supprimée.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Sécurité</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Pourquoi RS256 plutôt que HS256 pour les JWT ?</summary>
+      <div class="qa-answer">
+        <p>HS256 utilise un secret partagé : quiconque peut vérifier un token peut aussi en forger un. RS256 utilise une paire de clés asymétriques : seul le serveur a la clé privée (pour signer), la clé publique peut être distribuée (pour vérifier uniquement). Dans un système distribué avec une application web et mobile, si la clé publique est exposée, l'attaquant ne peut toujours pas créer de faux tokens. De plus, si une clé est compromise, seule la clé privée est sensible.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment fonctionne le rate limiting dans votre application ?</summary>
+      <div class="qa-answer">
+        <p>Le rate limiting est implémenté au niveau de l'API Symfony. Pour l'endpoint de login : maximum 5 tentatives par tranche de 15 minutes par IP. Pour le reset de mot de passe : maximum 3 demandes par heure. Si la limite est atteinte, l'API répond avec un code 429 (Too Many Requests). Ce mécanisme protège contre les attaques brute force : à 5 essais toutes les 15 minutes, il faudrait des milliers d'années pour tester toutes les combinaisons d'un mot de passe complexe.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce qu'une injection SQL et comment vous protégez-vous ?</summary>
+      <div class="qa-answer">
+        <p>Une injection SQL, c'est quand un utilisateur malveillant insère du code SQL dans un champ de formulaire pour manipuler la base de données. Exemple : si on construit <code>"SELECT * FROM users WHERE name = '" + input + "'"</code> et que l'input est <code>' OR 1=1 --</code>, on récupère tous les utilisateurs. La protection : on utilise exclusivement Doctrine ORM avec des paramètres liés. Doctrine envoie la requête et les données séparément au moteur SQL — les données ne peuvent jamais être interprétées comme du code SQL.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi les mots de passe sont hashés avec bcrypt et pas MD5 ou SHA ?</summary>
+      <div class="qa-answer">
+        <p>MD5 et SHA sont des algorithmes rapides, conçus pour être calculés le plus vite possible. Sur un GPU moderne, on peut calculer des milliards de hachages MD5 par seconde. bcrypt est volontairement lent : le paramètre "cost 13" signifie qu'il faut environ 300ms pour hasher un mot de passe. Un attaquant qui vole la base de données ne peut tester que quelques milliers de combinaisons par seconde, contre des milliards avec MD5. De plus, bcrypt "sale" automatiquement chaque hash, rendant les tables pré-calculées (rainbow tables) inutilisables.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que Gitleaks et pourquoi en avez-vous besoin ?</summary>
+      <div class="qa-answer">
+        <p>Gitleaks est un outil qui scanne l'historique complet d'un dépôt git à la recherche de secrets accidentellement commités : mots de passe, clés API, tokens, chaînes de connexion BDD. Le problème : même si on supprime un fichier dans le dernier commit, il reste dans l'historique git et quelqu'un peut le retrouver. Gitleaks tourne en CI à chaque push et bloque si un pattern suspect est détecté (ex: une chaîne qui ressemble à une clé AWS, un token JWT, un mot de passe). On a aussi configuré un fichier <code>.gitleaks.toml</code> pour les faux positifs.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Quels sont les 2 points OWASP non encore complètement traités et pourquoi ?</summary>
+      <div class="qa-answer">
+        <p><strong>A05 — Security Misconfiguration :</strong> les headers HTTP de sécurité comme Content-Security-Policy (CSP) et X-Frame-Options ne sont pas encore configurés. CSP est complexe à mettre en place (il faut lister toutes les sources autorisées pour les scripts, images, fonts) et peut casser des fonctionnalités si mal configuré. C'est en feuille de route.</p>
+        <p><strong>A08 — Software and Data Integrity :</strong> le <code>composer.lock</code> est versionné (bonne pratique), mais les releases GitHub ne sont pas encore signées cryptographiquement. La signature permettrait de vérifier qu'une release n'a pas été modifiée entre sa création et son déploiement.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment fonctionnent concrètement vos logs de sécurité ?</summary>
+      <div class="qa-answer">
+        <p>L'application maintient 4 tables de logs en base de données. <code>log_connexion</code> enregistre chaque tentative de login (succès ou échec) avec l'IP, l'horodatage et le résultat. <code>log_action</code> enregistre chaque action métier sensible (create, save, moderate, delete…) avec l'utilisateur qui l'a faite. Ces logs permettent de répondre à des questions comme "qui a supprimé cette ressource ?" ou "depuis quelles IPs ce compte a-t-il été utilisé ?". La rétention est de 12 mois pour respecter le RGPD (intérêt légitime de sécurité).</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi la BDD MySQL n'est-elle pas chiffrée au repos ?</summary>
+      <div class="qa-answer">
+        <p>C'est un choix conscient et assumé, documenté dans le plan de sécurisation. Le volume Docker MySQL n'est pas chiffré nativement, mais il est protégé par plusieurs autres couches : il est isolé sur un réseau bridge privé (aucun port 3306 exposé vers l'extérieur en production), l'accès SSH au serveur est protégé par clé, et les mots de passe en base sont hachés bcrypt (une fuite de la BDD ne compromet pas les mots de passe). La prochaine étape serait d'activer le chiffrement InnoDB ou d'utiliser un volume chiffré au niveau OS.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Maintenance</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Quelle est la différence entre maintenance préventive, évolutive et corrective ?</summary>
+      <div class="qa-answer">
+        <p><strong>Préventive :</strong> actions planifiées régulièrement pour éviter des problèmes futurs. Exemple : mettre à jour les dépendances chaque mois pour corriger des CVE avant qu'elles soient exploitées. <strong>Évolutive :</strong> faire évoluer le produit selon de nouveaux besoins. Exemple : ajouter une fonctionnalité de messagerie interne. C'est facturable (estimé en jours, TJM 350€). <strong>Corrective :</strong> réparer un bug ou un dysfonctionnement existant. Elle a des SLA : un problème critique doit être pris en charge en 2h et résolu en 24h.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi GitHub Issues plutôt qu'un outil dédié comme Jira ?</summary>
+      <div class="qa-answer">
+        <p>Jira est un outil puissant mais complexe, avec un coût, une configuration importante, et qui vit en dehors du dépôt de code. GitHub Issues est directement intégré au dépôt : un ticket peut référencer un commit (<code>fixes #42</code> dans un message de commit ferme automatiquement l'issue), une PR peut être liée à une issue, et l'historique complet est dans le même outil que le code. Pour un projet open source ou une petite équipe, c'est plus simple, gratuit, et suffisamment puissant avec les labels et milestones.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Que couvre la garantie de 30 jours sur les évolutions ?</summary>
+      <div class="qa-answer">
+        <p>Toute fonctionnalité livrée dans le cadre de la maintenance évolutive est garantie 30 jours contre les régressions directement liées à cette livraison. Concrètement : si on livre une nouvelle fonctionnalité de filtre et que ça casse le système de recherche existant, la correction est incluse sans facturation supplémentaire. En revanche, cette garantie ne couvre pas les bugs préexistants, les problèmes dus à l'infrastructure tierce, ou les modifications de comportement demandées après livraison.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi la rotation des clés JWT est-elle trimestrielle ?</summary>
+      <div class="qa-answer">
+        <p>La rotation des clés est un principe de sécurité : même si une clé privée a été compromise sans qu'on le sache, la remplacer régulièrement limite la fenêtre d'exposition. Trimestrielle (tous les 3 mois) est un compromis entre sécurité et praticité — trop fréquente, ça génère des opérations manuelles et des risques d'erreur. La rotation consiste à générer une nouvelle paire RSA, mettre à jour les GitHub Secrets, et redéployer. Tous les tokens existants deviennent invalides (TTL max 1h de toute façon), les utilisateurs se reconnectent.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que le RPO et le RTO de votre projet ?</summary>
+      <div class="qa-answer">
+        <p><strong>RPO (Recovery Point Objective) = 24h :</strong> en cas de catastrophe (serveur qui brûle, BDD corrompue), on peut perdre au maximum les données des 24 dernières heures, car la sauvegarde mysqldump est quotidienne. <strong>RTO (Recovery Time Objective) = 4h :</strong> en cas de panne, l'application doit être de nouveau accessible en moins de 4 heures. On atteint ce RTO grâce aux images Docker versionnées sur GHCR : il suffit de pointer vers le tag précédent et de relancer les conteneurs via SSH — procédure qui prend moins d'une heure.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Architecture & Concepts</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Pourquoi avoir 3 dépôts séparés plutôt qu'un seul monorepo ?</summary>
+      <div class="qa-answer">
+        <p>Chaque dépôt a son propre cycle de vie, ses propres dépendances, et son propre pipeline CI. Un développeur Flutter n'a pas besoin de télécharger les dépendances PHP pour travailler. La CI de l'app mobile ne bloque pas le déploiement de l'API. Si on met tout dans un monorepo, la configuration devient complexe (filtres de chemin, pipelines conditionnels), et le premier développeur venu qui casse la CI PHP bloque potentiellement tous les autres projets.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que le Semantic Versioning et comment vous l'utilisez ?</summary>
+      <div class="qa-answer">
+        <p>SemVer est une convention de numérotation MAJEUR.MINEUR.PATCH. MAJEUR = changement incompatible (ex: v1.0.0 → v2.0.0 si on supprime un endpoint API). MINEUR = nouvelle fonctionnalité rétrocompatible (ex: v1.0.0 → v1.1.0 si on ajoute un endpoint). PATCH = correction de bug (ex: v1.0.0 → v1.0.1). Ça permet à n'importe qui — y compris l'app mobile — de savoir si une mise à jour de l'API est sûre à adopter sans changement de code de leur côté.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi utiliser Prometheus + Grafana + Loki plutôt qu'une solution SaaS comme Datadog ?</summary>
+      <div class="qa-answer">
+        <p>Datadog est excellent mais coûteux (facturation à l'usage, rapidement plusieurs centaines d'euros/mois pour un projet sérieux). Prometheus + Grafana + Loki sont open source, auto-hébergés, et gratuits. La stack PLG (Prometheus/Loki/Grafana) est la référence du marché pour l'auto-hébergement — Grafana peut afficher métriques et logs dans le même dashboard. L'inconvénient : on gère soi-même la configuration et la rétention des données. Pour un projet CESI, c'est aussi l'occasion d'apprendre des outils industriels réels.</p>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+</main>
+</div>

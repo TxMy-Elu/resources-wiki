@@ -1,0 +1,428 @@
+<title>CI/CD Workflow — (RE)Sources</title>
+<style>
+:root {
+  --bg: #0D1B3E;
+  --bg2: #0F1E36;
+  --card: #162748;
+  --border: #253A58;
+  --blue: #1756A9;
+  --blue2: #2D6EC8;
+  --teal: #0A7E8C;
+  --green: #1A7A4A;
+  --orange: #E8891A;
+  --red: #C0392B;
+  --amber: #D47E0A;
+  --white: #FFFFFF;
+  --grey: #7B8EA0;
+  --light: #9DB4CC;
+  --text-dim: #C5D8EA;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+  padding: 36px 32px 48px;
+  min-width: 720px;
+}
+
+/* ── Header ── */
+.header { margin-bottom: 36px; }
+.header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.header h1 span { color: var(--orange); }
+.header p { font-size: 12px; color: var(--light); letter-spacing: 0.06em; margin-top: 4px; }
+
+/* ── Layout ── */
+.flow { display: flex; flex-direction: column; position: relative; }
+
+/* ── Phase row ── */
+.phase { display: flex; gap: 0; align-items: stretch; }
+
+/* Spine column */
+.spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 56px;
+  flex-shrink: 0;
+}
+.dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+}
+.connector {
+  width: 2px;
+  flex: 1;
+  min-height: 20px;
+}
+.connector.dashed { background: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 6px, transparent 6px, transparent 12px); }
+
+/* Card */
+.card {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 10px 0;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+}
+
+/* Color variants */
+.c-grey   .dot { background: var(--grey); }
+.c-grey   .connector { background: linear-gradient(to bottom, var(--grey), var(--blue2)); }
+.c-grey   .card::before { background: var(--grey); }
+
+.c-blue   .dot { background: var(--blue2); }
+.c-blue   .connector { background: linear-gradient(to bottom, var(--blue2), var(--blue)); }
+.c-blue   .card::before { background: var(--blue2); }
+
+.c-dev    .dot { background: var(--blue); }
+.c-dev    .connector { background: linear-gradient(to bottom, var(--blue), var(--teal)); }
+.c-dev    .card::before { background: var(--blue); }
+
+.c-teal   .dot { background: var(--teal); }
+.c-teal   .connector { background: linear-gradient(to bottom, var(--teal), var(--green)); }
+.c-teal   .card::before { background: var(--teal); }
+
+.c-green  .dot { background: var(--green); }
+.c-green  .connector { background: linear-gradient(to bottom, var(--green), var(--orange)); }
+.c-green  .card::before { background: var(--green); }
+
+.c-orange .dot { background: var(--orange); }
+.c-orange .connector { background: none; }
+.c-orange .card::before { background: var(--orange); }
+
+/* Phase title */
+.phase-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.phase-title { font-size: 15px; font-weight: 700; }
+.phase-trigger {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--light);
+  background: rgba(255,255,255,0.06);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+/* Workflow pills */
+.workflows { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid;
+}
+.pill.ci  { background: rgba(45,110,200,0.18); border-color: var(--blue2); color: #7DB8FF; }
+.pill.sec { background: rgba(10,126,140,0.18); border-color: var(--teal);  color: #5BE0EC; }
+.pill.cd  { background: rgba(26,122,74,0.18);  border-color: var(--green); color: #62D998; }
+.pill .dot-sm { width: 7px; height: 7px; border-radius: 50%; }
+.pill.ci  .dot-sm { background: var(--blue2); }
+.pill.sec .dot-sm { background: var(--teal); }
+.pill.cd  .dot-sm { background: var(--green); }
+
+/* Steps */
+.steps { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+.step { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+.step b { color: var(--white); }
+.step-bullet { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+
+/* Step group */
+.step-group { margin-bottom: 10px; }
+.step-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--light);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+/* Gate */
+.gate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+.gate.ok    { background: rgba(26,122,74,0.18); border: 1px solid var(--green);  color: #62D998; }
+.gate.block { background: rgba(192,57,43,0.15); border: 1px solid var(--red);    color: #F08080; }
+.gate.warn  { background: rgba(212,126,10,0.18); border: 1px solid var(--amber); color: #F5C266; }
+.gate-icon { font-size: 14px; }
+
+/* No trigger */
+.no-trig { font-size: 12px; color: var(--grey); display: flex; align-items: center; gap: 8px; }
+.no-trig-icon { font-size: 16px; }
+
+/* CD sub-grid */
+.cd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.cd-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.cd-box.manual { border-color: var(--orange); background: rgba(232,137,26,0.07); }
+.cd-num { font-size: 26px; font-weight: 900; color: var(--green); line-height: 1; font-family: 'Georgia', serif; }
+.cd-box.manual .cd-num { color: var(--orange); }
+.cd-name { font-size: 12px; font-weight: 700; margin: 4px 0 3px; }
+.cd-detail { font-size: 11px; color: var(--light); line-height: 1.45; }
+
+/* Connector row between phases */
+.conn-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 0 0 56px;
+}
+.arrow-line {
+  height: 2px;
+  flex: 1;
+  max-width: 120px;
+}
+.arrow-label {
+  font-size: 10px;
+  color: var(--light);
+  letter-spacing: 0.05em;
+  padding: 0 8px;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.legend-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--light); text-transform: uppercase; width: 100%; }
+.leg { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--light); }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+</style>
+
+<div class="header">
+  <h1>CI/CD Workflow — <span>(RE)Sources</span></h1>
+  <p>FLUX COMPLET · FEATURE → DEV → MAIN → PRODUCTION</p>
+</div>
+
+<div class="flow">
+
+  <!-- ── 1. feature/* push ── -->
+  <div class="phase c-grey">
+    <div class="spine">
+      <div class="dot">①</div>
+      <div class="connector"></div>
+    </div>
+    <div class="card">
+      <div class="phase-head">
+        <span class="phase-title">Push sur la branche feature</span>
+        <span class="phase-trigger">feature/* → push</span>
+      </div>
+      <div class="no-trig">
+        <span class="no-trig-icon">⚙</span>
+        Aucun workflow ne se déclenche — commits locaux libres, pas de CI.
+      </div>
+      <div class="gate block" style="margin-top:10px">
+        <span class="gate-icon">🚫</span>
+        Push direct sur <code style="font-family:monospace;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;">dev</code> ou <code style="font-family:monospace;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;">main</code> bloqué par les règles de protection de branche
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. PR → dev ── -->
+  <div class="phase c-blue">
+    <div class="spine">
+      <div class="dot">②</div>
+      <div class="connector"></div>
+    </div>
+    <div class="card">
+      <div class="phase-head">
+        <span class="phase-title">Pull Request ouverte → dev</span>
+        <span class="phase-trigger">pull_request (dev)</span>
+      </div>
+      <div class="workflows">
+        <span class="pill ci"><span class="dot-sm"></span>ci.yml</span>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="step-bullet" style="background:var(--blue2)"></span><span><b>PHPUnit</b> — 30 tests E2E sur MySQL réelle (pas de mock)</span></div>
+        <div class="step"><span class="step-bullet" style="background:var(--blue2)"></span><span><b>Lint</b> — PHP, YAML, configuration conteneurs</span></div>
+        <div class="step"><span class="step-bullet" style="background:var(--blue2)"></span><span><b>Coverage</b> PCOV → génère <code style="font-family:monospace;font-size:11px">coverage.xml</code></span></div>
+        <div class="step"><span class="step-bullet" style="background:var(--blue2)"></span><span><b>SonarCloud</b> — Quality Gate A · 0 bugs · 0 issues sécurité</span></div>
+      </div>
+      <div class="gate ok">
+        <span class="gate-icon">✓</span>
+        CI verte → merge autorisé · CI rouge → merge bloqué
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. Merge dev ── -->
+  <div class="phase c-dev">
+    <div class="spine">
+      <div class="dot">③</div>
+      <div class="connector"></div>
+    </div>
+    <div class="card">
+      <div class="phase-head">
+        <span class="phase-title">Merge vers dev</span>
+        <span class="phase-trigger">push dev</span>
+      </div>
+      <div class="workflows">
+        <span class="pill ci"><span class="dot-sm"></span>ci.yml</span>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="step-bullet" style="background:var(--blue)"></span><span>Même pipeline CI — validation post-merge pour détecter les conflits d'intégration</span></div>
+        <div class="step"><span class="step-bullet" style="background:var(--blue)"></span><span>Résultat visible dans les <b>GitHub Checks</b> de la branche dev</span></div>
+      </div>
+      <div class="gate ok">
+        <span class="gate-icon">✓</span>
+        dev reste toujours dans un état déployable
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. PR dev → main ── -->
+  <div class="phase c-teal">
+    <div class="spine">
+      <div class="dot">④</div>
+      <div class="connector"></div>
+    </div>
+    <div class="card">
+      <div class="phase-head">
+        <span class="phase-title">Pull Request ouverte → main</span>
+        <span class="phase-trigger">pull_request (main)</span>
+      </div>
+      <div class="workflows">
+        <span class="pill ci"><span class="dot-sm"></span>ci.yml</span>
+        <span class="pill sec"><span class="dot-sm"></span>security.yml</span>
+      </div>
+
+      <div class="step-group">
+        <div class="step-group-label">ci.yml</div>
+        <div class="steps">
+          <div class="step"><span class="step-bullet" style="background:var(--blue2)"></span><span><b>PHPUnit</b> + Lint + Coverage + SonarCloud</span></div>
+        </div>
+      </div>
+      <div class="step-group">
+        <div class="step-group-label">security.yml</div>
+        <div class="steps">
+          <div class="step"><span class="step-bullet" style="background:var(--teal)"></span><span><b>Gitleaks</b> — détection de secrets commités accidentellement</span></div>
+          <div class="step"><span class="step-bullet" style="background:var(--teal)"></span><span><b>Trivy</b> — scan CVE du code et des dépendances</span></div>
+          <div class="step"><span class="step-bullet" style="background:var(--teal)"></span><span><b>Trivy</b> — scan de l'image Docker (vulnérabilités OS + libs)</span></div>
+          <div class="step"><span class="step-bullet" style="background:var(--teal)"></span><span><b>Composer audit</b> — advisory PHP connus (Packagist)</span></div>
+        </div>
+      </div>
+      <div class="gate warn">
+        <span class="gate-icon">👤</span>
+        CI ✓ + Security ✓ + <b>1 reviewer obligatoire</b> (branche main protégée) → merge autorisé
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5. Merge main ── -->
+  <div class="phase c-green">
+    <div class="spine">
+      <div class="dot">⑤</div>
+      <div class="connector"></div>
+    </div>
+    <div class="card">
+      <div class="phase-head">
+        <span class="phase-title">Merge vers main</span>
+        <span class="phase-trigger">push main</span>
+      </div>
+      <div class="workflows">
+        <span class="pill ci"><span class="dot-sm"></span>ci.yml</span>
+        <span class="pill sec"><span class="dot-sm"></span>security.yml</span>
+        <span class="pill cd"><span class="dot-sm"></span>cd.yml</span>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="step-bullet" style="background:var(--green)"></span><span>ci.yml + security.yml rejouent en parallèle sur le code mergé</span></div>
+        <div class="step"><span class="step-bullet" style="background:var(--green)"></span><span><b>cd.yml</b> se déclenche dès que la CI est verte</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. cd.yml Pipeline ── -->
+  <div class="phase c-orange">
+    <div class="spine">
+      <div class="dot" style="background:var(--orange)">⑥</div>
+      <div class="connector"></div>
+    </div>
+    <div class="card">
+      <div class="phase-head">
+        <span class="phase-title">Pipeline de déploiement</span>
+        <span class="phase-trigger">cd.yml · CI verte sur main</span>
+      </div>
+      <div class="workflows">
+        <span class="pill cd"><span class="dot-sm"></span>cd.yml</span>
+      </div>
+      <div class="cd-grid">
+        <div class="cd-box">
+          <div class="cd-num">1</div>
+          <div class="cd-name">Build Docker</div>
+          <div class="cd-detail">Multi-stage: <code style="font-family:monospace">composer:2</code> (builder) → <code style="font-family:monospace">php:8.4-fpm-alpine</code> runtime ~50 Mo · Utilisateur non-root UID 1001</div>
+        </div>
+        <div class="cd-box">
+          <div class="cd-num">2</div>
+          <div class="cd-name">Push → GHCR</div>
+          <div class="cd-detail">Image poussée sur GitHub Container Registry · Tag <code style="font-family:monospace">:latest</code> + tag <code style="font-family:monospace">:sha-{commit}</code></div>
+        </div>
+        <div class="cd-box">
+          <div class="cd-num">3</div>
+          <div class="cd-name">Deploy pré-prod</div>
+          <div class="cd-detail">SSH vers le serveur · Pull image GHCR · Redémarre les conteneurs · <b>Automatique</b> — aucune intervention requise</div>
+        </div>
+        <div class="cd-box manual">
+          <div class="cd-num">4</div>
+          <div class="cd-name">Deploy production</div>
+          <div class="cd-detail"><b>Approbation manuelle requise</b> dans GitHub Actions · Même procédure SSH · Déclenchement uniquement après validation explicite</div>
+        </div>
+      </div>
+      <div class="gate ok" style="margin-top:12px">
+        <span class="gate-icon">🚀</span>
+        Production mise à jour — tag SemVer créé manuellement après validation
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-title">Workflows</div>
+  <div class="leg"><span class="leg-dot" style="background:var(--blue2)"></span> ci.yml — Tests · Lint · SonarCloud · Coverage</div>
+  <div class="leg"><span class="leg-dot" style="background:var(--teal)"></span> security.yml — Gitleaks · Trivy · Composer audit</div>
+  <div class="leg"><span class="leg-dot" style="background:var(--green)"></span> cd.yml — Build Docker · Push GHCR · Deploy SSH</div>
+  <div class="leg"><span class="leg-dot" style="background:var(--orange)"></span> Approbation manuelle (gate prod)</div>
+  <div class="leg"><span class="leg-dot" style="background:var(--grey)"></span> Branche non protégée (feature/*)</div>
+</div>

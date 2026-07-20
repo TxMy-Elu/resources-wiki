@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BL3 — GitHub Issues · (Re)Sources</title>
+<style>
+/* ── Tokens ──────────────────────────────────────────────────────────────── */
+:root {
+  --bg:      #0D1117;
+  --surf:    #161B22;
+  --surf2:   #21262D;
+  --border:  #30363D;
+  --text:    #E6EDF3;
+  --sub:     #9198A1;
+  --muted:   #656D76;
+  --blue:    #4493F8;
+  --blue-bg: #051D4D;
+  --green:   #3FB950;
+  --grn-bg:  #0A3929;
+  --amber:   #D29922;
+  --amb-bg:  #2D1F00;
+  --red:     #F85149;
+  --red-bg:  #490202;
+  --purple:  #C084FC;
+  --pur-bg:  #240B4D;
+  --r: 6px;
+  --sans: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+  --mono: ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+[data-theme="light"] {
+  --bg:#F6F8FA;--surf:#FFFFFF;--surf2:#EFF1F3;--border:#D0D7DE;
+  --text:#1F2328;--sub:#59636E;--muted:#818B98;
+  --blue:#0969DA;--blue-bg:#DDF4FF;--green:#1A7F37;--grn-bg:#DAFBE1;
+  --amber:#9A6700;--amb-bg:#FFF8C5;--red:#CF222E;--red-bg:#FFEBE9;
+  --purple:#8250DF;--pur-bg:#FBEFFF;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-size:14px;line-height:1.5;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.page{max-width:1100px;margin:0 auto;padding:28px 16px 56px}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.hd{display:flex;align-items:center;gap:10px;margin-bottom:28px;flex-wrap:wrap}
+.hd-icon{width:18px;height:18px;fill:var(--muted);flex-shrink:0}
+.hd-path{font-size:20px;font-weight:400;color:var(--text)}
+.hd-path span{color:var(--blue);font-weight:600}
+.badge{font-size:11px;font-weight:500;color:var(--sub);border:1px solid var(--border);border-radius:2em;padding:2px 8px}
+.hd-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.date{font-size:12px;color:var(--muted)}
+.theme-btn{background:var(--surf2);border:1px solid var(--border);border-radius:var(--r);color:var(--sub);font-size:12px;padding:4px 12px;cursor:pointer;font-family:var(--sans)}
+.theme-btn:hover{background:var(--border);color:var(--text)}
+
+/* ── KPI ─────────────────────────────────────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:580px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;inset:0 0 auto;height:3px}
+.kpi.kblue::before{background:var(--blue)}
+.kpi.kgreen::before{background:var(--green)}
+.kpi.kpurple::before{background:var(--purple)}
+.kpi.kamber::before{background:var(--amber)}
+.kpi-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.kpi-val{font-size:30px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.kpi.kblue  .kpi-val{color:var(--blue)}
+.kpi.kgreen .kpi-val{color:var(--green)}
+.kpi.kpurple .kpi-val{color:var(--purple)}
+.kpi.kamber .kpi-val{color:var(--amber)}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);margin-bottom:16px}
+.card-hd{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;background:var(--surf2);border-radius:var(--r) var(--r) 0 0}
+.card-hd svg{flex-shrink:0;fill:var(--muted)}
+.card-body{padding:16px}
+
+/* ── Milestone ───────────────────────────────────────────────────────────── */
+.ms-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ms-pct{font-size:36px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;min-width:64px}
+.ms-bar-wrap{flex:1;min-width:200px}
+.ms-track{height:8px;background:var(--surf2);border-radius:100px;overflow:hidden;margin-bottom:8px;border:1px solid var(--border)}
+.ms-fill{height:100%;background:linear-gradient(90deg,var(--green),#56d364);border-radius:100px}
+.ms-stats{display:flex;gap:16px;font-size:12px;color:var(--sub)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+/* ── Two-col ─────────────────────────────────────────────────────────────── */
+.two-col{display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px;align-items:start}
+@media(max-width:760px){.two-col{grid-template-columns:1fr}}
+
+/* ── Issue tabs ──────────────────────────────────────────────────────────── */
+.tabs{display:flex;background:var(--surf2);border-bottom:1px solid var(--border);padding:0 4px}
+.tab{display:flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:500;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;user-select:none;transition:color .15s}
+.tab.on{color:var(--text);border-color:var(--amber);font-weight:600}
+.tab:hover:not(.on){color:var(--text)}
+.tc{font-size:11px;padding:0 7px;line-height:18px;border-radius:2em;background:var(--surf2);border:1px solid var(--border)}
+.tab.on .tc{background:var(--amb-bg);border-color:transparent;color:var(--amber)}
+.tab-closed.on{border-color:var(--purple)}
+.tab-closed.on .tc{background:var(--pur-bg);color:var(--purple)}
+
+.panel{display:none}.panel.on{display:block}
+
+/* ── Issue row ───────────────────────────────────────────────────────────── */
+.iss{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.iss:last-child{border-bottom:none}
+.iss:hover{background:var(--surf2)}
+.iss-ico{flex-shrink:0;margin-top:2px}
+.iss-ico svg{display:block}
+.iss-body{flex:1;min-width:0}
+.iss-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;word-break:break-word}
+.iss-title.closed{color:var(--muted)}
+.iss-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.iss-meta{font-size:12px;color:var(--muted);margin-top:5px}
+.iss-num{color:var(--muted);margin-right:4px}
+
+/* ── Type badge ──────────────────────────────────────────────────────────── */
+.tbadge{font-size:11px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:5px;vertical-align:1px}
+.tf{background:var(--blue-bg);color:var(--blue)}
+.td{background:var(--amb-bg);color:var(--amber)}
+.tb{background:var(--red-bg);color:var(--red)}
+
+/* ── Label chips ─────────────────────────────────────────────────────────── */
+.chip{display:inline-block;font-size:11px;font-weight:500;padding:1px 8px;border-radius:2em;white-space:nowrap}
+.l-bug         {background:#490202;color:#F85149}
+.l-ci          {background:#051D4D;color:#79C0FF}
+.l-deps        {background:#051D4D;color:#79C0FF}
+.l-docker      {background:#0A2040;color:#58A6FF}
+.l-docs        {background:#0A2040;color:#79C0FF}
+.l-dup         {background:#21262D;color:#8B949E}
+.l-enh         {background:#052B40;color:#56D8FF}
+.l-gfi         {background:#3A1A6E;color:#D2A8FF}
+.l-hw          {background:#04342A;color:#7EE787}
+.l-inv         {background:#331D00;color:#E3B341}
+.l-java        {background:#451F00;color:#FFA657}
+.l-q           {background:#3A0454;color:#F0A8FF}
+.l-sec         {background:#490202;color:#F85149}
+.l-wf          {background:#21262D;color:#8B949E}
+
+[data-theme="light"] .l-bug         {background:#FFEBE9;color:#CF222E}
+[data-theme="light"] .l-ci          {background:#DDF4FF;color:#0969DA}
+[data-theme="light"] .l-deps        {background:#DDF4FF;color:#0969DA}
+[data-theme="light"] .l-docker      {background:#F0F9FF;color:#0550AE}
+[data-theme="light"] .l-docs        {background:#F0F9FF;color:#0550AE}
+[data-theme="light"] .l-dup         {background:#EFF1F3;color:#59636E}
+[data-theme="light"] .l-enh         {background:#CAEEFE;color:#055B8C}
+[data-theme="light"] .l-gfi         {background:#FBEFFF;color:#8250DF}
+[data-theme="light"] .l-hw          {background:#DAFBE1;color:#1A7F37}
+[data-theme="light"] .l-inv         {background:#FFF8C5;color:#9A6700}
+[data-theme="light"] .l-java        {background:#FFE4C8;color:#8A3300}
+[data-theme="light"] .l-q           {background:#FFE0F8;color:#A02B8C}
+[data-theme="light"] .l-sec         {background:#FFEBE9;color:#CF222E}
+[data-theme="light"] .l-wf          {background:#EFF1F3;color:#59636E;border:1px solid #D0D7DE}
+
+/* ── Labels sidebar ──────────────────────────────────────────────────────── */
+.lbl-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+.lbl-row:last-child{border:none}
+.lbl-desc{font-size:11px;color:var(--muted);text-align:right;margin-left:8px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── Filters ─────────────────────────────────────────────────────────────── */
+.filters{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.fi{background:var(--surf2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.fi-label{font-size:12px;color:var(--sub);font-weight:500;margin-bottom:3px}
+.fi-q{font-family:var(--mono);font-size:12px;color:var(--blue);word-break:break-all;user-select:all}
+
+/* ── Template ────────────────────────────────────────────────────────────── */
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.tpl-card{background:var(--surf2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px}
+.tpl-title{font-family:var(--mono);font-size:12px;color:var(--blue);font-weight:600;margin-bottom:4px}
+.tpl-body{font-size:12px;color:var(--sub);line-height:1.5}
+
+/* ── Section label ───────────────────────────────────────────────────────── */
+.sh{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:24px 0 10px}
+
+/* ── Stat inline ─────────────────────────────────────────────────────────── */
+.stat-open{color:var(--green)}
+.stat-closed{color:var(--purple)}
+
+/* ── Repo row ────────────────────────────────────────────────────────────── */
+.repo-tag{display:inline-block;font-size:11px;font-family:var(--mono);background:var(--surf2);border:1px solid var(--border);border-radius:3px;padding:1px 5px;color:var(--sub);margin-right:4px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="hd">
+    <svg class="hd-icon" viewBox="0 0 16 16"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/></svg>
+    <span class="hd-path"><span>TxMy-Elu</span> / GitHub Issues</span>
+    <span class="badge">BL3</span>
+    <div class="hd-right">
+      <span class="date">20 juillet 2026</span>
+      <button class="theme-btn" onclick="toggleTheme()">◐ Thème</button>
+    </div>
+  </div>
+
+  <!-- Repos -->
+  <p style="font-size:13px;color:var(--muted);margin-bottom:20px">
+    <span class="repo-tag">resources_front</span>
+    <span class="repo-tag">ressources_api</span>
+    <span class="repo-tag">api_zen</span>
+    <span style="margin-left:4px">· Milestone <strong style="color:var(--text)">BL3</strong> · 3 repos liés</span>
+  </p>
+
+  <!-- KPI -->
+  <div class="kpi-row">
+    <div class="kpi kblue">
+      <div class="kpi-label">Total Issues</div>
+      <div class="kpi-val">19</div>
+      <div class="kpi-sub">3 repos · milestone BL3</div>
+    </div>
+    <div class="kpi kgreen">
+      <div class="kpi-label">Ouvertes</div>
+      <div class="kpi-val">12</div>
+      <div class="kpi-sub">En cours · à traiter</div>
+    </div>
+    <div class="kpi kpurple">
+      <div class="kpi-label">Fermées</div>
+      <div class="kpi-val">7</div>
+      <div class="kpi-sub">Complétées</div>
+    </div>
+    <div class="kpi kamber">
+      <div class="kpi-label">Labels</div>
+      <div class="kpi-val">13</div>
+      <div class="kpi-sub">Catégories définies</div>
+    </div>
+  </div>
+
+  <!-- Milestone -->
+  <div class="card">
+    <div class="card-hd">
+      <svg width="16" height="16" viewBox="0 0 16 16"><path d="M7.75 0a.75.75 0 0 1 .75.75V3h3.634c.414 0 .814.147 1.13.414l2.07 1.75a1.75 1.75 0 0 1 0 2.672l-2.07 1.75a1.75 1.75 0 0 1-1.13.414H8.5v5.25a.75.75 0 0 1-1.5 0V10H2.75A1.75 1.75 0 0 1 1 8.25v-4.5C1 2.784 1.784 2 2.75 2H7V.75A.75.75 0 0 1 7.75 0Z"/></svg>
+      Milestone BL3 — Bloc 3 : sécurisation, déploiement, maintenance
+    </div>
+    <div class="card-body">
+      <div class="ms-row">
+        <span class="ms-pct">42%</span>
+        <div class="ms-bar-wrap">
+          <div class="ms-track"><div class="ms-fill" style="width:42%"></div></div>
+          <div class="ms-stats">
+            <span><span class="dot" style="background:var(--green)"></span>7 fermées</span>
+            <span><span class="dot" style="background:var(--muted)"></span>12 ouvertes</span>
+            <span style="margin-left:auto">Pas de date limite</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issues + Labels -->
+  <div class="two-col">
+
+    <!-- Issues -->
+    <div class="card" style="margin:0">
+      <div class="tabs">
+        <div class="tab on" id="t-open" onclick="switchTab('open')">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg>
+          Ouvertes <span class="tc">12</span>
+        </div>
+        <div class="tab tab-closed" id="t-closed" onclick="switchTab('closed')">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg>
+          Fermées <span class="tc">7</span>
+        </div>
+      </div>
+
+      <div class="panel on" id="p-open">
+        <!-- resources_front open -->
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge tf">[Feature]</span>Headers de sécurité HTTP côté Next.js (CSP, HSTS, X-Frame-Options)</div>
+            <div class="iss-chips"><span class="chip l-sec">security</span><span class="chip l-enh">enhancement</span></div>
+            <div class="iss-meta"><span class="iss-num">#11</span>resources_front · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge tf">[Feature]</span>Page de statut et supervision externe de l'API</div>
+            <div class="iss-chips"><span class="chip l-ci">ci</span><span class="chip l-enh">enhancement</span></div>
+            <div class="iss-meta"><span class="iss-num">#12</span>resources_front · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge td">[Docs]</span>Rédiger le README de déploiement (Vercel + variables d'env)</div>
+            <div class="iss-chips"><span class="chip l-docs">documentation</span></div>
+            <div class="iss-meta"><span class="iss-num">#13</span>resources_front · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge td">[Docs]</span>Veille technologique — 3 fiches (Next.js, Tailwind, Supabase)</div>
+            <div class="iss-chips"><span class="chip l-docs">documentation</span></div>
+            <div class="iss-meta"><span class="iss-num">#14</span>resources_front · milestone BL3</div>
+          </div>
+        </div>
+        <!-- ressources_api open -->
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge tf">[Feature]</span>Rate limiting sur les endpoints publics</div>
+            <div class="iss-chips"><span class="chip l-sec">security</span><span class="chip l-enh">enhancement</span></div>
+            <div class="iss-meta"><span class="iss-num">#27</span>ressources_api · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge tf">[Feature]</span>Health check endpoint + métriques Prometheus</div>
+            <div class="iss-chips"><span class="chip l-ci">ci</span><span class="chip l-enh">enhancement</span></div>
+            <div class="iss-meta"><span class="iss-num">#28</span>ressources_api · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge td">[Docs]</span>Documenter les 44 endpoints API (OpenAPI / Swagger)</div>
+            <div class="iss-chips"><span class="chip l-docs">documentation</span></div>
+            <div class="iss-meta"><span class="iss-num">#29</span>ressources_api · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge td">[Docs]</span>Veille technologique — 3 fiches (Symfony, Docker, GitHub Actions)</div>
+            <div class="iss-chips"><span class="chip l-docs">documentation</span></div>
+            <div class="iss-meta"><span class="iss-num">#30</span>ressources_api · milestone BL3</div>
+          </div>
+        </div>
+        <!-- api_zen open -->
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge tf">[Feature]</span>Headers de sécurité côté Next.js</div>
+            <div class="iss-chips"><span class="chip l-enh">enhancement</span><span class="chip l-sec">security</span></div>
+            <div class="iss-meta"><span class="iss-num">#33</span>api_zen · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge tf">[Feature]</span>Supervision externe de /actuator/health + status page</div>
+            <div class="iss-chips"><span class="chip l-ci">ci</span><span class="chip l-enh">enhancement</span></div>
+            <div class="iss-meta"><span class="iss-num">#34</span>api_zen · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge td">[Docs]</span>Rédiger le plan de sécurisation, déploiement et maintenance</div>
+            <div class="iss-chips"><span class="chip l-docs">documentation</span><span class="chip l-sec">security</span></div>
+            <div class="iss-meta"><span class="iss-num">#36</span>api_zen · milestone BL3</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--green)"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title"><span class="tbadge td">[Docs]</span>Veille technologique — 3 fiches</div>
+            <div class="iss-chips"><span class="chip l-docs">documentation</span></div>
+            <div class="iss-meta"><span class="iss-num">#37</span>api_zen · milestone BL3</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="p-closed">
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title closed"><span class="tbadge tb">[Bug]</span>Token JWT non rafraîchi — déconnexion silencieuse après expiration</div>
+            <div class="iss-chips"><span class="chip l-bug">bug</span></div>
+            <div class="iss-meta"><span class="iss-num">#16</span>resources_front · fermée</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title closed"><span class="tbadge tb">[Bug]</span>Rechargement sur page protégée → redirect loop si localStorage vide</div>
+            <div class="iss-chips"><span class="chip l-bug">bug</span></div>
+            <div class="iss-meta"><span class="iss-num">#17</span>resources_front · fermée</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title closed"><span class="tbadge tb">[Bug]</span>Mot de passe réinitialisé mais token JWT toujours valide</div>
+            <div class="iss-chips"><span class="chip l-bug">bug</span><span class="chip l-sec">security</span></div>
+            <div class="iss-meta"><span class="iss-num">#31</span>ressources_api · fermée</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title closed"><span class="tbadge tb">[Bug]</span>Dependabot bumpe symfony/security-bundle sans mettre à jour les tests</div>
+            <div class="iss-chips"><span class="chip l-bug">bug</span><span class="chip l-deps">dependencies</span></div>
+            <div class="iss-meta"><span class="iss-num">#32</span>ressources_api · fermée</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title closed"><span class="tbadge tb">[Bug]</span>Reconnexion impossible après réinitialisation du mot de passe</div>
+            <div class="iss-chips"><span class="chip l-bug">bug</span></div>
+            <div class="iss-meta"><span class="iss-num">#41</span>api_zen · fermée</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title closed"><span class="tbadge td">[Docs]</span>Mettre à jour le wiki CESIZen</div>
+            <div class="iss-chips"><span class="chip l-docs">documentation</span></div>
+            <div class="iss-meta"><span class="iss-num">#38</span>api_zen · fermée</div>
+          </div>
+        </div>
+        <div class="iss">
+          <div class="iss-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="var(--purple)"><path d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"/><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"/></svg></div>
+          <div class="iss-body">
+            <div class="iss-title closed"><span class="tbadge tb">[Bug]</span>Dependabot bumpe jjwt-jackson sans jjwt-api ni jjwt-impl</div>
+            <div class="iss-chips"><span class="chip l-bug">bug</span><span class="chip l-deps">dependencies</span></div>
+            <div class="iss-meta"><span class="iss-num">#32</span>api_zen · fermée</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Labels -->
+    <div class="card" style="margin:0">
+      <div class="card-hd">
+        <svg width="14" height="14" viewBox="0 0 16 16"><path d="M1 7.775V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm1.5 0c0 .066.026.13.073.177l6.25 6.25a.25.25 0 0 0 .354 0l5.025-5.025a.25.25 0 0 0 0-.354l-6.25-6.25a.25.25 0 0 0-.177-.073H2.75a.25.25 0 0 0-.25.25ZM6 5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z"/></svg>
+        Labels <span style="color:var(--muted);font-weight:400">(13)</span>
+      </div>
+      <div style="padding:4px 14px 10px">
+        <div class="lbl-row"><span class="chip l-bug">bug</span><span class="lbl-desc">Dysfonctionnement</span></div>
+        <div class="lbl-row"><span class="chip l-ci">ci</span><span class="lbl-desc">GitHub Actions</span></div>
+        <div class="lbl-row"><span class="chip l-deps">dependencies</span><span class="lbl-desc">Bumps versions</span></div>
+        <div class="lbl-row"><span class="chip l-docker">docker</span><span class="lbl-desc">Dockerfile, compose</span></div>
+        <div class="lbl-row"><span class="chip l-docs">documentation</span><span class="lbl-desc">Docs, wiki, BL3</span></div>
+        <div class="lbl-row"><span class="chip l-dup">duplicate</span><span class="lbl-desc">Doublon</span></div>
+        <div class="lbl-row"><span class="chip l-enh">enhancement</span><span class="lbl-desc">Nouvelle fonctionnalité</span></div>
+        <div class="lbl-row"><span class="chip l-gfi">good first issue</span><span class="lbl-desc">Bon point d'entrée</span></div>
+        <div class="lbl-row"><span class="chip l-hw">help wanted</span><span class="lbl-desc">Aide extérieure</span></div>
+        <div class="lbl-row"><span class="chip l-inv">invalid</span><span class="lbl-desc">Non reproductible</span></div>
+        <div class="lbl-row"><span class="chip l-q">question</span><span class="lbl-desc">Clarification</span></div>
+        <div class="lbl-row"><span class="chip l-sec">security</span><span class="lbl-desc">Sécurité / CVE</span></div>
+        <div class="lbl-row"><span class="chip l-wf">wontfix</span><span class="lbl-desc">Hors périmètre</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <p class="sh">Filtres rapides</p>
+  <div class="filters">
+    <div class="fi"><div class="fi-label">Bugs ouverts</div><div class="fi-q">is:open label:bug</div></div>
+    <div class="fi"><div class="fi-label">Issues sécurité</div><div class="fi-q">is:open label:security</div></div>
+    <div class="fi"><div class="fi-label">Tout BL3</div><div class="fi-q">milestone:BL3</div></div>
+    <div class="fi"><div class="fi-label">BL3 non terminées</div><div class="fi-q">is:open milestone:BL3</div></div>
+    <div class="fi"><div class="fi-label">Évolutions</div><div class="fi-q">is:open label:enhancement</div></div>
+    <div class="fi"><div class="fi-label">Issues CI/CD</div><div class="fi-q">is:open label:ci</div></div>
+    <div class="fi"><div class="fi-label">Dépendances</div><div class="fi-q">is:open label:dependencies</div></div>
+    <div class="fi"><div class="fi-label">Fermées ce mois</div><div class="fi-q">is:closed closed:&gt;2026-07-01</div></div>
+  </div>
+
+  <!-- Template -->
+  <p class="sh">Convention — template d'issue</p>
+  <div style="margin-bottom:8px;font-size:13px;color:var(--sub)">
+    Préfixe obligatoire :
+    <span class="tbadge tb" style="vertical-align:1px">[Bug]</span>
+    <span class="tbadge tf" style="vertical-align:1px">[Feature]</span>
+    <span class="tbadge td" style="vertical-align:1px">[Docs]</span>
+    + 5 sections ci-dessous
+  </div>
+  <div class="tpl-grid">
+    <div class="tpl-card"><div class="tpl-title">## Besoin</div><div class="tpl-body">Description du problème ou du besoin constaté.</div></div>
+    <div class="tpl-card"><div class="tpl-title">## User story</div><div class="tpl-body">En tant que [rôle], je veux [action] afin que [bénéfice].</div></div>
+    <div class="tpl-card"><div class="tpl-title">## Critères d'acceptation</div><div class="tpl-body">- [ ] Critère mesurable<br>- [ ] Testé sur [env]</div></div>
+    <div class="tpl-card"><div class="tpl-title">## Périmètre</div><div class="tpl-body">Frontend / API / Mobile / Infra</div></div>
+    <div class="tpl-card"><div class="tpl-title">## Notes techniques</div><div class="tpl-body">Contraintes, liens, fichiers concernés.</div></div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(t) {
+  ['open','closed'].forEach(x => {
+    document.getElementById('t-'+x).classList.toggle('on', x===t);
+    document.getElementById('p-'+x).classList.toggle('on', x===t);
+    if(x==='closed') document.getElementById('t-'+x).classList.toggle('tab-closed', true);
+  });
+}
+function toggleTheme() {
+  const r = document.documentElement;
+  r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>
