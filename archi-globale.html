@@ -1,0 +1,679 @@
+<title>Architecture Globale — (RE)Sources Relationnelles</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --navy:#0C2550;
+  --blue:#1A4BAD;
+  --blue2:#2560D0;
+  --blue-light:#EAF1FF;
+  --blue-border:#3B6BC8;
+  --api-bg:#1A3F7A;
+  --api-border:#2560D0;
+  --orange:#D4780A;
+  --orange-dim:#FFF4E0;
+  --green:#1B7F48;
+  --green-dim:#E6F7EE;
+  --teal:#0A7A6A;
+  --teal-dim:#E0F5F2;
+  --red:#B83030;
+  --red-dim:#FEF0F0;
+  --purple:#5C3A9E;
+  --purple-dim:#F0ECFD;
+  --surface:#F5F8FF;
+  --border:#C8D6F0;
+  --text:#1A1F36;
+  --sub:#4A5A7A;
+  --muted:#7A8AAA;
+  --white:#FFFFFF;
+  --arrow:#4A6090;
+  --mono:ui-monospace,'SF Mono',Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --navy:#0D1A3A;--blue:#2560D0;--blue2:#3D78E8;
+  --blue-light:#0D1E40;--blue-border:#2D4A7A;
+  --api-bg:#0A2050;--api-border:#2560D0;
+  --orange:#E07B00;--orange-dim:#2A1800;
+  --green:#2ECC8A;--green-dim:#0A2018;
+  --teal:#2EC4B6;--teal-dim:#0A1E1C;
+  --red:#E85576;--red-dim:#280A12;
+  --purple:#9B7FEF;--purple-dim:#1A1030;
+  --surface:#0D1525;--border:rgba(100,130,200,0.15);
+  --text:#C8D5F0;--sub:#7A94C0;--muted:#4A6080;
+  --white:#151E30;--arrow:#3D6090;
+}}
+:root[data-theme="dark"]{
+  --navy:#0D1A3A;--blue:#2560D0;--blue2:#3D78E8;
+  --blue-light:#0D1E40;--blue-border:#2D4A7A;
+  --api-bg:#0A2050;--api-border:#2560D0;
+  --orange:#E07B00;--orange-dim:#2A1800;
+  --green:#2ECC8A;--green-dim:#0A2018;
+  --teal:#2EC4B6;--teal-dim:#0A1E1C;
+  --red:#E85576;--red-dim:#280A12;
+  --purple:#9B7FEF;--purple-dim:#1A1030;
+  --surface:#0D1525;--border:rgba(100,130,200,0.15);
+  --text:#C8D5F0;--sub:#7A94C0;--muted:#4A6080;
+  --white:#151E30;--arrow:#3D6090;
+}
+:root[data-theme="light"]{
+  --navy:#0C2550;--blue:#1A4BAD;--blue2:#2560D0;
+  --blue-light:#EAF1FF;--blue-border:#3B6BC8;
+  --api-bg:#1A3F7A;--api-border:#2560D0;
+  --orange:#D4780A;--orange-dim:#FFF4E0;
+  --green:#1B7F48;--green-dim:#E6F7EE;
+  --teal:#0A7A6A;--teal-dim:#E0F5F2;
+  --red:#B83030;--red-dim:#FEF0F0;
+  --purple:#5C3A9E;--purple-dim:#F0ECFD;
+  --surface:#F5F8FF;--border:#C8D6F0;
+  --text:#1A1F36;--sub:#4A5A7A;--muted:#7A8AAA;
+  --white:#FFFFFF;--arrow:#4A6090;
+}
+body{font-family:var(--sans);background:var(--surface);color:var(--text);font-size:14px;line-height:1.6}
+a{color:var(--blue);text-decoration:none}
+
+/* ── Header ── */
+.page-header{background:var(--navy);color:#E8F0FF;padding:28px 32px 24px;position:relative}
+.page-header .eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#5A8FD8;margin-bottom:8px}
+.page-header h1{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:10px}
+.page-header .desc{font-size:14px;color:#8AAADA;max-width:620px}
+.theme-btn{position:absolute;top:24px;right:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#8AAADA;font-size:12px;padding:5px 14px;cursor:pointer;font-family:var(--sans)}
+.theme-btn:hover{background:rgba(255,255,255,.14);color:#C8D8F0}
+
+/* ── Main layout ── */
+.page{max-width:1060px;margin:0 auto;padding:32px 24px 60px}
+
+/* ── Section titles ── */
+.sec-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:40px 0 16px;display:flex;align-items:center;gap:10px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ════════════════════════════════════════
+   ARCHITECTURE DIAGRAM
+════════════════════════════════════════ */
+.diagram-wrap{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px 20px 20px;overflow-x:auto}
+.diagram{min-width:600px;max-width:860px;margin:0 auto;font-size:13px}
+
+/* Row helpers */
+.d-row{display:flex;justify-content:center;align-items:stretch;gap:14px;margin-bottom:0}
+.d-center{display:flex;flex-direction:column;align-items:center}
+
+/* Boxes */
+.dbox{border-radius:7px;padding:10px 14px;text-align:center;flex:1}
+.dbox-name{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:3px}
+.dbox-meta{font-size:11px;line-height:1.5}
+
+.db-client{background:var(--blue-light);border:1.5px solid var(--blue-border)}
+.db-client .dbox-name{color:var(--navy)}
+.db-client .dbox-meta{color:var(--sub)}
+
+.db-front{background:var(--navy);border:2px solid var(--blue2)}
+.db-front .dbox-name{color:#FFFFFF}
+.db-front .dbox-meta{color:#7AAAE8}
+.db-front .dbox-meta .hl{color:#F5A623}
+
+.db-nginx{background:var(--navy);border:2px solid #5080C0;width:100%}
+.db-nginx .dbox-name{color:#FFFFFF}
+.db-nginx .dbox-meta{color:#7AAAE8}
+
+.db-api{background:var(--api-bg);border:2px solid var(--blue2);width:100%}
+.db-api .dbox-name{color:#FFFFFF;font-size:15px}
+.db-api .dbox-meta{color:#AABDE0}
+.db-api .dbox-meta .hl{color:#F5A623}
+
+.db-data{background:var(--white);border:1.5px solid var(--blue-border)}
+.db-data .dbox-name{color:var(--navy)}
+.db-data .dbox-meta{color:var(--sub)}
+
+/* Arrow column */
+.arr-col{display:flex;flex-direction:column;align-items:center;padding:2px 0}
+.arr-line{width:2px;background:var(--arrow)}
+.arr-line.s{height:20px}
+.arr-line.d{height:20px;background:repeating-linear-gradient(to bottom,var(--arrow) 0 4px,transparent 4px 8px)}
+.arr-line.s::after,.arr-line.d::after{content:'';display:block;margin-top:-1px;margin-left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--arrow)}
+.arr-label{font-size:10.5px;color:var(--muted);font-style:italic;white-space:nowrap;padding:1px 6px;background:var(--surface);border-radius:3px;border:1px solid var(--border);margin-bottom:2px}
+
+/* Data row */
+.d-data-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:0;margin-top:0}
+.d-data-arr{display:flex;flex-direction:column;align-items:center}
+.d-data-arr .arr-line.s{height:26px}
+.d-data-arr .arr-line.d{height:26px}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);justify-content:center}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--sub)}
+.leg-line{height:2px;width:28px;border-radius:1px;background:var(--arrow)}
+.leg-line.dashed{background:repeating-linear-gradient(to right,var(--arrow) 0 5px,transparent 5px 9px)}
+
+/* ════════════════════════════════════════
+   COMPONENT CARDS
+════════════════════════════════════════ */
+.components{display:flex;flex-direction:column;gap:16px}
+.ccard{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.ccard-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.ccard-icon{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ccard-title{font-size:15px;font-weight:700;color:var(--text)}
+.ccard-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.ccard-body{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.ccard-body{grid-template-columns:1fr}}
+
+.ccard-body.single{grid-template-columns:1fr}
+.ccard-body.three{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:700px){.ccard-body.three{grid-template-columns:1fr}}
+
+.cfield{display:flex;flex-direction:column;gap:3px}
+.cfield-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.cfield-val{font-size:13.5px;color:var(--text);line-height:1.5}
+.cfield-val code{font-family:var(--mono);font-size:12px;background:var(--surface);padding:1px 5px;border-radius:3px;border:1px solid var(--border)}
+
+/* Tags */
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.tag.blue{background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-border)}
+.tag.green{background:var(--green-dim);color:var(--green)}
+.tag.amber{background:var(--orange-dim);color:var(--orange)}
+.tag.red{background:var(--red-dim);color:var(--red)}
+.tag.purple{background:var(--purple-dim);color:var(--purple)}
+.tag.teal{background:var(--teal-dim);color:var(--teal)}
+
+/* Flow chips */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:0;background:var(--surface);border-radius:6px;padding:12px 14px;border:1px solid var(--border)}
+.flow-step{background:var(--white);border:1px solid var(--border);border-radius:5px;padding:5px 10px;font-size:12px;color:var(--text);font-weight:500;white-space:nowrap}
+.flow-arr{padding:0 6px;color:var(--muted);font-size:14px}
+
+/* Table */
+.t-wrap{overflow-x:auto;border-radius:6px;border:1px solid var(--border)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+thead tr{background:var(--surface)}
+thead th{padding:8px 12px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.04em;color:var(--muted);border-bottom:1px solid var(--border)}
+tbody tr:nth-child(even){background:var(--surface)}
+tbody td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:none}
+
+/* Color accent left border on cards */
+.accent-blue{border-left:3px solid var(--blue)}
+.accent-green{border-left:3px solid var(--green)}
+.accent-teal{border-left:3px solid var(--teal)}
+.accent-orange{border-left:3px solid var(--orange)}
+.accent-purple{border-left:3px solid var(--purple)}
+.accent-navy{border-left:3px solid var(--navy)}
+
+/* Full-span */
+.span2{grid-column:1/-1}
+
+ul.detail-list{padding-left:16px;display:flex;flex-direction:column;gap:4px}
+ul.detail-list li{font-size:13px;color:var(--text);line-height:1.5}
+</style>
+
+<div class="page-header">
+  <div class="eyebrow">BL3 · Architecture</div>
+  <h1>Architecture globale — (RE)Sources Relationnelles</h1>
+  <p class="desc">Schéma complet de l'architecture applicative et infrastructure : clients, frontends, proxy, API, données et monitoring.</p>
+  <button class="theme-btn" onclick="document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark')">◐ Thème</button>
+</div>
+
+<div class="page">
+
+  <!-- ════ DIAGRAM ════ -->
+  <div class="sec-title">Schéma d'architecture</div>
+
+  <div class="diagram-wrap">
+    <div class="diagram">
+
+      <!-- ROW 1 — Clients -->
+      <div class="d-row">
+        <div class="dbox db-client">
+          <div class="dbox-name">Citoyen</div>
+          <div class="dbox-meta">Navigateur web</div>
+        </div>
+        <div class="dbox db-client">
+          <div class="dbox-name">Admin · Modérateur</div>
+          <div class="dbox-meta">Back-office web</div>
+        </div>
+        <div class="dbox db-client">
+          <div class="dbox-name">Utilisateur mobile</div>
+          <div class="dbox-meta">Android · iOS</div>
+        </div>
+      </div>
+
+      <!-- Arrows clients → frontends -->
+      <div class="d-row" style="gap:14px;margin:0">
+        <div class="d-center" style="flex:2">
+          <div class="arr-col"><div class="arr-line s" style="height:10px"></div></div>
+        </div>
+        <div class="d-center" style="flex:1">
+          <div class="arr-col"><div class="arr-line s" style="height:10px"></div></div>
+        </div>
+      </div>
+
+      <!-- ROW 2 — Frontends -->
+      <div class="d-row">
+        <div class="dbox db-front" style="flex:2">
+          <div class="dbox-name">Next.js 16</div>
+          <div class="dbox-meta"><span class="hl">resources_front</span> &nbsp;·&nbsp; Vercel &nbsp;·&nbsp; SSR</div>
+        </div>
+        <div class="dbox db-front" style="flex:1">
+          <div class="dbox-name">Flutter 3.32</div>
+          <div class="dbox-meta"><span class="hl">re_flutter</span> &nbsp;·&nbsp; APK release</div>
+        </div>
+      </div>
+
+      <!-- Arrow → Nginx -->
+      <div style="display:flex;align-items:flex-end;gap:14px;padding:0">
+        <div class="d-center" style="flex:2">
+          <div class="arr-label">HTTPS · JWT RS256</div>
+          <div class="arr-col"><div class="arr-line s"></div></div>
+        </div>
+        <div class="d-center" style="flex:1">
+          <div class="arr-label">HTTPS · JWT RS256</div>
+          <div class="arr-col"><div class="arr-line s"></div></div>
+        </div>
+      </div>
+
+      <!-- ROW 3 — Nginx -->
+      <div class="dbox db-nginx">
+        <div class="dbox-name">Nginx &nbsp;·&nbsp; Reverse Proxy &nbsp;·&nbsp; HTTPS</div>
+        <div class="dbox-meta">TLS 1.2+ · Let's Encrypt · nginx:alpine · :80→443 (prod) · :8080→80 (dev)</div>
+      </div>
+
+      <!-- Arrow → API -->
+      <div class="d-center">
+        <div class="arr-label">FastCGI :9000</div>
+        <div class="arr-col"><div class="arr-line s"></div></div>
+      </div>
+
+      <!-- ROW 4 — API -->
+      <div class="dbox db-api">
+        <div class="dbox-name">API REST &nbsp;—&nbsp; Symfony 8</div>
+        <div class="dbox-meta"><span class="hl">ressources_api</span> &nbsp;·&nbsp; PHP 8.4-fpm-alpine &nbsp;·&nbsp; JWT RS256 &nbsp;·&nbsp; RBAC 4 rôles &nbsp;·&nbsp; 44 endpoints &nbsp;·&nbsp; UID 1001</div>
+      </div>
+
+      <!-- ROW 5 — Data arrows + boxes -->
+      <div class="d-data-row">
+        <div class="d-data-arr">
+          <div class="arr-col" style="align-items:flex-end;padding-right:30%">
+            <div class="arr-label">Doctrine ORM · SQL</div>
+            <div class="arr-line s" style="height:20px"></div>
+          </div>
+        </div>
+        <div style="width:40px"></div>
+        <div class="d-data-arr">
+          <div class="arr-col" style="align-items:flex-start;padding-left:30%">
+            <div class="arr-label">SDK Supabase PHP</div>
+            <div class="arr-line d" style="height:20px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-row">
+        <div class="dbox db-data accent-blue">
+          <div class="dbox-name">MySQL 8.0</div>
+          <div class="dbox-meta">Docker · volume persistant db_data · port 3306 (interne)</div>
+        </div>
+        <div class="dbox db-data accent-teal">
+          <div class="dbox-name">Supabase Storage</div>
+          <div class="dbox-meta">Fichiers médias · bucket Ressources · CDN public</div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="leg-item"><div class="leg-line"></div>Connexion directe (JWT / SQL)</div>
+        <div class="leg-item"><div class="leg-line dashed"></div>Accès SDK externe (Supabase)</div>
+        <div class="leg-item" style="color:var(--muted);font-size:11px">⚠️ Seul Nginx expose les ports vers Internet — MySQL et PHP-FPM sont invisibles depuis l'extérieur</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ COMPOSANTS DÉTAILLÉS ════ -->
+  <div class="sec-title">Détail des composants</div>
+  <div class="components">
+
+    <!-- CLIENTS -->
+    <div class="ccard accent-navy">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:var(--blue-light)">👥</div>
+        <div>
+          <div class="ccard-title">Clients — 3 profils</div>
+          <div class="ccard-sub">Navigateurs web et application mobile</div>
+        </div>
+      </div>
+      <div class="ccard-body three">
+        <div class="cfield">
+          <div class="cfield-label">Citoyen</div>
+          <div class="cfield-val">Accès en lecture — consulter, télécharger, commenter les ressources. Rôle <code>ROLE_CONNECTED</code>.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Admin · Modérateur</div>
+          <div class="cfield-val">Back-office web via Next.js. Gère utilisateurs, contenu, statistiques. Rôles <code>ROLE_MODERATOR</code> / <code>ROLE_ADMIN</code> / <code>ROLE_SUPER_ADMIN</code>.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Utilisateur mobile</div>
+          <div class="cfield-val">Application Flutter (Android/iOS). Même API REST, JWT stocké dans <code>flutter_secure_storage</code> (keychain natif).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXT.JS -->
+    <div class="ccard accent-blue">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:var(--blue-light)">⬡</div>
+        <div>
+          <div class="ccard-title">Next.js 16 — Frontend Web</div>
+          <div class="ccard-sub">resources_front · déployé sur Vercel</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="cfield">
+          <div class="cfield-label">Stack technique</div>
+          <div class="tags">
+            <span class="tag blue">Next.js 16</span>
+            <span class="tag blue">React 18</span>
+            <span class="tag blue">TypeScript</span>
+            <span class="tag blue">Tailwind CSS</span>
+            <span class="tag blue">pnpm 9</span>
+          </div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Rendu</div>
+          <div class="cfield-val">SSR (Server-Side Rendering) — les pages sont pré-rendues côté serveur Vercel pour le SEO et la performance. Certaines routes sont client-only (dashboard).</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Hébergement</div>
+          <div class="cfield-val">Vercel — déploiement automatique sur chaque push <code>main</code>. Chaque PR génère une URL de prévisualisation unique.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Communication API</div>
+          <div class="cfield-val">Appels HTTPS vers l'API Symfony avec <code>Authorization: Bearer &lt;JWT&gt;</code>. Variables d'env : <code>NEXT_PUBLIC_API_URL</code>, <code>NEXT_PUBLIC_SUPABASE_URL</code>.</div>
+        </div>
+        <div class="cfield span2">
+          <div class="cfield-label">Sécurité headers (à implémenter — OWASP A05)</div>
+          <div class="cfield-val">CSP, HSTS, X-Frame-Options, X-Content-Type-Options à configurer dans <code>next.config.js</code> → issue <strong>#11</strong> ouverte.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLUTTER -->
+    <div class="ccard accent-teal">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:var(--teal-dim)">🐦</div>
+        <div>
+          <div class="ccard-title">Flutter 3.32 — Application Mobile</div>
+          <div class="ccard-sub">re_flutter · APK Android · iOS (en cours)</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="cfield">
+          <div class="cfield-label">Stack technique</div>
+          <div class="tags">
+            <span class="tag teal">Flutter 3.32</span>
+            <span class="tag teal">Dart 3</span>
+            <span class="tag teal">dio (HTTP)</span>
+            <span class="tag teal">GoRouter</span>
+            <span class="tag teal">flutter_secure_storage</span>
+          </div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Architecture</div>
+          <div class="cfield-val">Compilation AOT (Ahead-Of-Time) vers code machine ARM. Moteur Skia/Impeller pour le rendu UI — identique Android et iOS pixel-perfect.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Stockage JWT</div>
+          <div class="cfield-val"><code>flutter_secure_storage</code> → KeyStore Android (API 23+) et Keychain iOS. Le token n'est jamais en mémoire non protégée.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Distribution</div>
+          <div class="cfield-val">APK release buildé en CI (GitHub Actions, runner Ubuntu, Java 17 Temurin). Archivé 7 jours comme artefact GitHub. Play Store non encore configuré.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NGINX -->
+    <div class="ccard accent-navy">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:#E0E8F0">🔒</div>
+        <div>
+          <div class="ccard-title">Nginx — Reverse Proxy & Terminaison SSL</div>
+          <div class="ccard-sub">resources_nginx · nginx:alpine · seul point d'entrée exposé vers Internet</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="cfield">
+          <div class="cfield-label">Rôle principal</div>
+          <div class="cfield-val">Reverse proxy : reçoit toutes les requêtes entrantes et les route. Gère le chiffrement TLS — PHP reçoit les requêtes en HTTP simple en interne, ce qui simplifie la config Symfony.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Certificat SSL</div>
+          <div class="cfield-val">Let's Encrypt — renouvellement automatique via Certbot (cron) tous les 90 jours. TLS 1.2 minimum, TLS 1.0/1.1 désactivés.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Ports exposés</div>
+          <div class="tags">
+            <span class="tag amber">:443 → HTTPS prod</span>
+            <span class="tag blue">:8080 → HTTP dev</span>
+          </div>
+          <div class="cfield-val" style="margin-top:4px">Tous les autres ports (MySQL :3306, PHP-FPM :9000) sont invisibles depuis Internet.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Protocole vers PHP</div>
+          <div class="cfield-val">FastCGI sur <code>resources_php:9000</code> (réseau bridge Docker interne). Nginx passe les requêtes à PHP-FPM, récupère la réponse, la retransmet au client.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Fichiers statiques</div>
+          <div class="cfield-val">Nginx sert les assets statiques (images, CSS, JS) directement sans passer par PHP — 10× plus rapide. PHP n'est appelé que pour la logique métier.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Image</div>
+          <div class="cfield-val"><code>nginx:alpine</code> — ~25 MB. Alpine Linux pour la surface d'attaque minimale.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API SYMFONY -->
+    <div class="ccard accent-blue">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:var(--blue-light)">⚙️</div>
+        <div>
+          <div class="ccard-title">API REST — Symfony 8 · PHP 8.4</div>
+          <div class="ccard-sub">ressources_api · php:8.4-fpm-alpine · 44 endpoints · RBAC 4 rôles</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="cfield">
+          <div class="cfield-label">Stack technique</div>
+          <div class="tags">
+            <span class="tag blue">Symfony 8</span>
+            <span class="tag blue">PHP 8.4-fpm</span>
+            <span class="tag blue">Doctrine ORM</span>
+            <span class="tag blue">LexikJWTBundle</span>
+            <span class="tag blue">NelmioCorsBundle</span>
+            <span class="tag blue">SonarCloud</span>
+          </div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Authentification</div>
+          <div class="cfield-val">JWT RS256 — paire RSA-2048. TTL 3600s. Refresh token en base. Clés PEM dans GitHub Secrets, jamais commitées.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Contrôle d'accès (RBAC)</div>
+          <div class="tags" style="margin-top:4px">
+            <span class="tag blue">ROLE_CONNECTED</span>
+            <span class="tag teal">ROLE_MODERATOR</span>
+            <span class="tag amber">ROLE_ADMIN</span>
+            <span class="tag red">ROLE_SUPER_ADMIN</span>
+          </div>
+          <div class="cfield-val" style="margin-top:4px">Hiérarchie Symfony + Voters pour le contrôle au niveau de l'entité (auteur d'une ressource). Catch-all : tout <code>/api/**</code> non listé requiert <code>IS_AUTHENTICATED_FULLY</code>.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Sécurité conteneur</div>
+          <div class="cfield-val">Utilisateur non-root <code>symfony</code> (UID 1001). Image multi-stage : stage builder (composer) → stage runtime (php-fpm-alpine ~50 MB). HEALTHCHECK toutes les 30s.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Endpoints principaux</div>
+          <div class="cfield-val">44 endpoints REST : auth (login, refresh, reset), ressources (CRUD), catégories, utilisateurs (admin), modération, statistiques, logs.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Flux JWT</div>
+          <div class="flow" style="margin-top:4px">
+            <span class="flow-step">POST /api/login</span><span class="flow-arr">→</span>
+            <span class="flow-step">bcrypt verify</span><span class="flow-arr">→</span>
+            <span class="flow-step">JWT signé RS256</span><span class="flow-arr">→</span>
+            <span class="flow-step">Bearer header</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MYSQL -->
+    <div class="ccard accent-blue">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:var(--blue-light)">🗄️</div>
+        <div>
+          <div class="ccard-title">MySQL 8.0 — Base de données relationnelle</div>
+          <div class="ccard-sub">resources_db · Docker · volume persistant db_data · port 3306 (interne uniquement)</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="cfield">
+          <div class="cfield-label">Isolation réseau</div>
+          <div class="cfield-val">Port 3306 accessible uniquement depuis le réseau bridge Docker interne. En production : aucun port MySQL exposé vers Internet. En dev : <code>3307→3306</code> pour DBeaver/TablePlus.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Persistance</div>
+          <div class="cfield-val">Volume Docker nommé <code>db_data</code> monté sur <code>/var/lib/mysql</code>. Si le conteneur est supprimé et recréé, les données survivent dans le volume.</div>
+        </div>
+        <div class="cfield span2">
+          <div class="cfield-label">Structure — 8 entités principales</div>
+          <div class="t-wrap" style="margin-top:6px">
+            <table>
+              <thead><tr><th>Table</th><th>Colonnes clés</th><th>Particularités</th></tr></thead>
+              <tbody>
+                <tr><td><code>utilisateur</code></td><td>uuid, email, password, role, is_available</td><td>UUID v4, bcrypt cost 13, activation admin obligatoire</td></tr>
+                <tr><td><code>ressource</code></td><td>uuid, titre, url_media, type, statut</td><td>Statuts : brouillon / publié / archivé</td></tr>
+                <tr><td><code>categorie</code></td><td>nom, slug</td><td>Arborescence plate</td></tr>
+                <tr><td><code>participation</code></td><td>utilisateur_fk, ressource_fk, type</td><td>Many-to-many : favoris, consultations, progression</td></tr>
+                <tr><td><code>commentaire</code></td><td>texte, auteur_fk, ressource_fk, statut</td><td>Statut modération</td></tr>
+                <tr><td><code>log_action</code></td><td>utilisateur_fk, action, ip, timestamp</td><td>16 types, rétention 12 mois (RGPD)</td></tr>
+                <tr><td><code>log_connexion</code></td><td>email, ip, user_agent, success, timestamp</td><td>Détecte brute-force</td></tr>
+                <tr><td><code>password_reset_token</code></td><td>token, expires_at, used</td><td>Usage unique, expiration 1h</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Sauvegardes</div>
+          <div class="cfield-val">Dump <code>mysqldump</code> quotidien. RPO = 24h. Rétention 30 jours. Stocké hors du serveur de production.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Monitoring</div>
+          <div class="cfield-val">MySQL Exporter → Prometheus. Métriques : QPS, connexions actives, InnoDB buffer pool hit rate, slow queries.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPABASE -->
+    <div class="ccard accent-teal">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:var(--teal-dim)">☁️</div>
+        <div>
+          <div class="ccard-title">Supabase Storage — Stockage des médias</div>
+          <div class="ccard-sub">Fichiers images et documents · bucket Ressources · CDN public · S3-compatible</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="cfield">
+          <div class="cfield-label">Pourquoi pas un volume Docker ?</div>
+          <div class="cfield-val">Un volume local crée des problèmes de scalabilité (non partagé si plusieurs serveurs), de sauvegarde et de CDN. Supabase gère la réplication, la CDN mondiale et les sauvegardes automatiquement.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Flux d'upload</div>
+          <div class="flow" style="margin-top:4px;flex-direction:column;align-items:flex-start;gap:4px">
+            <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap"><span class="flow-step">Fichier (multipart)</span><span class="flow-arr">→</span><span class="flow-step">Validation Symfony (MIME, taille)</span></div>
+            <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap"><span class="flow-step">SDK Supabase PHP → bucket</span><span class="flow-arr">→</span><span class="flow-step">URL CDN publique</span><span class="flow-arr">→</span><span class="flow-step">Stocké dans url_media</span></div>
+          </div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Sécurité</div>
+          <div class="cfield-val">Clé <code>service_role</code> (accès écriture) stockée dans GitHub Secrets. Clé <code>anon</code> (lecture publique) acceptable côté client. Jamais de clé dans le code.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Types de fichiers</div>
+          <div class="tags">
+            <span class="tag teal">Images de couverture</span>
+            <span class="tag teal">Avatars utilisateurs</span>
+            <span class="tag teal">Documents PDF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONITORING -->
+    <div class="ccard accent-purple">
+      <div class="ccard-head">
+        <div class="ccard-icon" style="background:var(--purple-dim)">📊</div>
+        <div>
+          <div class="ccard-title">Stack Monitoring — Prometheus · Grafana · Loki</div>
+          <div class="ccard-sub">docker-compose.monitoring.yaml · données conservées 30 jours</div>
+        </div>
+      </div>
+      <div class="ccard-body three">
+        <div class="cfield">
+          <div class="cfield-label">Prometheus :9090</div>
+          <div class="cfield-val">Collecte les métriques en mode <em>pull</em> (scrape toutes les 15s). Sources : API Symfony (<code>/metrics</code>), Node Exporter (système), MySQL Exporter. Évalue les règles d'alerting.</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Grafana :3001</div>
+          <div class="cfield-val">Dashboard visuel en temps réel : temps de réponse p95, taux d'erreurs, CPU/RAM, requêtes BDD. Alertes automatiques par email si seuil dépassé. Agrège métriques (Prometheus) + logs (Loki).</div>
+        </div>
+        <div class="cfield">
+          <div class="cfield-label">Loki + Promtail</div>
+          <div class="cfield-val">Loki stocke et indexe les logs (alternative légère à Elasticsearch). Promtail lit les logs Docker et les envoie à Loki. Corrélation log/métrique dans Grafana pour le débogage.</div>
+        </div>
+        <div class="cfield span2" style="grid-column:1/-1">
+          <div class="cfield-label">Alertes configurées</div>
+          <div class="t-wrap" style="margin-top:6px">
+            <table>
+              <thead><tr><th>Condition</th><th>Seuil</th><th>Délai</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td>Taux d'erreurs 5xx</td><td>&gt; 1%</td><td>5 min consécutives</td><td>Email équipe</td></tr>
+                <tr><td>Temps de réponse médian</td><td>&gt; 500ms</td><td>5 min</td><td>Email équipe</td></tr>
+                <tr><td>Espace disque</td><td>&lt; 10% libre</td><td>Immédiat</td><td>Email admin</td></tr>
+                <tr><td>Mémoire PHP-FPM</td><td>&gt; 85%</td><td>10 min</td><td>Email admin</td></tr>
+                <tr><td>Certificat SSL</td><td>&lt; 14 jours avant expiration</td><td>Quotidien</td><td>Email admin</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════ FLUX DE DONNÉES ════ -->
+  <div class="sec-title">Flux de données principaux</div>
+  <div class="t-wrap">
+    <table>
+      <thead><tr><th>Flux</th><th>Source</th><th>Destination</th><th>Protocole</th><th>Authentification</th></tr></thead>
+      <tbody>
+        <tr><td>Requête web</td><td>Navigateur</td><td>Nginx :443</td><td>HTTPS TLS 1.2+</td><td>—</td></tr>
+        <tr><td>Appel API</td><td>Next.js / Flutter</td><td>Nginx → PHP-FPM</td><td>HTTPS → FastCGI</td><td>JWT RS256 (Bearer)</td></tr>
+        <tr><td>Requêtes BDD</td><td>Symfony (Doctrine)</td><td>MySQL :3306</td><td>TCP (réseau bridge Docker)</td><td>Credentials Docker env</td></tr>
+        <tr><td>Upload médias</td><td>Symfony (SDK)</td><td>Supabase Storage</td><td>HTTPS</td><td>service_role key (GitHub Secret)</td></tr>
+        <tr><td>Collecte métriques</td><td>Prometheus</td><td>API /metrics, Node Exporter, MySQL Exporter</td><td>HTTP (réseau monitoring Docker)</td><td>—</td></tr>
+        <tr><td>Logs applicatifs</td><td>Promtail</td><td>Loki</td><td>HTTP (réseau monitoring Docker)</td><td>—</td></tr>
+        <tr><td>CI/CD — image Docker</td><td>GitHub Actions</td><td>GHCR (ghcr.io)</td><td>HTTPS</td><td>GITHUB_TOKEN automatique</td></tr>
+        <tr><td>Déploiement prod</td><td>GitHub Actions CD</td><td>Serveur SSH</td><td>SSH</td><td>Clé SSH (GitHub Secret)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const saved = localStorage.getItem('theme');
+if (saved) document.documentElement.setAttribute('data-theme', saved);
+document.querySelector('.theme-btn').addEventListener('click', () => {
+  const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
+});
+</script>

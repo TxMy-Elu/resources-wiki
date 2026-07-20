@@ -211,7 +211,7 @@ section:last-of-type { border-bottom: none; }
 /* ── Doc cards ── */
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 14px;
 }
 .card {
@@ -237,9 +237,10 @@ section:last-of-type { border-bottom: none; }
   font-size: 18px;
   flex-shrink: 0;
 }
-.ci-blue  { background: var(--accdim); }
-.ci-green { background: var(--grndim); }
-.ci-amber { background: var(--amddim); }
+.ci-blue   { background: var(--accdim); }
+.ci-green  { background: var(--grndim); }
+.ci-amber  { background: var(--amddim); }
+.ci-purple { background: rgba(155,127,239,0.10); }
 .card-arrow { color: var(--muted); opacity: 0; transition: opacity 0.15s; }
 .card:hover .card-arrow { opacity: 1; }
 .card-title {
@@ -465,6 +466,7 @@ footer {
       <a href="#docs">Documents</a>
       <a href="#archi">Architecture</a>
       <a href="#stack">Stack</a>
+      <a href="archi-globale.html">Archi globale →</a>
       <a href="guide.html#questions">Questions →</a>
     </div>
   </div>
@@ -559,6 +561,21 @@ footer {
             <span class="tag">Docker</span>
             <span class="tag">SonarCloud</span>
             <span class="tag">Trivy</span>
+          </div>
+        </a>
+
+        <a class="card" href="archi-globale.html">
+          <div class="card-top">
+            <div class="card-icon ci-purple">🏗️</div>
+            <span class="card-arrow">→</span>
+          </div>
+          <div class="card-title">Architecture globale</div>
+          <div class="card-desc">Schéma détaillé clients → frontends → Nginx → Symfony → MySQL / Supabase. Fiches par composant, flux de données, monitoring.</div>
+          <div class="card-tags">
+            <span class="tag">Docker</span>
+            <span class="tag">Symfony</span>
+            <span class="tag">Next.js</span>
+            <span class="tag">Flutter</span>
           </div>
         </a>
 

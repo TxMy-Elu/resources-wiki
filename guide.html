@@ -280,6 +280,7 @@ ul li{margin-bottom:4px;font-size:14px}
     <li><a href="#maintenance">Dossier Maintenance</a></li>
     <li class="sub"><a href="#types-maint">Types de maintenance</a></li>
     <li class="sub"><a href="#github-issues">GitHub Issues</a></li>
+    <li class="sub"><a href="#sla">SLA & Engagements</a></li>
     <li class="sub"><a href="#veille">Veille technologique</a></li>
     <div class="toc-sep"></div>
     <li><a href="#questions">Questions possibles</a></li>
@@ -1343,9 +1344,9 @@ Stage 2 — "runtime" (image php:8.4-fpm-alpine — ~50 MB)
 
     <div class="info-card" style="margin:12px 0">
       <h4>🏁 Milestone "BL3" — Bloc 3 - sécurisation, déploiement, maintenance</h4>
-      <p>7 issues au total · 3 fermées · 4 ouvertes · <strong>42% complété</strong></p>
+      <p>19 issues au total (3 repos) · 7 fermées · 12 ouvertes · <strong>37% complété</strong></p>
       <div style="background:var(--surface2);border-radius:4px;height:8px;margin:10px 0;overflow:hidden">
-        <div style="background:var(--green);height:100%;width:42%"></div>
+        <div style="background:var(--green);height:100%;width:37%"></div>
       </div>
     </div>
 
@@ -1385,21 +1386,35 @@ Contraintes, liens vers la doc, fichiers concernés.</pre>
     <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
 
       <div class="info-card" style="border-left:3px solid var(--green)">
-        <h4>✅ Fermées (3)</h4>
+        <h4>✅ Fermées — 7 au total (3 repos)</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">resources_front · ressources_api · re_flutter</p>
         <ul style="margin-top:6px">
-          <li><code>[Bug]</code> Reconnexion impossible après réinitialisation du mot de passe</li>
-          <li><code>[Docs]</code> Mettre à jour le wiki CESIZen</li>
-          <li><code>[Bug]</code> Dependabot bumpe jjwt-jackson sans jjwt-api ni jjwt-impl</li>
+          <li><code>[Bug]</code> <strong>#16</strong> Token JWT non rafraîchi — déconnexion silencieuse après expiration — <em>resources_front</em></li>
+          <li><code>[Bug]</code> <strong>#17</strong> Rechargement sur page protégée → redirect loop si localStorage vide — <em>resources_front</em></li>
+          <li><code>[Bug]</code> <strong>#31</strong> Mot de passe réinitialisé mais token JWT toujours valide — <em>ressources_api</em></li>
+          <li><code>[Bug]</code> <strong>#32</strong> Dependabot bumpe symfony/security-bundle sans mettre à jour les tests — <em>ressources_api</em></li>
+          <li><code>[Bug]</code> <strong>#41</strong> Reconnexion impossible après réinitialisation du mot de passe — <em>re_flutter</em></li>
+          <li><code>[Docs]</code> <strong>#38</strong> Documenter l'architecture de navigation Flutter (GoRouter) — <em>re_flutter</em></li>
+          <li><code>[Bug]</code> <strong>#42</strong> Fuite mémoire sur la liste des ressources — StreamSubscription non annulée — <em>re_flutter</em></li>
         </ul>
       </div>
 
       <div class="info-card" style="border-left:3px solid var(--accent)">
-        <h4>🔵 Ouvertes (4)</h4>
+        <h4>🔵 Ouvertes — 12 au total (3 repos)</h4>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:8px">resources_front · ressources_api · re_flutter</p>
         <ul style="margin-top:6px">
-          <li><code>[Feature]</code> <strong>#33</strong> Headers de sécurité côté Next.js — <span class="badge green">enhancement</span> <span class="badge red">security</span></li>
-          <li><code>[Feature]</code> <strong>#34</strong> Supervision externe de /actuator/health + status page — <span class="badge blue">ci</span> <span class="badge green">enhancement</span></li>
-          <li><code>[Docs]</code> <strong>#36</strong> Rédiger le plan de sécurisation, déploiement et dossier maintenance — <span class="badge blue">documentation</span> <span class="badge red">security</span></li>
-          <li><code>[Docs]</code> <strong>#37</strong> Veille technologique — 3 fiches — <span class="badge blue">documentation</span></li>
+          <li><code>[Feature]</code> <strong>#11</strong> Headers de sécurité HTTP côté Next.js (CSP, HSTS, X-Frame-Options) — <em>resources_front</em> — <span class="badge red">security</span></li>
+          <li><code>[Feature]</code> <strong>#12</strong> Page de statut et supervision externe de l'API — <em>resources_front</em> — <span class="badge blue">ci</span></li>
+          <li><code>[Docs]</code> <strong>#13</strong> Rédiger le README de déploiement (Vercel + variables d'env) — <em>resources_front</em></li>
+          <li><code>[Docs]</code> <strong>#14</strong> Veille technologique — 3 fiches (Next.js, Tailwind, Supabase) — <em>resources_front</em></li>
+          <li><code>[Feature]</code> <strong>#27</strong> Rate limiting sur les endpoints publics — <em>ressources_api</em> — <span class="badge red">security</span></li>
+          <li><code>[Feature]</code> <strong>#28</strong> Health check endpoint + métriques Prometheus — <em>ressources_api</em> — <span class="badge blue">ci</span></li>
+          <li><code>[Docs]</code> <strong>#29</strong> Documenter les 44 endpoints API (OpenAPI / Swagger) — <em>ressources_api</em></li>
+          <li><code>[Docs]</code> <strong>#30</strong> Veille technologique — 3 fiches (Symfony, Docker, GitHub Actions) — <em>ressources_api</em></li>
+          <li><code>[Feature]</code> <strong>#33</strong> Authentification JWT RS256 côté Flutter (flutter_secure_storage + refresh) — <em>re_flutter</em> — <span class="badge red">security</span></li>
+          <li><code>[Feature]</code> <strong>#34</strong> Pipeline CI/CD Flutter — build + signature APK release — <em>re_flutter</em> — <span class="badge blue">ci</span></li>
+          <li><code>[Docs]</code> <strong>#36</strong> Rédiger le plan de sécurisation, déploiement et dossier maintenance — <em>re_flutter</em></li>
+          <li><code>[Docs]</code> <strong>#37</strong> Veille technologique — 3 fiches (Flutter, Dart, distribution Android) — <em>re_flutter</em></li>
         </ul>
       </div>
 
@@ -1423,9 +1438,84 @@ Contraintes, liens vers la doc, fichiers concernés.</pre>
     </div>
   </div>
 
+  <!-- SLA -->
+  <div class="subsection" id="sla">
+    <h3 class="subsection-title">3.3 SLA — Service Level Agreement</h3>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Concept — Qu'est-ce qu'un SLA ?</div>
+      <p>Un <strong>SLA (Service Level Agreement)</strong> est un contrat formel qui définit le niveau de service garanti entre un prestataire et son client. Il précise trois choses : la <strong>disponibilité</strong> de l'application (uptime en %), les <strong>délais de prise en charge</strong> (combien de temps avant qu'on réponde) et les <strong>délais de résolution</strong> (combien de temps avant que le problème soit réglé), selon la criticité de l'incident. Si ces engagements ne sont pas respectés, des pénalités contractuelles s'appliquent. Le SLA répond à la question : "Que se passe-t-il concrètement si l'application tombe un mardi matin ?"</p>
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Engagement de disponibilité (Uptime)</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Environnement</th><th>Uptime garanti</th><th>Downtime max / mois</th><th>Plage couverte</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge green">Production</span></td><td><strong>99,5 %</strong></td><td>≈ 3h36min</td><td>24h/24 · 7j/7</td></tr>
+          <tr><td><span class="badge amber">Préprod</span></td><td>95 %</td><td>≈ 36h</td><td>Jours ouvrés 8h–18h</td></tr>
+          <tr><td><span class="badge blue">Dev</span></td><td>Non garanti</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Comment calculer l'uptime ?</div>
+      <p>Uptime 99,5 % sur 30 jours = 30 × 24 × 60 = 43 200 minutes disponibles. 0,5 % d'indisponibilité = 216 minutes = 3h36. C'est le budget de downtime mensuel. Si une maintenance planifiée dure 2h, il reste 1h36 de "tolérance" pour les pannes non prévues ce mois-là. Prometheus + Grafana calculent cet uptime automatiquement à partir des health checks.</p>
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Niveaux de criticité et délais contractuels</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Priorité</th><th>Critères</th><th>Prise en charge</th><th>Résolution</th><th>Escalade</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge red">P1 — Critique</span></td><td>Application inaccessible, faille sécurité exploitée, corruption/perte de données</td><td><strong>2 heures</strong></td><td><strong>24 heures</strong></td><td>Toute l'équipe — immédiat</td></tr>
+          <tr><td><span class="badge amber">P2 — Majeur</span></td><td>Fonctionnalité clé inopérante : authentification, publication, modération</td><td><strong>4 heures</strong></td><td><strong>48 heures</strong></td><td>Lead développeur</td></tr>
+          <tr><td><span class="badge blue">P3 — Mineur</span></td><td>Bug sans blocage complet, comportement inattendu, performance dégradée</td><td>1 jour ouvré</td><td>5 jours ouvrés</td><td>Ticket GitHub Issues</td></tr>
+          <tr><td><span class="badge purple">P4 — Cosmétique</span></td><td>Problème visuel, texte incorrect, suggestion UI</td><td>3 jours ouvrés</td><td>10 jours ouvrés</td><td>Milestone suivant</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Comment le SLA est-il suivi techniquement ?</h4>
+
+    <div class="callout tech">
+      <div class="callout-title">⚙️ Monitoring automatique</div>
+      <ul>
+        <li><strong>Prometheus scrape toutes les 15s :</strong> collecte les métriques HTTP (taux d'erreurs 5xx, temps de réponse p95, requêtes/seconde). Si le taux d'erreurs dépasse 1% pendant 5 minutes consécutives → alerte Grafana par email.</li>
+        <li><strong>Healthcheck Docker (toutes les 30s) :</strong> <code>php-fpm -t</code> vérifie que PHP-FPM répond. Après 3 échecs consécutifs, Docker redémarre le conteneur automatiquement — sans intervention humaine. Temps de redémarrage : &lt; 10 secondes.</li>
+        <li><strong>Grafana Alerting :</strong> règles configurées sur les dashboards. Seuils : temps de réponse médian &gt; 500ms, espace disque &lt; 10%, mémoire &gt; 85%.</li>
+      </ul>
+    </div>
+
+    <h4 style="margin:20px 0 10px;font-size:14.5px;font-weight:600;color:var(--text-strong)">Procédure de rollback (retour arrière)</h4>
+
+    <div class="callout concept">
+      <div class="callout-title">💡 Pourquoi un rollback est-il rapide ?</div>
+      <p>Chaque image Docker déployée est taguée avec le SHA du commit Git (ex: <code>ghcr.io/txmy-elu/ressources_api:abc1234f</code>). L'image précédente n'est pas écrasée — elle reste dans GHCR. Un rollback consiste simplement à dire à Docker "utilise l'ancienne image" et à relancer les conteneurs. Pas besoin de recompiler, pas besoin de redéployer le code. C'est pour ça que le RTO (Recovery Time Objective) est de 4h : dans 90% des cas, le rollback seul suffit et prend moins de 15 minutes.</p>
+    </div>
+
+    <div class="flow" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="flow-step">Incident détecté</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Alerte Grafana (P1: 2h max)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Identification du SHA précédent (GHCR)</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="flow-step">docker compose up -d --tag sha-précédent</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Vérification healthcheck</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Post-mortem dans 48h</div>
+      </div>
+    </div>
+  </div>
+
   <!-- VEILLE TECH -->
   <div class="subsection" id="veille">
-    <h3 class="subsection-title">3.3 Veille technologique</h3>
+    <h3 class="subsection-title">3.4 Veille technologique</h3>
 
     <div class="callout concept">
       <div class="callout-title">💡 Concept — Pourquoi faire de la veille ?</div>
@@ -1744,6 +1834,349 @@ Contraintes, liens vers la doc, fichiers concernés.</pre>
         </ol>
         <p><strong>Pourquoi pas un volume Docker ?</strong> Un volume Docker local crée des problèmes de scalabilité (si on ajoute un second serveur, les fichiers ne sont pas partagés) et de sauvegarde (il faut sauvegarder séparément). Supabase gère la réplication, la CDN, et les sauvegardes automatiquement.</p>
         <p>La clé <code>service_role</code> Supabase (accès en écriture) est stockée dans GitHub Secrets — jamais dans le code.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Docker & Infrastructure avancée</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Comment Nginx et PHP-FPM communiquent-ils techniquement ?</summary>
+      <div class="qa-answer">
+        <p>Ils utilisent le protocole <strong>FastCGI</strong> sur une socket TCP interne. Nginx reçoit une requête HTTP pour <code>/api/login</code>. Il ne sait pas exécuter du PHP — son rôle est uniquement de router. Il transmet la requête à PHP-FPM via <code>fastcgi_pass resources_php:9000</code> dans sa config. PHP-FPM tourne en permanence avec un pool de workers (processus PHP persistants). Un worker disponible prend la requête, exécute le contrôleur Symfony correspondant, et retourne la réponse à Nginx au format FastCGI. Nginx la retransmet au client en HTTP.</p>
+        <p>Pourquoi port <code>:9000</code> ? C'est le port par défaut de PHP-FPM. Ce port n'est <strong>pas exposé</strong> vers l'extérieur — uniquement accessible dans le réseau bridge Docker <code>resources_network</code>. Un attaquant qui scanne les ports du serveur ne le voit pas.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce qu'Alpine Linux et pourquoi l'utiliser comme base d'image ?</summary>
+      <div class="qa-answer">
+        <p>Alpine Linux est une distribution Linux ultra-minimaliste basée sur musl libc (au lieu de glibc) et BusyBox. Son avantage principal : une image de base de seulement <strong>~5 MB</strong>, contre ~120 MB pour Debian ou Ubuntu. Pour Docker, ça se traduit par :</p>
+        <ul>
+          <li><strong>Sécurité :</strong> moins de packages installés = moins de CVE potentielles. Une image Debian embarque des centaines de paquets inutiles (outils réseau, compilateurs…). Alpine n'installe que le strict minimum.</li>
+          <li><strong>Vitesse :</strong> images plus petites à télécharger → CI plus rapide, déploiements plus rapides.</li>
+          <li><strong>Surface d'attaque réduite :</strong> si un attaquant compromet le conteneur, il dispose de moins d'outils pour se mouvoir (pas de <code>curl</code>, <code>wget</code>, <code>python</code> par défaut).</li>
+        </ul>
+        <p>Notre image est <code>php:8.4-fpm-alpine</code>. Le suffixe <code>-alpine</code> indique qu'elle est basée sur Alpine. Inconvénient : certaines extensions PHP nécessitent une compilation manuelle car Alpine utilise musl au lieu de glibc, qui peut être incompatible avec des bibliothèques C standards.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Quelle est la différence entre une image Docker et un conteneur ?</summary>
+      <div class="qa-answer">
+        <p>La différence est la même qu'entre un <strong>programme installé</strong> et un <strong>programme en cours d'exécution</strong> :</p>
+        <ul>
+          <li>Une <strong>image Docker</strong> est un fichier statique, immuable, versionné. C'est le "plan de construction" : système de fichiers en lecture seule avec l'OS, les dépendances et le code. Elle existe dans GHCR ou localement. Elle ne "fait" rien.</li>
+          <li>Un <strong>conteneur</strong> est une instance en cours d'exécution d'une image. Docker crée une couche d'écriture au-dessus de l'image (read-only) pour les fichiers temporaires. Si on supprime le conteneur, cette couche disparaît — c'est pour ça qu'on utilise des volumes pour les données persistantes.</li>
+        </ul>
+        <p>Analogie : l'image = la recette de cuisine. Le conteneur = le plat en train de cuire. On peut lancer 10 conteneurs à partir de la même image.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment fonctionne le healthcheck Docker et pourquoi est-il important ?</summary>
+      <div class="qa-answer">
+        <p>Un HEALTHCHECK est une commande définie dans le Dockerfile que Docker exécute périodiquement pour savoir si le conteneur fonctionne correctement. Pour PHP-FPM :</p>
+        <pre>HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD php-fpm -t</pre>
+        <p><code>php-fpm -t</code> teste la configuration de PHP-FPM. Si la commande réussit (exit code 0) → conteneur "healthy". Si elle échoue 3 fois de suite → conteneur "unhealthy" → Docker le redémarre automatiquement.</p>
+        <p>Sans healthcheck, Docker ne sait pas si l'application à l'intérieur du conteneur fonctionne. Un conteneur peut être "running" (le processus PHP-FPM tourne) mais en état d'erreur (il ne traite plus les requêtes). Le healthcheck détecte ce cas et déclenche un redémarrage sans intervention humaine — un incident qui aurait duré des heures est résolu en secondes.</p>
+        <p>Dans <code>docker-compose.yaml</code>, d'autres conteneurs peuvent aussi dépendre du statut healthy : <code>condition: service_healthy</code> empêche <code>resources_php</code> de démarrer avant que <code>resources_db</code> soit opérationnelle.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que GHCR et pourquoi l'utilisez-vous plutôt que Docker Hub ?</summary>
+      <div class="qa-answer">
+        <p><strong>GHCR</strong> (GitHub Container Registry) est le registre Docker intégré à GitHub. On y stocke les images Docker buildées en CI. <code>ghcr.io/txmy-elu/ressources_api:sha-abc123</code> est une image taguée par SHA de commit — immuable et traçable.</p>
+        <p>Avantages vs Docker Hub :</p>
+        <ul>
+          <li><strong>Intégration native :</strong> les pipelines GitHub Actions s'authentifient à GHCR automatiquement via le token <code>GITHUB_TOKEN</code> — pas de secret supplémentaire à gérer.</li>
+          <li><strong>Contrôle d'accès GitHub :</strong> les permissions d'accès aux images sont gérées avec les permissions du dépôt (même organisation, même gestion des collaborateurs).</li>
+          <li><strong>Gratuit pour les repos publics</strong> et avec quota généreux pour les privés.</li>
+          <li><strong>Docker Hub rate limiting :</strong> Docker Hub limite les pulls anonymes à 100/6h. En CI avec plusieurs machines, on atteint rapidement cette limite.</li>
+        </ul>
+        <p>Chaque image est taguée à la fois par SHA court (ex: <code>:abc1234f</code>) et par <code>:latest</code> pour la dernière version stable. En CD, on déploie toujours par SHA pour être sûr de quelle version tourne.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Outils de sécurité</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Qu'est-ce que Trivy et comment est-il intégré dans le pipeline ?</summary>
+      <div class="qa-answer">
+        <p><strong>Trivy</strong> (Aqua Security) est un scanner de vulnérabilités open source. Il analyse :</p>
+        <ul>
+          <li>Les <strong>paquets système</strong> de l'image Docker (ex: packages Alpine Linux embarqués dans <code>php:8.4-fpm-alpine</code>)</li>
+          <li>Les <strong>dépendances applicatives</strong> (<code>composer.lock</code>, <code>package-lock.json</code>)</li>
+          <li>Les <strong>secrets</strong> éventuellement présents dans l'image (clés API, tokens)</li>
+          <li>Les <strong>misconfigurations</strong> du Dockerfile</li>
+        </ul>
+        <p>Dans le pipeline CI, Trivy tourne après le <code>docker build</code> et avant le <code>docker push</code>. Si une CVE de sévérité <code>CRITICAL</code> ou <code>HIGH</code> est détectée, le job échoue et l'image n'est pas poussée sur GHCR. Le rapport Trivy est publié dans les artefacts GitHub Actions.</p>
+        <pre>- uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: ghcr.io/txmy-elu/ressources_api:${{ github.sha }}
+    severity: CRITICAL,HIGH
+    exit-code: '1'</pre>
+        <p>Lien OWASP : Trivy couvre directement <strong>A06 — Composants vulnérables</strong> en bloquant les images qui embarquent des bibliothèques avec des CVE connues.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment SonarCloud fonctionne-t-il et qu'est-ce que le Quality Gate ?</summary>
+      <div class="qa-answer">
+        <p><strong>SonarCloud</strong> est un service SAST (Static Application Security Testing) : il analyse le code source sans l'exécuter, à la recherche de bugs, vulnérabilités, et code smell. En CI, le job <code>sonar</code> envoie tout le code source (et le rapport de couverture de tests PHPUnit) à SonarCloud via l'API.</p>
+        <p>SonarCloud analyse :</p>
+        <ul>
+          <li><strong>Bugs :</strong> code qui va probablement planter à l'exécution (null pointer, division par zéro...)</li>
+          <li><strong>Vulnerabilities :</strong> patterns connus de vulnérabilités (injection, XSS, secrets hardcodés)</li>
+          <li><strong>Code Smells :</strong> code techniquement fonctionnel mais difficile à maintenir (fonctions trop longues, duplication)</li>
+          <li><strong>Couverture de tests :</strong> % du code couvert par les tests PHPUnit</li>
+          <li><strong>Hotspots de sécurité :</strong> code à revoir manuellement (peut être OK ou non)</li>
+        </ul>
+        <p>Le <strong>Quality Gate</strong> est un ensemble de seuils définis dans SonarCloud. Si l'un d'eux n'est pas atteint (ex: couverture &lt; 80%, nouvelle vulnérabilité critique), le job échoue et bloque le merge de la PR. Notre Quality Gate : 0 nouvelle vulnérabilité, 0 nouveau bug bloquant, couverture &gt; 70%.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que Dependabot et que fait-il concrètement ?</summary>
+      <div class="qa-answer">
+        <p><strong>Dependabot</strong> est un bot GitHub qui surveille automatiquement les dépendances de chaque dépôt. Configuré via <code>.github/dependabot.yml</code>, il vérifie chaque semaine (ou quotidiennement) si des nouvelles versions sont disponibles pour <code>composer.json</code>, <code>package.json</code>, <code>pubspec.yaml</code> ou les actions GitHub.</p>
+        <p>Quand il détecte une mise à jour disponible :</p>
+        <ol style="padding-left:18px">
+          <li>Il crée une <strong>Pull Request automatique</strong> avec le changement de version dans le lockfile</li>
+          <li>La PR déclenche la CI — si les tests passent, la PR est prête à merger</li>
+          <li>Si la dépendance a une <strong>CVE connue</strong>, Dependabot l'indique dans la PR avec le score CVSS (gravité)</li>
+        </ol>
+        <p>Sans Dependabot, il faudrait surveiller manuellement des dizaines de dépendances. Un package JS peut avoir plusieurs mises à jour par semaine. Le risque sans surveillance : rester sur une version vulnérable pendant des mois sans le savoir (comme Log4Shell en 2021 — la bibliothèque existait depuis 2001, la CVE critique a été publiée en décembre 2021).</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que le CORS et comment l'avez-vous configuré ?</summary>
+      <div class="qa-answer">
+        <p><strong>CORS</strong> (Cross-Origin Resource Sharing) est un mécanisme de sécurité du navigateur. Par défaut, un navigateur interdit à une page web de faire des requêtes AJAX vers un domaine différent de celui où elle est hébergée. Sans CORS configuré côté API, le frontend Next.js sur <code>resources-front.vercel.app</code> ne peut pas appeler <code>api.resources.fr</code> — le navigateur bloque la requête.</p>
+        <p>Le serveur doit explicitement autoriser les origines via des headers HTTP :</p>
+        <pre>Access-Control-Allow-Origin: https://resources-front.vercel.app
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: Content-Type, Authorization</pre>
+        <p>Sur Symfony, on utilise <strong>NelmioCorsBundle</strong> configuré dans <code>config/packages/nelmio_cors.yaml</code>. On liste exactement les origines autorisées (domaine Vercel + domaine de l'app mobile). <code>Access-Control-Allow-Origin: *</code> est interdit — ça autoriserait n'importe quel site à appeler notre API, ce qui annulerait les protections CSRF et permettrait des attaques de type phishing.</p>
+        <p>Note : CORS est une protection <strong>navigateur uniquement</strong>. Un attaquant avec <code>curl</code> ou Postman peut toujours appeler l'API sans CORS — c'est pourquoi JWT + RBAC restent la vraie protection.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que Let's Encrypt et comment renouvelle-t-il les certificats SSL ?</summary>
+      <div class="qa-answer">
+        <p><strong>Let's Encrypt</strong> est une autorité de certification (CA) gratuite et automatisée. Elle émet des certificats SSL/TLS qui permettent à Nginx de chiffrer les communications HTTPS. Contrairement à un certificat commercial (payant, renouvelable manuellement tous les ans), les certificats Let's Encrypt ont une durée de vie de <strong>90 jours</strong> et se renouvellent automatiquement.</p>
+        <p>Le renouvellement se fait via le protocole <strong>ACME</strong>. Certbot (ou le plugin Nginx intégré) :</p>
+        <ol style="padding-left:18px">
+          <li>Demande un nouveau certificat à Let's Encrypt 30 jours avant l'expiration</li>
+          <li>Let's Encrypt envoie un "challenge" — une valeur à placer dans un fichier spécifique sur le serveur pour prouver qu'on contrôle bien le domaine</li>
+          <li>Nginx sert ce fichier, Let's Encrypt vérifie, émet le nouveau certificat</li>
+          <li>Nginx est rechargé avec le nouveau certificat — sans interruption de service (<code>nginx -s reload</code>)</li>
+        </ol>
+        <p>Tout ce processus est automatisé via un cron job sur le serveur. On n'a pas à y penser, sauf si le renouvellement échoue (généralement parce que le domaine n'est plus accessible). Grafana peut alerter si le certificat expire dans moins de 14 jours.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Monitoring & Observabilité</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Comment Prometheus collecte-t-il les métriques de l'API Symfony ?</summary>
+      <div class="qa-answer">
+        <p>Prometheus fonctionne en mode <strong>pull</strong> : c'est lui qui va "gratter" (scrape) les métriques des cibles, pas les cibles qui les poussent. Toutes les 15 secondes, Prometheus envoie une requête GET à chaque cible configurée dans <code>prometheus.yml</code>.</p>
+        <p>Pour l'API Symfony, un endpoint <code>/metrics</code> expose les métriques au format Prometheus (texte structuré). Ce endpoint est géré par le bundle <strong>Prometheus Metrics</strong> pour Symfony et expose :</p>
+        <ul>
+          <li>Nombre de requêtes HTTP par route, méthode, et code de réponse</li>
+          <li>Durée des requêtes (histogramme : p50, p90, p95, p99)</li>
+          <li>Nombre de connexions à la BDD actives</li>
+          <li>Mémoire PHP utilisée</li>
+        </ul>
+        <p>Node Exporter expose quant à lui les métriques système (CPU, RAM, disque) du serveur hôte. MySQL Exporter expose les métriques de la base de données (QPS, connexions actives, InnoDB buffer pool). Toutes ces données atterrissent dans Prometheus, consultables et visualisables dans Grafana via des requêtes PromQL.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Quelle est la différence entre Prometheus et Loki ?</summary>
+      <div class="qa-answer">
+        <p>Ce sont deux bases de données spécialisées dans des types de données différents :</p>
+        <ul>
+          <li><strong>Prometheus</strong> stocke des <strong>métriques</strong> : des valeurs numériques horodatées. Ex : "à 14h32, le temps de réponse moyen était de 45ms, il y avait 12 requêtes/seconde". C'est parfait pour créer des graphes, calculer des tendances, déclencher des alertes sur des seuils chiffrés.</li>
+          <li><strong>Loki</strong> stocke des <strong>logs</strong> : du texte libre horodaté. Ex : "à 14h32:15, l'utilisateur UUID-xyz a tenté de se connecter depuis 192.168.1.1 — succès". C'est parfait pour déboguer, comprendre ce qui s'est passé, retrouver l'historique d'un événement.</li>
+        </ul>
+        <p>Loki est souvent comparé à Elasticsearch, mais avec une différence fondamentale : Loki n'indexe pas le contenu des logs (trop coûteux), il indexe seulement les <strong>labels</strong> (métadonnées : conteneur source, environnement). La recherche dans Loki est donc moins puissante mais beaucoup moins gourmande en ressources. Promtail est l'agent qui lit les fichiers de log Docker et les envoie à Loki.</p>
+        <p>Dans Grafana, on peut mixer métriques (Prometheus) et logs (Loki) dans le même dashboard : voir qu'à 14h32 le taux d'erreurs a pic ké (Prometheus), et immédiatement afficher les logs correspondants (Loki) pour comprendre pourquoi.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce que le RPO et le RTO et quels sont les vôtres ?</summary>
+      <div class="qa-answer">
+        <p>Ce sont deux indicateurs clés de la capacité de reprise après incident :</p>
+        <ul>
+          <li><strong>RPO (Recovery Point Objective) = 24h :</strong> c'est la quantité maximale de données qu'on accepte de perdre en cas de catastrophe. Notre sauvegarde <code>mysqldump</code> est quotidienne — en cas de perte totale du serveur, on peut perdre au pire les données des dernières 24h. Si le client veut un RPO de 1h, il faudrait des sauvegardes toutes les heures.</li>
+          <li><strong>RTO (Recovery Time Objective) = 4h :</strong> c'est le temps maximal acceptable entre la panne et le retour à la normale. On atteint ce RTO grâce aux images Docker versionnées sur GHCR : pointer vers l'image précédente + relancer les conteneurs via SSH prend moins d'une heure dans 90% des cas. Les 4h incluent le diagnostic, la communication et les vérifications post-restauration.</li>
+        </ul>
+        <p>Comment les améliorer ? RPO : mettre en place la réplication MySQL (binlog) pour des sauvegardes continues. RTO : automatiser entièrement le processus de restauration (un script qui prend le dernier tag GHCR et relance tout).</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Que se passe-t-il concrètement quand Grafana déclenche une alerte P1 ?</summary>
+      <div class="qa-answer">
+        <p>Le flux d'alerte dans notre stack :</p>
+        <ol style="padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          <li>Prometheus scrape <code>/metrics</code> toutes les 15s et stocke les valeurs</li>
+          <li>Les <strong>règles d'alerting Prometheus</strong> (<code>rules.yml</code>) évaluent les conditions toutes les 30s. Ex: <code>rate(http_requests_total{status=~"5.."}[5m]) > 0.01</code></li>
+          <li>Si la condition est vraie pendant la durée <code>for: 5m</code> (évite les faux positifs sur un pic court), Prometheus passe l'alerte en état <strong>FIRING</strong></li>
+          <li>Prometheus envoie l'alerte à <strong>Alertmanager</strong> (composant séparé)</li>
+          <li>Alertmanager déduplique (si 10 alertes similaires arrivent en même temps, il n'envoie qu'une notification), groupe, et route : en heures ouvrées → email, hors heures → notification urgente</li>
+          <li>L'équipe reçoit l'alerte avec le contexte : quelle métrique, quel seuil, depuis quand</li>
+        </ol>
+        <p>Pour un P1 (application inaccessible), on a aussi un healthcheck externe (Uptime Kuma prévu) qui pinge l'URL publique depuis l'extérieur — même si tout le monitoring interne est down, cette alerte-là fonctionne toujours.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">SLA & Gestion des incidents</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Qu'est-ce qu'un SLA et quels sont vos engagements de disponibilité ?</summary>
+      <div class="qa-answer">
+        <p>Un <strong>SLA (Service Level Agreement)</strong> est un contrat qui définit le niveau de service garanti. Nos engagements :</p>
+        <ul>
+          <li><strong>Uptime production : 99,5%</strong> — soit environ 3h36 de downtime autorisé par mois. Mesuré via Prometheus + healthchecks.</li>
+          <li><strong>P1 (critique) :</strong> prise en charge en 2h, résolution en 24h</li>
+          <li><strong>P2 (majeur) :</strong> prise en charge en 4h, résolution en 48h</li>
+          <li><strong>P3 (mineur) :</strong> prise en charge sous 1 jour ouvré, résolution sous 5 jours ouvrés</li>
+        </ul>
+        <p>Le SLA est suivi via Grafana qui calcule l'uptime réel et le compare aux seuils. Les plages de maintenance planifiée (ex: migration de BDD) sont exclues du calcul d'uptime si notifiées 48h à l'avance.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment gérez-vous le rollback si un déploiement casse la production ?</summary>
+      <div class="qa-answer">
+        <p>Le rollback tire parti de l'immuabilité des images Docker. Chaque image est taguée par le SHA Git du commit qui l'a produite. GHCR conserve les dernières images — elles ne sont jamais écrasées.</p>
+        <p>Procédure de rollback :</p>
+        <ol style="padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          <li>Identifier dans GHCR le SHA de la dernière version stable (ex: <code>abc1234f</code>)</li>
+          <li>Sur le serveur via SSH : modifier <code>docker-compose.prod.yml</code> pour pointer sur cet ancien tag</li>
+          <li><code>docker compose pull &amp;&amp; docker compose up -d</code> — Docker télécharge l'ancienne image et relance les conteneurs</li>
+          <li>Vérifier via Grafana que les métriques redeviennent normales</li>
+          <li>Si la migration Doctrine est en cause : exécuter la migration "down" manuellement (<code>doctrine:migrations:execute --down</code>)</li>
+        </ol>
+        <p>Temps moyen pour un rollback sans complication de migration : <strong>moins de 15 minutes</strong>. C'est pour ça qu'on ne pousse jamais directement sur <code>main</code> sans CI verte — chaque image sur GHCR est une version testée et potentiel point de restauration.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Qu'est-ce qu'un post-mortem et pourquoi en faire un après un incident ?</summary>
+      <div class="qa-answer">
+        <p>Un <strong>post-mortem</strong> (ou rapport d'incident) est un document rédigé après un incident significatif pour en comprendre les causes et éviter qu'il se reproduise. La culture post-mortem vient du monde des SRE (Site Reliability Engineering, popularisé par Google) et repose sur un principe fondamental : <strong>pas de blame</strong> — l'objectif n'est pas de trouver un coupable mais d'améliorer les systèmes.</p>
+        <p>Un bon post-mortem contient :</p>
+        <ul>
+          <li><strong>Timeline :</strong> à quelle heure exactement chaque événement s'est produit (panne détectée, alerte reçue, équipe notifiée, rollback décidé, résolution)</li>
+          <li><strong>Impact :</strong> combien d'utilisateurs affectés, pendant combien de temps, données perdues ?</li>
+          <li><strong>Cause racine :</strong> pas le symptôme ("le conteneur s'est crashé") mais la vraie cause ("une migration qui supprime une colonne encore utilisée par l'ancienne version")</li>
+          <li><strong>Actions correctives :</strong> GitHub Issues créées pour éviter que ça se reproduise</li>
+        </ul>
+        <p>Dans notre processus : tout incident P1 ou P2 requiert un post-mortem partagé avec l'équipe dans les 48h.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Symfony & Architecture technique</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Comment fonctionne un Voter Symfony et pourquoi est-ce mieux qu'un simple if dans le contrôleur ?</summary>
+      <div class="qa-answer">
+        <p>Un <strong>Voter</strong> est une classe Symfony qui centralise la logique d'autorisation pour un type d'objet. Au lieu de répéter dans chaque contrôleur <code>if ($ressource->getAuteur() !== $user) { throw new AccessDeniedException(); }</code>, le Voter encapsule cette logique.</p>
+        <p>Fonctionnement :</p>
+        <ol style="padding-left:18px">
+          <li>Dans le contrôleur : <code>#[IsGranted('EDIT', subject: $ressource)]</code></li>
+          <li>Symfony appelle tous les Voters enregistrés avec l'attribut <code>'EDIT'</code> et le sujet <code>$ressource</code></li>
+          <li><code>ResourceVoter::supports('EDIT', Ressource::class)</code> retourne true</li>
+          <li><code>ResourceVoter::voteOnAttribute()</code> vérifie : est-ce que l'utilisateur connecté est l'auteur, OU a-t-il le rôle ROLE_MODERATOR ? → true/false</li>
+        </ol>
+        <p>Avantages : <strong>centralisation</strong> (la logique est en un seul endroit, pas dans 10 contrôleurs), <strong>testabilité</strong> (on peut unit-tester le Voter indépendamment), et <strong>réutilisabilité</strong> (le même Voter couvre toutes les actions EDIT, DELETE, VIEW sur l'entité Ressource).</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Que contient exactement un token JWT et peut-on le lire/modifier ?</summary>
+      <div class="qa-answer">
+        <p>Un JWT est composé de <strong>3 parties séparées par des points</strong>, chacune encodée en base64url :</p>
+        <ul>
+          <li><strong>Header :</strong> <code>{"alg": "RS256", "typ": "JWT"}</code> — indique l'algorithme de signature</li>
+          <li><strong>Payload :</strong> <code>{"sub": "uuid-utilisateur", "roles": ["ROLE_ADMIN"], "iat": 1753000000, "exp": 1753003600}</code> — les données utilisateur</li>
+          <li><strong>Signature :</strong> résultat de RSA-SHA256(header + "." + payload, clé_privée)</li>
+        </ul>
+        <p><strong>Peut-on le lire ?</strong> Oui — le base64 n'est pas du chiffrement. N'importe qui peut décoder le payload avec <code>atob()</code> en JavaScript ou sur jwt.io. C'est pourquoi on ne met jamais d'informations sensibles (mot de passe, données privées) dans un JWT.</p>
+        <p><strong>Peut-on le modifier ?</strong> Non — si on modifie le payload (ex: changer <code>ROLE_CONNECTED</code> en <code>ROLE_ADMIN</code>), la signature RSA ne correspond plus. Symfony vérifie la signature à chaque requête — le token modifié est rejeté avec un 401. Il faudrait la clé privée RSA-2048 pour recalculer une signature valide.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi utiliser Doctrine ORM et pas du SQL brut ?</summary>
+      <div class="qa-answer">
+        <p>Doctrine ORM (Object-Relational Mapper) traduit les objets PHP en opérations SQL. Au lieu d'écrire :</p>
+        <pre>$stmt = $pdo->prepare("INSERT INTO ressource (titre, auteur_id) VALUES (?, ?)");
+$stmt->execute([$titre, $userId]);</pre>
+        <p>On écrit :</p>
+        <pre>$ressource = new Ressource();
+$ressource->setTitre($titre)->setAuteur($user);
+$em->persist($ressource);
+$em->flush();</pre>
+        <p>Avantages clés :</p>
+        <ul>
+          <li><strong>Sécurité :</strong> Doctrine utilise toujours des requêtes préparées — injection SQL structurellement impossible via l'ORM</li>
+          <li><strong>Migrations :</strong> <code>doctrine:migrations:diff</code> génère automatiquement le SQL pour faire évoluer la BDD quand on modifie les entités PHP</li>
+          <li><strong>Portabilité :</strong> changer de MySQL à PostgreSQL ne nécessite qu'un changement de driver</li>
+          <li><strong>Lazy loading :</strong> les relations (<code>$ressource->getAuteur()</code>) ne chargent les données de la BDD que quand on les accède réellement</li>
+        </ul>
+        <p>Quand utilise-t-on du SQL natif ? Pour des requêtes très complexes (reporting avec GROUP BY, HAVING, sous-requêtes imbriquées) où l'ORM génèrerait du SQL inefficace. Doctrine permet du SQL natif via <code>$em->getConnection()->executeQuery()</code> avec paramètres bindés.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi des UUIDs v4 plutôt que des auto-incréments pour les IDs ?</summary>
+      <div class="qa-answer">
+        <p>Un ID auto-incrémenté (1, 2, 3…) est prévisible et séquentiel. Un attaquant qui sait qu'une ressource est à <code>/api/ressources/42</code> peut deviner que <code>/api/ressources/43</code> existe — même si le contrôle d'accès le bloquera, il sait que l'ID existe et peut l'utiliser dans d'autres attaques (IDOR — Insecure Direct Object Reference). Il peut aussi compter le nombre de ressources en base (donnée potentiellement commercialement sensible).</p>
+        <p>Un UUID v4 est aléatoire : <code>550e8400-e29b-41d4-a716-446655440000</code>. Il y a 2¹²² (~5 × 10³⁶) valeurs possibles — deviner un UUID valide est computationnellement impossible. Les avantages :</p>
+        <ul>
+          <li><strong>Sécurité :</strong> impossible d'énumérer les IDs ou de deviner des ressources d'autres utilisateurs</li>
+          <li><strong>Scalabilité :</strong> les UUIDs peuvent être générés côté client ou en distribué sans risque de collision</li>
+          <li><strong>Migration :</strong> fusionner deux bases de données avec des UUIDs ne crée pas de conflits d'IDs</li>
+        </ul>
+        <p>Inconvénient : les UUIDs sont moins efficaces comme clé primaire MySQL (index B-tree moins performant qu'un entier séquentiel sur de très grandes tables — > 100 millions de lignes). Pour notre échelle, l'impact est négligeable.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment fonctionne l'activation des comptes par un admin et pourquoi ce choix ?</summary>
+      <div class="qa-answer">
+        <p>À l'inscription, le compte est créé avec <code>is_available = false</code>. Le JWT ne peut pas être généré pour un compte inactif — Symfony vérifie ce flag dans le <code>UserChecker</code> avant la génération du token. L'utilisateur reçoit un email lui indiquant d'attendre la validation.</p>
+        <p>Un administrateur voit les comptes en attente dans le back-office et les active manuellement (ou les rejette). Seule l'activation déclenche un email de bienvenue.</p>
+        <p>Pourquoi ce choix design (OWASP A04 — Conception sécurisée) ?</p>
+        <ul>
+          <li><strong>Contexte :</strong> (RE)Sources est une plateforme communautaire pour des professionnels de la santé mentale — pas une application grand public. L'accès doit être contrôlé.</li>
+          <li><strong>Prévention spam/bots :</strong> impossible de créer automatiquement des centaines de comptes pour spammer ou exploiter la plateforme</li>
+          <li><strong>Vérification de l'identité :</strong> l'admin peut vérifier que la personne appartient bien au réseau professionnel ciblé</li>
+        </ul>
+        <p>Inconvénient : friction à l'inscription. Pour une app grand public, c'est rédhibitoire — mais pour cette cible professionnelle, c'est une contrainte acceptée.</p>
       </div>
     </details>
 
