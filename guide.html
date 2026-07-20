@@ -1648,7 +1648,107 @@ Contraintes, liens vers la doc, fichiers concernés.</pre>
       </div>
     </details>
 
+    <details>
+      <summary>Pourquoi PHP-FPM et pas un serveur PHP intégré ?</summary>
+      <div class="qa-answer">
+        <p><strong>PHP-FPM</strong> (FastCGI Process Manager) est le mode d'exécution PHP recommandé en production. Contrairement au serveur intégré (<code>php -S</code>), PHP-FPM maintient un pool de processus PHP persistants — ils ne démarrent pas à chaque requête, ils restent en vie et traitent les requêtes l'une après l'autre. Résultats : performances bien supérieures, gestion fine de la concurrence (paramètre <code>pm.max_children</code>), et isolation entre requêtes.</p>
+        <p><strong>FastCGI</strong> est le protocole de communication entre Nginx et PHP-FPM via TCP sur le port <code>:9000</code> (réseau bridge Docker interne — non exposé à l'extérieur). Nginx reçoit la requête HTTP, mais ne sait pas exécuter du PHP : il la transmet à PHP-FPM via FastCGI, qui la traite et renvoie la réponse à Nginx, qui la renvoie au client.</p>
+        <p>L'image Docker utilisée est <code>php:8.4-fpm-alpine</code> — Alpine Linux (5 MB) plutôt que Debian pour réduire la surface d'attaque et la taille de l'image.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Pourquoi Flutter pour le mobile et pas React Native ?</summary>
+      <div class="qa-answer">
+        <p>Deux raisons principales :</p>
+        <ul>
+          <li><strong>Performances</strong> : Flutter compile directement en code machine ARM (AOT — Ahead Of Time). React Native passe par un bridge JavaScript → code natif à l'exécution. Ce bridge introduit une latence perceptible sur les animations complexes. Flutter dessine sa propre UI via le moteur Skia/Impeller — aucune traduction de composants natifs, ce qui garantit un comportement identique sur Android et iOS.</li>
+          <li><strong>Consistance UI</strong> : React Native délègue le rendu aux composants natifs de chaque plateforme (un <code>Button</code> ressemble différemment sur Android et iOS). Flutter dessine tout lui-même sur un canvas — l'application est pixel-perfect identique partout.</li>
+        </ul>
+        <p>Côté intégration : l'app Flutter consomme l'API REST Symfony avec le package <code>dio</code> (équivalent d'axios en JS), stocke le JWT dans le <code>FlutterSecureStorage</code> (keychain natif Android/iOS), et implémente le même système RBAC 4 rôles que le front web. La release APK est buildée en CI via GitHub Actions sur un runner Ubuntu.</p>
+      </div>
+    </details>
+
   </div>
+
+  <div class="qa-cat">Authentification & Droits</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Comment fonctionne l'authentification JWT de bout en bout ?</summary>
+      <div class="qa-answer">
+        <p>Le flux complet :</p>
+        <ol style="padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li>Le client envoie <code>POST /api/login</code> avec email + mot de passe</li>
+          <li>Symfony vérifie le mot de passe contre le hash bcrypt en base (<code>password_verify</code>)</li>
+          <li>Si correct, LexikJWTBundle génère un <strong>access token</strong> (TTL 3600s) signé en RS256 avec la clé privée RSA-2048</li>
+          <li>Le client reçoit aussi un <strong>refresh token</strong> (durée plus longue, stocké en base)</li>
+          <li>Chaque requête suivante envoie <code>Authorization: Bearer &lt;access_token&gt;</code></li>
+          <li>Symfony vérifie la signature RSA et l'expiration — automatiquement, avant d'appeler le contrôleur</li>
+          <li>À l'expiration, <code>POST /api/token/refresh</code> → nouveau access token sans ressaisie de mot de passe</li>
+        </ol>
+        <p>Le payload JWT contient : <code>sub</code> (UUID utilisateur), <code>roles</code>, <code>iat</code> (issued at), <code>exp</code> (expiration). Il n'est pas chiffré — il est encodé base64 — mais sa signature RSA garantit qu'il n'a pas été modifié.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment sont gérés les rôles et les droits d'accès (RBAC + Voters) ?</summary>
+      <div class="qa-answer">
+        <p>Deux mécanismes complémentaires coexistent dans Symfony :</p>
+        <p><strong>1. RBAC — 4 rôles hiérarchiques :</strong></p>
+        <ul>
+          <li><code>ROLE_CONNECTED</code> → consulter et télécharger des ressources</li>
+          <li><code>ROLE_MODERATOR</code> → valider, rejeter, supprimer du contenu</li>
+          <li><code>ROLE_ADMIN</code> → gérer utilisateurs, catégories, statistiques</li>
+          <li><code>ROLE_SUPER_ADMIN</code> → accès total, gestion des autres admins</li>
+        </ul>
+        <p>La hiérarchie Symfony (<code>security.yaml</code>) fait qu'un ROLE_ADMIN a automatiquement tous les droits d'un ROLE_MODERATOR — pas besoin de les lister explicitement.</p>
+        <p><strong>2. Voters — contrôle au niveau de la ressource :</strong> Le rôle seul ne suffit pas. Un utilisateur <code>ROLE_CONNECTED</code> ne peut modifier que ses propres ressources. Le <code>ResourceVoter</code> vérifie que <code>$ressource->getAuteur() === $utilisateurConnecte</code> avant d'autoriser l'action. Si ce n'est pas le cas : 403, même si le rôle serait suffisant.</p>
+        <p><strong>Catch-all dans <code>security.yaml</code> :</strong> tout <code>/api/**</code> non listé comme <code>PUBLIC_ACCESS</code> requiert <code>IS_AUTHENTICATED_FULLY</code> — une route oubliée est bloquée par défaut, jamais ouverte.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="qa-cat">Base de données & Données</div>
+  <div class="qa-list">
+
+    <details>
+      <summary>Quelle est la structure de la base de données ?</summary>
+      <div class="qa-answer">
+        <p>La base MySQL 8.0 contient les entités suivantes :</p>
+        <ul>
+          <li><strong>utilisateur</strong> — <code>uuid</code>, email, password (bcrypt), rôle, <code>is_available</code> (activation par admin), avatar_url</li>
+          <li><strong>ressource</strong> — <code>uuid</code>, titre, description, url_media, type, catégorie FK, auteur FK, statut (brouillon / publié / archivé)</li>
+          <li><strong>categorie</strong> — nom, slug (arborescence plate)</li>
+          <li><strong>participation</strong> — relation many-to-many utilisateur ↔ ressource (favoris, consultations, progression)</li>
+          <li><strong>commentaire</strong> — texte, auteur FK, ressource FK, statut modération</li>
+          <li><strong>log_action</strong> — audit trail : 16 types d'actions, utilisateur FK, IP, timestamp</li>
+          <li><strong>log_connexion</strong> — chaque tentative de login (succès ou échec), IP, user agent, timestamp</li>
+          <li><strong>password_reset_token</strong> — token usage unique, <code>expires_at</code>, booléen <code>used</code></li>
+        </ul>
+        <p>Pourquoi des <strong>UUID</strong> (et pas des entiers 1, 2, 3…) ? Un attaquant qui connaît l'URL <code>/api/ressources/42</code> peut facilement deviner <code>/api/ressources/43</code> et accéder à une ressource d'un autre utilisateur. Avec un UUID (<code>550e8400-e29b-41d4-a716-446655440000</code>), deviner un identifiant est computationnellement impossible.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment les fichiers médias sont-ils gérés ? Pourquoi Supabase ?</summary>
+      <div class="qa-answer">
+        <p>Les médias (images de couverture des ressources, avatars utilisateurs) ne sont pas stockés sur le serveur applicatif. Ils sont externalisés dans <strong>Supabase Storage</strong>, un service S3-compatible open source.</p>
+        <p>Flux d'upload :</p>
+        <ol style="padding-left:18px;display:flex;flex-direction:column;gap:4px">
+          <li>Le client envoie le fichier en multipart à l'API Symfony</li>
+          <li>Symfony valide le fichier (type MIME, taille max) puis l'envoie au bucket <code>Ressources</code> via le SDK Supabase PHP</li>
+          <li>Supabase retourne une URL publique CDN</li>
+          <li>Cette URL est stockée dans la colonne <code>url_media</code> de l'entité</li>
+        </ol>
+        <p><strong>Pourquoi pas un volume Docker ?</strong> Un volume Docker local crée des problèmes de scalabilité (si on ajoute un second serveur, les fichiers ne sont pas partagés) et de sauvegarde (il faut sauvegarder séparément). Supabase gère la réplication, la CDN, et les sauvegardes automatiquement.</p>
+        <p>La clé <code>service_role</code> Supabase (accès en écriture) est stockée dans GitHub Secrets — jamais dans le code.</p>
+      </div>
+    </details>
+
+  </div>
+
 </section>
 
 </main>
