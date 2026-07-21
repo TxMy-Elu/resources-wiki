@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workflows GitHub Actions — (RE)Sources</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:       #0D1117;
+  --surf:     #161B27;
+  --surf2:    #1E2535;
+  --surf3:    #263042;
+  --border:   rgba(130,150,200,0.11);
+  --border2:  rgba(130,150,200,0.20);
+  --text:     #CDD5E0;
+  --strong:   #E8EDFB;
+  --muted:    #6B7A99;
+
+  --ci:       #3B82F6;
+  --ci-dim:   rgba(59,130,246,0.10);
+  --ci-bord:  rgba(59,130,246,0.28);
+
+  --sec:      #EF4444;
+  --sec-dim:  rgba(239,68,68,0.10);
+  --sec-bord: rgba(239,68,68,0.28);
+
+  --cd:       #22C55E;
+  --cd-dim:   rgba(34,197,94,0.10);
+  --cd-bord:  rgba(34,197,94,0.28);
+
+  --amber:    #F0A732;
+  --amb-dim:  rgba(240,167,50,0.10);
+  --purple:   #9B7FEF;
+  --pur-dim:  rgba(155,127,239,0.10);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: inherit; text-decoration: none; }
+
+code {
+  font-family: 'Cascadia Code','Fira Code',Consolas,monospace;
+  font-size: 12px;
+  background: var(--surf3);
+  color: var(--ci);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ── Nav ── */
+nav {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  background: rgba(13,17,23,0.92);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--strong); font-size: 15px; }
+.nav-logo .pill { background: var(--ci); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+.nav-links { display: flex; gap: 22px; font-size: 13px; color: var(--muted); }
+.nav-links a:hover { color: var(--strong); }
+
+/* ── Wrap ── */
+.wrap { max-width: 1060px; margin: 0 auto; padding: 0 32px; width: 100%; }
+
+/* ── Hero ── */
+header { padding: 52px 0 40px; border-bottom: 1px solid var(--border); }
+.hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ci); margin-bottom: 10px; }
+.hero-title { font-size: 30px; font-weight: 700; color: var(--strong); letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 12px; }
+.hero-sub { font-size: 14px; color: var(--muted); max-width: 560px; line-height: 1.75; margin-bottom: 22px; }
+.file-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.file-pill {
+  font-size: 11.5px; font-family: 'Cascadia Code','Fira Code',Consolas,monospace;
+  padding: 4px 12px; border-radius: 6px; border: 1px solid; white-space: nowrap;
+}
+.fp-ci  { color: var(--ci);  border-color: var(--ci-bord);  background: var(--ci-dim); }
+.fp-sec { color: var(--sec); border-color: var(--sec-bord); background: var(--sec-dim); }
+.fp-cd  { color: var(--cd);  border-color: var(--cd-bord);  background: var(--cd-dim); }
+
+/* ── Trigger table ── */
+.trigger-section { padding: 36px 0; border-bottom: 1px solid var(--border); }
+.section-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+.section-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.trig-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.trig-table th {
+  text-align: left; padding: 9px 14px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); border-bottom: 1px solid var(--border2);
+}
+.trig-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.trig-table tr:last-child td { border-bottom: none; }
+.trig-table tr:hover td { background: var(--surf); }
+.trig-table td:first-child { color: var(--strong); font-weight: 500; }
+.trig-table td:nth-child(2), .trig-table td:nth-child(3), .trig-table td:nth-child(4) { text-align: center; }
+.trig-table th:nth-child(2) { color: var(--ci); }
+.trig-table th:nth-child(3) { color: var(--sec); }
+.trig-table th:nth-child(4) { color: var(--cd); }
+.check { font-size: 14px; }
+.check-y  { color: #22C55E; }
+.check-n  { color: var(--surf3); }
+.check-c  { color: var(--amber); }
+.check-note { font-size: 11px; color: var(--muted); }
+
+/* ── Dep diagram ── */
+.dep-section { padding: 32px 0; border-bottom: 1px solid var(--border); }
+.dep-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding: 8px 0 12px;
+}
+.dep-group { display: flex; flex-direction: column; gap: 6px; }
+.dep-job {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.dep-ci  { background: var(--ci-dim);  border-color: var(--ci-bord);  color: var(--ci); }
+.dep-sec { background: var(--sec-dim); border-color: var(--sec-bord); color: var(--sec); }
+.dep-cd  { background: var(--cd-dim);  border-color: var(--cd-bord);  color: var(--cd); }
+.dep-amb { background: var(--amb-dim); border-color: rgba(240,167,50,0.3); color: var(--amber); }
+.dep-arr {
+  padding: 0 14px;
+  color: var(--muted);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  align-self: center;
+}
+.dep-label { font-size: 10px; color: var(--muted); text-align: center; margin-top: 6px; font-style: italic; }
+
+/* ── Workflow sections ── */
+.wf-section { padding: 44px 0; border-bottom: 1px solid var(--border); }
+.wf-section:last-of-type { border-bottom: none; }
+
+.wf-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  border: 1px solid;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.wf-ci-h  { background: var(--ci-dim);  border-color: var(--ci-bord); }
+.wf-sec-h { background: var(--sec-dim); border-color: var(--sec-bord); }
+.wf-cd-h  { background: var(--cd-dim);  border-color: var(--cd-bord); }
+
+.wf-badge {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 5px; flex-shrink: 0;
+}
+.wf-ci-b  { background: var(--ci);  color: #fff; }
+.wf-sec-b { background: var(--sec); color: #fff; }
+.wf-cd-b  { background: var(--cd);  color: #0D1117; }
+
+.wf-name { font-size: 15px; font-weight: 700; color: var(--strong); }
+.wf-file { font-family: 'Cascadia Code','Fira Code',Consolas,monospace; font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.wf-triggers { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.wf-trig {
+  font-size: 11px; padding: 3px 9px; border-radius: 4px;
+  background: var(--surf2); border: 1px solid var(--border2); color: var(--muted);
+}
+
+/* ── Job card ── */
+.jobs-grid { display: flex; flex-direction: column; gap: 20px; }
+
+.job-card {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.job-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.job-num {
+  width: 26px; height: 26px; border-radius: 6px;
+  background: var(--surf3); display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--muted); flex-shrink: 0;
+}
+.job-name { font-size: 14px; font-weight: 700; color: var(--strong); }
+.job-id   { font-size: 11.5px; font-family: 'Cascadia Code','Fira Code',Consolas,monospace; color: var(--muted); }
+.job-badges { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.jb {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap;
+}
+.jb-parallel { color: var(--purple); border-color: rgba(155,127,239,0.3); background: var(--pur-dim); }
+.jb-after    { color: var(--amber);  border-color: rgba(240,167,50,0.3);  background: var(--amb-dim); }
+.jb-cond     { color: var(--amber);  border-color: rgba(240,167,50,0.3);  background: var(--amb-dim); }
+.jb-active   { color: var(--cd);     border-color: var(--cd-bord);         background: var(--cd-dim); }
+.jb-ci       { color: var(--ci);     border-color: var(--ci-bord);         background: var(--ci-dim); }
+.jb-sec      { color: var(--sec);    border-color: var(--sec-bord);        background: var(--sec-dim); }
+
+.job-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+@media (max-width: 780px) { .job-body { grid-template-columns: 1fr; } }
+
+.job-desc-col { padding: 18px 20px; border-right: 1px solid var(--border); }
+.job-code-col { padding: 0; }
+@media (max-width: 780px) { .job-desc-col { border-right: none; border-bottom: 1px solid var(--border); } }
+
+.job-desc { font-size: 13px; color: var(--text); line-height: 1.7; margin-bottom: 14px; }
+
+.steps { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.steps li {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 12.5px;
+}
+.step-n {
+  width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0;
+  background: var(--surf3); display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 1px;
+}
+.step-txt { color: var(--text); flex: 1; line-height: 1.55; }
+.step-txt strong { color: var(--strong); }
+.step-txt em { color: var(--muted); font-style: normal; font-size: 11.5px; }
+
+.cond-note {
+  margin-top: 12px; padding: 9px 12px;
+  background: var(--amb-dim); border: 1px solid rgba(240,167,50,0.25); border-radius: 6px;
+  font-size: 12px; color: var(--amber); line-height: 1.5;
+}
+.cond-note strong { color: var(--amber); }
+
+/* ── Code block ── */
+.code-wrap {
+  background: #0A1020;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.code-label {
+  padding: 9px 14px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.code-label span { font-family: 'Cascadia Code','Fira Code',Consolas,monospace; font-weight: 400; color: var(--surf3); font-size: 11px; letter-spacing: 0; text-transform: none; }
+pre.yaml {
+  font-family: 'Cascadia Code','Fira Code',Consolas,monospace;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #A8B8CC;
+  padding: 14px 16px;
+  overflow-x: auto;
+  flex: 1;
+  white-space: pre;
+}
+.y-key  { color: #79A8D2; }
+.y-val  { color: #B5CEA8; }
+.y-str  { color: #CE9178; }
+.y-sec  { color: #FFB84D; }
+.y-cm   { color: #4A5A6A; font-style: italic; }
+.y-kw   { color: #C586C0; }
+.y-op   { color: #569CD6; }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 32px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: auto;
+}
+
+@media (max-width: 640px) {
+  .wrap, .nav-inner, footer { padding-left: 16px; padding-right: 16px; }
+  .nav-links { display: none; }
+  .dep-flow { flex-direction: column; }
+  .dep-arr { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <span class="pill">BL3</span>
+      (RE)Sources Relationnelles
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="guide.html">Guide</a>
+      <a href="dashboard.html">Issues</a>
+      <a href="archi-globale.html">Architecture</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header>
+  <div class="wrap">
+    <div class="hero-eyebrow">GitHub Actions — 3 workflows</div>
+    <h1 class="hero-title">Workflows CI/CD</h1>
+    <p class="hero-sub">Chaque push déclenche une chaîne automatisée : tests, analyse qualité, scan de sécurité, build Docker, déploiement. Voici en détail ce que fait chaque job, dans quel ordre, et pourquoi.</p>
+    <div class="file-pills">
+      <span class="file-pill fp-ci">.github/workflows/ci.yml</span>
+      <span class="file-pill fp-sec">.github/workflows/security.yml</span>
+      <span class="file-pill fp-cd">.github/workflows/cd.yml</span>
+    </div>
+  </div>
+</header>
+
+<main style="flex:1">
+
+  <!-- Trigger overview -->
+  <div class="trigger-section">
+    <div class="wrap">
+      <div class="section-eyebrow">Déclencheurs — quand chaque workflow s'exécute</div>
+      <div style="overflow-x:auto">
+        <table class="trig-table">
+          <thead>
+            <tr>
+              <th>Événement</th>
+              <th>CI — Tests &amp; Qualité</th>
+              <th>Security — CVE &amp; OWASP</th>
+              <th>CD — Build &amp; Deploy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>push sur <code>dev</code></td>
+              <td><span class="check check-y">✓</span></td>
+              <td><span class="check check-y">✓</span></td>
+              <td><span class="check check-n">—</span></td>
+            </tr>
+            <tr>
+              <td>push sur <code>main</code></td>
+              <td><span class="check check-y">✓</span></td>
+              <td><span class="check check-y">✓</span></td>
+              <td><span class="check check-c">✓ auto préprod</span></td>
+            </tr>
+            <tr>
+              <td>Pull Request vers <code>dev</code> / <code>main</code></td>
+              <td><span class="check check-y">✓</span></td>
+              <td><span class="check check-y">✓</span></td>
+              <td><span class="check check-n">—</span></td>
+            </tr>
+            <tr>
+              <td>Nuit — cron <code>0 2 * * *</code> (2h UTC)</td>
+              <td><span class="check check-n">—</span></td>
+              <td><span class="check check-c">✓ OWASP seulement</span></td>
+              <td><span class="check check-n">—</span></td>
+            </tr>
+            <tr>
+              <td>Manuel (<code>workflow_dispatch</code>)</td>
+              <td><span class="check check-n">—</span></td>
+              <td><span class="check check-n">—</span></td>
+              <td><span class="check check-c">✓ production uniquement</span></td>
+            </tr>
+            <tr>
+              <td>CD → après CI + Security passés</td>
+              <td><span class="check check-n">—</span></td>
+              <td><span class="check check-n">—</span></td>
+              <td><span class="check check-y">✓ auto via workflow_run</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dependency diagram -->
+  <div class="dep-section">
+    <div class="wrap">
+      <div class="section-eyebrow">Chaîne d'exécution sur un push <code>main</code></div>
+      <div class="dep-flow">
+        <div class="dep-group">
+          <div class="dep-job dep-ci">tests</div>
+          <div class="dep-job dep-ci">lint</div>
+          <div class="dep-job dep-sec">composer-audit</div>
+          <div class="dep-job dep-sec">trivy-image</div>
+          <div class="dep-job dep-sec">trivy-code</div>
+          <div class="dep-job dep-sec">gitleaks</div>
+          <div class="dep-job dep-amb">owasp (main/cron)</div>
+          <div class="dep-label">parallèles</div>
+        </div>
+        <div class="dep-arr">→</div>
+        <div class="dep-group">
+          <div class="dep-job dep-ci">sonarcloud</div>
+          <div class="dep-label">needs: tests</div>
+        </div>
+        <div class="dep-arr">→</div>
+        <div class="dep-group">
+          <div class="dep-job dep-cd">build Docker</div>
+          <div class="dep-label">si CI + Security ✓</div>
+        </div>
+        <div class="dep-arr">→</div>
+        <div class="dep-group">
+          <div class="dep-job dep-cd">deploy-preprod</div>
+          <div class="dep-label">si PREPROD_ENABLED</div>
+        </div>
+        <div class="dep-arr">→</div>
+        <div class="dep-group">
+          <div class="dep-job dep-amb">deploy-prod</div>
+          <div class="dep-label">manuel seulement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════ CI -->
+  <section class="wf-section" id="ci">
+    <div class="wrap">
+
+      <div class="wf-header wf-ci-h">
+        <span class="wf-badge wf-ci-b">CI</span>
+        <div>
+          <div class="wf-name">Tests &amp; Qualité</div>
+          <div class="wf-file">ci.yml · 3 jobs · ~4-6 min</div>
+        </div>
+        <div class="wf-triggers">
+          <span class="wf-trig">push dev/main</span>
+          <span class="wf-trig">PR vers dev/main/release/hotfix</span>
+        </div>
+      </div>
+
+      <div class="jobs-grid">
+
+        <!-- Job 1: tests -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">1</div>
+            <div>
+              <div class="job-name">PHPUnit Tests</div>
+              <div class="job-id">job: tests</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-active">toujours actif</span>
+              <span class="jb jb-parallel">parallèle avec lint</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Lance les 24 tests PHPUnit sur une vraie base MySQL 8.0 (pas de mock). C'est le job le plus critique : s'il échoue, SonarCloud et le CD ne se déclenchent pas. Il génère aussi le rapport de couverture de code (coverage.xml) transmis à SonarCloud.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>Service MySQL 8.0</strong> — GitHub Actions démarre un container MySQL parallèlement au job. Healthcheck toutes les 10s avant de continuer. <em>Base : resources_test / user : app</em></span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>Setup PHP 8.4 + PCOV</strong> — <code>shivammathur/setup-php@v2</code> installe PHP 8.4 avec les extensions pdo, pdo_mysql, intl, mbstring, opcache et le driver de couverture PCOV (plus rapide que Xdebug)</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>Cache Composer</strong> — le dossier <code>vendor/</code> est mis en cache avec la clé <code>composer-{hash(composer.lock)}</code>. Si <code>composer.lock</code> n'a pas changé, les dépendances ne sont pas retéléchargées</span></li>
+                <li><span class="step-n">4</span><span class="step-txt"><strong>composer install</strong> — avec <code>--optimize-autoloader</code> et <code>--no-scripts</code> pour éviter les effets de bord</span></li>
+                <li><span class="step-n">5</span><span class="step-txt"><strong>Génération des clés JWT RSA-4096</strong> — <code>openssl genpkey</code> + <code>openssl rsa -pubout</code>. La passphrase vient de <code>secrets.JWT_PASSPHRASE</code>. Sans ces clés, Symfony ne peut pas signer les tokens → tous les tests d'authentification échoueraient</span></li>
+                <li><span class="step-n">6</span><span class="step-txt"><strong>Création du .env minimal</strong> — Symfony cherche un fichier .env au démarrage (<code>bootEnv()</code>). On crée <code>echo "APP_ENV=test" &gt; .env</code> — les vraies valeurs viennent des variables d'env du runner (GitHub Secrets)</span></li>
+                <li><span class="step-n">7</span><span class="step-txt"><strong>Cache clear + migrations</strong> — <code>bin/console cache:clear</code> puis <code>doctrine:migrations:migrate</code> — crée les tables dans <code>resources_test</code></span></li>
+                <li><span class="step-n">8</span><span class="step-txt"><strong>Fixtures</strong> — <code>doctrine:fixtures:load --append</code>. Le flag <code>--append</code> évite le TRUNCATE (qui peut bloquer sur les FK). Injecte les données de test : utilisateurs, ressources, catégories</span></li>
+                <li><span class="step-n">9</span><span class="step-txt"><strong>PHPUnit</strong> — <code>--coverage-clover coverage.xml --stop-on-failure</code>. S'arrête au premier test échoué. Génère le rapport XML de couverture</span></li>
+                <li><span class="step-n">10</span><span class="step-txt"><strong>Upload coverage artifact</strong> — <code>coverage.xml</code> uploadé comme artifact GitHub Actions (TTL 1 jour) pour être téléchargé par le job sonarcloud</span></li>
+              </ol>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>ci.yml · job: tests</span></div>
+                <pre class="yaml"><span class="y-key">services</span>:
+  <span class="y-key">mysql</span>:
+    <span class="y-key">image</span>: <span class="y-val">mysql:8.0</span>
+    <span class="y-key">env</span>:
+      <span class="y-key">MYSQL_DATABASE</span>: <span class="y-val">resources_test</span>
+      <span class="y-key">MYSQL_USER</span>: <span class="y-val">app</span>
+      <span class="y-key">MYSQL_PASSWORD</span>: <span class="y-val">app</span>
+    <span class="y-key">options</span>: >-
+      --health-cmd=<span class="y-str">"mysqladmin ping -u app -papp"</span>
+      --health-interval=10s
+      --health-retries=5
+
+<span class="y-key">steps</span>:
+  - <span class="y-key">name</span>: <span class="y-val">Setup PHP 8.4</span>
+    <span class="y-key">uses</span>: <span class="y-val">shivammathur/setup-php@v2</span>
+    <span class="y-key">with</span>:
+      <span class="y-key">php-version</span>: <span class="y-str">"8.4"</span>
+      <span class="y-key">coverage</span>: <span class="y-val">pcov</span>
+
+  - <span class="y-key">name</span>: <span class="y-val">Generate JWT keys</span>
+    <span class="y-key">run</span>: |
+      openssl genpkey -algorithm RSA \
+        -out config/jwt/private.pem \
+        -aes256 -pass pass:<span class="y-sec">${{ secrets.JWT_PASSPHRASE }}</span>
+      openssl rsa -pubout \
+        -in config/jwt/private.pem \
+        -out config/jwt/public.pem \
+        -passin pass:<span class="y-sec">${{ secrets.JWT_PASSPHRASE }}</span>
+
+  - <span class="y-key">name</span>: <span class="y-val">Run tests</span>
+    <span class="y-key">run</span>: <span class="y-val">php bin/phpunit</span>
+      <span class="y-val">--coverage-clover coverage.xml</span>
+      <span class="y-val">--stop-on-failure</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 2: lint -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">2</div>
+            <div>
+              <div class="job-name">Lint &amp; Static Analysis</div>
+              <div class="job-id">job: lint</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-active">toujours actif</span>
+              <span class="jb jb-parallel">parallèle avec tests</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Vérifie la syntaxe PHP, les fichiers de configuration YAML et le container Symfony sans lancer les tests. S'exécute en parallèle avec le job <code>tests</code> pour réduire le temps total du pipeline. N'a pas besoin de base de données.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>PHP Syntax check</strong> — <code>find src/ -name "*.php" -exec php -l {}</code> — vérifie que chaque fichier PHP est parseable. Attrape les erreurs de syntaxe avant même que les tests ne tournent</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>Lint YAML</strong> — <code>php bin/console lint:yaml config/ --parse-tags</code> — valide tous les fichiers YAML de config Symfony (services.yaml, security.yaml, routes.yaml…)</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>Lint container</strong> — <code>php bin/console lint:container</code> — vérifie que tous les services définis dans le DIC (Dependency Injection Container) Symfony sont bien configurés et que leurs dépendances existent</span></li>
+              </ol>
+              <div class="cond-note">
+                <strong>Note :</strong> le lint utilise des valeurs factices pour les secrets (<code>ci_dummy_secret</code>) car il ne fait pas tourner l'application, juste l'analyser. Pas de connexion BDD nécessaire.
+              </div>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>ci.yml · job: lint</span></div>
+                <pre class="yaml"><span class="y-key">lint</span>:
+  <span class="y-key">name</span>: <span class="y-val">Lint &amp; Static Analysis</span>
+  <span class="y-key">runs-on</span>: <span class="y-val">ubuntu-latest</span>
+  <span class="y-cm"># pas de needs: → parallèle avec tests</span>
+
+  <span class="y-key">env</span>:
+    <span class="y-key">APP_ENV</span>: <span class="y-val">dev</span>
+    <span class="y-key">APP_SECRET</span>: <span class="y-val">ci_dummy_secret_for_lint_only</span>
+    <span class="y-cm"># Valeurs factices — lint ne fait pas tourner l'app</span>
+
+  <span class="y-key">steps</span>:
+    - <span class="y-key">name</span>: <span class="y-val">PHP Syntax check</span>
+      <span class="y-key">run</span>: |
+        find src/ -name <span class="y-str">"*.php"</span> \
+          -exec php -l {} \; \
+          | grep -v <span class="y-str">"No syntax errors"</span> || true
+
+    - <span class="y-key">name</span>: <span class="y-val">Lint YAML</span>
+      <span class="y-key">run</span>: <span class="y-val">php bin/console lint:yaml config/ --parse-tags</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">Lint container</span>
+      <span class="y-key">run</span>: <span class="y-val">php bin/console lint:container --no-debug</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 3: sonarcloud -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">3</div>
+            <div>
+              <div class="job-name">SonarCloud Analysis</div>
+              <div class="job-id">job: sonarcloud</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-after">needs: tests</span>
+              <span class="jb jb-cond">skip si Dependabot</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Analyse la qualité et la sécurité du code source via la plateforme SonarCloud. Ne peut démarrer qu'après la fin du job <code>tests</code> car il a besoin du rapport de couverture <code>coverage.xml</code> produit par PHPUnit.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>Checkout avec fetch-depth: 0</strong> — récupère l'historique git complet. SonarCloud analyse les nouveaux commits par rapport à la branche de base — sans l'historique complet, il ne peut pas calculer le différentiel</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>Download artifact coverage</strong> — télécharge <code>coverage.xml</code> uploadé par le job <code>tests</code>. SonarCloud lit ce fichier pour connaître le taux de couverture de code ligne par ligne</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>SonarCloud Scan</strong> — <code>SonarSource/sonarcloud-github-action</code> analyse le code, détecte les bugs, code smells, vulnérabilités, et calcule le Quality Gate. <em>Quality Gate configuré : 0 nouvelles vulnérabilités, 0 bugs bloquants, couverture &gt; 70%</em></span></li>
+              </ol>
+              <div class="cond-note">
+                <strong>Conditionnel :</strong> <code>if: github.actor != 'dependabot[bot]'</code> — Dependabot n'a pas les permissions pour accéder à <code>SONAR_TOKEN</code> (secret de dépôt). Le scan est ignoré sur ses PRs.
+              </div>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>ci.yml · job: sonarcloud</span></div>
+                <pre class="yaml"><span class="y-key">sonarcloud</span>:
+  <span class="y-key">name</span>: <span class="y-val">SonarCloud Analysis</span>
+  <span class="y-key">needs</span>: <span class="y-val">tests</span>
+  <span class="y-key">if</span>: <span class="y-val">github.actor != 'dependabot[bot]'</span>
+
+  <span class="y-key">steps</span>:
+    - <span class="y-key">name</span>: <span class="y-val">Checkout</span>
+      <span class="y-key">uses</span>: <span class="y-val">actions/checkout@v4</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">fetch-depth</span>: <span class="y-val">0</span>
+        <span class="y-cm"># historique complet requis pour le diff</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">Download coverage report</span>
+      <span class="y-key">uses</span>: <span class="y-val">actions/download-artifact@v4</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">name</span>: <span class="y-val">coverage</span>
+        <span class="y-cm"># coverage.xml uploadé par le job tests</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">SonarCloud Scan</span>
+      <span class="y-key">uses</span>: <span class="y-val">SonarSource/sonarcloud-github-action@master</span>
+      <span class="y-key">env</span>:
+        <span class="y-key">GITHUB_TOKEN</span>: <span class="y-sec">${{ secrets.GITHUB_TOKEN }}</span>
+        <span class="y-key">SONAR_TOKEN</span>:  <span class="y-sec">${{ secrets.SONAR_TOKEN }}</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ SECURITY -->
+  <section class="wf-section" id="security">
+    <div class="wrap">
+
+      <div class="wf-header wf-sec-h">
+        <span class="wf-badge wf-sec-b">Security</span>
+        <div>
+          <div class="wf-name">CVE &amp; OWASP</div>
+          <div class="wf-file">security.yml · 5 jobs · ~8-20 min</div>
+        </div>
+        <div class="wf-triggers">
+          <span class="wf-trig">push dev/main</span>
+          <span class="wf-trig">PR</span>
+          <span class="wf-trig">cron 0 2 * * * (nuit)</span>
+        </div>
+      </div>
+
+      <div class="jobs-grid">
+
+        <!-- composer-audit -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">1</div>
+            <div>
+              <div class="job-name">Composer Audit — CVE PHP</div>
+              <div class="job-id">job: composer-audit</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-active">toujours actif</span>
+              <span class="jb jb-sec">OWASP A06</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Vérifie les dépendances Composer contre la base de données des advisories de sécurité PHP (Packagist Security Advisories). Détecte les packages avec des CVE connues avant de builder ou déployer.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>composer audit --format=json</strong> — produit un rapport JSON listant les packages vulnérables avec leur CVE, sévérité (CRITICAL/HIGH/MEDIUM/LOW), lien advisory</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>Script Python de filtre</strong> — parse le JSON, compte les advisories de sévérité CRITICAL ou HIGH. Si le count est &gt; 0, affiche chaque vulnérabilité et quitte avec code 1 → le job échoue et bloque le CD</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>Upload artifact</strong> — le rapport JSON est conservé même si le job échoue (<code>if: always()</code>) pour pouvoir être consulté et archivé</span></li>
+              </ol>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>security.yml · composer-audit</span></div>
+                <pre class="yaml">    - <span class="y-key">name</span>: <span class="y-val">Composer audit</span>
+      <span class="y-key">run</span>: <span class="y-val">composer audit --format=json 2>&amp;1 | tee composer-audit.json || true</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">Check for critical vulnerabilities</span>
+      <span class="y-key">run</span>: |
+        CRITICAL=$(cat composer-audit.json | python3 -c <span class="y-str">"
+        import json,sys
+        data=json.load(sys.stdin)
+        advisories=data.get('advisories',{})
+        critical=[a for pkg in advisories.values()
+                  for a in pkg
+                  if a.get('severity','').lower()
+                  in ['critical','high']]
+        print(len(critical))
+        "</span> || echo <span class="y-str">"0"</span>)
+        echo <span class="y-str">"Critical/High found: $CRITICAL"</span>
+        if [ <span class="y-str">"$CRITICAL"</span> -gt <span class="y-str">"0"</span> ]; then
+          echo <span class="y-str">"❌ Vulnérabilités CRITICAL/HIGH détectées!"</span>
+          exit 1
+        fi</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- trivy-image -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">2</div>
+            <div>
+              <div class="job-name">Trivy — Scan image Docker</div>
+              <div class="job-id">job: trivy-image</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-cond">main/dev push seulement</span>
+              <span class="jb jb-sec">OWASP A06</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Build l'image <code>Dockerfile.prod</code> (multi-stage Alpine) et la scanne avec Trivy pour détecter les CVE dans l'OS Alpine, les bibliothèques système et les paquets PHP. Les résultats sont remontés dans l'onglet Security du repo GitHub.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>docker build -f Dockerfile.prod</strong> — build l'image de production complète (les 2 stages). Taggée <code>ressources-api:scan</code> localement</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>Trivy scan (table)</strong> — format lisible dans les logs. <code>exit-code: 1</code> → le job échoue si une CVE CRITICAL ou HIGH non patchée est trouvée. <code>ignore-unfixed: true</code> ignore les CVE sans correctif disponible</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>Trivy scan (SARIF)</strong> — format standardisé pour GitHub. Couvre CRITICAL/HIGH/MEDIUM. S'exécute <code>if: always()</code> même si le scan table a échoué, pour avoir le rapport complet</span></li>
+                <li><span class="step-n">4</span><span class="step-txt"><strong>Upload SARIF</strong> — <code>github/codeql-action/upload-sarif</code> pousse les résultats dans l'onglet <em>Security → Code scanning</em> du repo GitHub</span></li>
+              </ol>
+              <div class="cond-note">
+                <strong>Conditionnel :</strong> <code>if: github.ref == 'refs/heads/main' || 'refs/heads/dev'</code> — ne tourne pas sur les PRs car builder une image complète prend 3-5 min. Les PRs sont couvertes par <code>composer-audit</code> et <code>trivy-code</code>.
+              </div>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>security.yml · trivy-image</span></div>
+                <pre class="yaml">    - <span class="y-key">name</span>: <span class="y-val">Build image for scanning</span>
+      <span class="y-key">run</span>: <span class="y-val">docker build -f Dockerfile.prod -t ressources-api:scan .</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">Trivy scan — CRITICAL &amp; HIGH</span>
+      <span class="y-key">uses</span>: <span class="y-val">aquasecurity/trivy-action@master</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">image-ref</span>:     <span class="y-val">ressources-api:scan</span>
+        <span class="y-key">format</span>:        <span class="y-val">table</span>
+        <span class="y-key">exit-code</span>:     <span class="y-str">"1"</span>
+        <span class="y-key">severity</span>:      <span class="y-val">CRITICAL,HIGH</span>
+        <span class="y-key">ignore-unfixed</span>: <span class="y-val">true</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">Trivy scan — SARIF (GitHub Security tab)</span>
+      <span class="y-key">uses</span>: <span class="y-val">aquasecurity/trivy-action@master</span>
+      <span class="y-key">if</span>: <span class="y-val">always()</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">format</span>:  <span class="y-val">sarif</span>
+        <span class="y-key">output</span>:  <span class="y-val">trivy-results.sarif</span>
+        <span class="y-key">severity</span>: <span class="y-val">CRITICAL,HIGH,MEDIUM</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">Upload SARIF to GitHub Security</span>
+      <span class="y-key">uses</span>: <span class="y-val">github/codeql-action/upload-sarif@v4</span>
+      <span class="y-key">if</span>: <span class="y-val">always()</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- trivy-code -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">3</div>
+            <div>
+              <div class="job-name">Trivy — Scan code source</div>
+              <div class="job-id">job: trivy-code</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-active">toujours actif</span>
+              <span class="jb jb-parallel">parallèle</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Scanne le code source (filesystem) plutôt que l'image Docker. Détecte trois catégories de problèmes : secrets hardcodés, misconfigurations (fichiers de config dangereux), et vulnérabilités dans les fichiers de dépendances.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>scan-type: fs</strong> — mode filesystem, scanne le repo directement sans builder d'image</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>scanners: secret,misconfig,vuln</strong> — 3 types simultanément : clés API dans le code, fichiers .env commités, vulnérabilités déclarées dans composer.json</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>Upload SARIF</strong> — résultats remontés dans GitHub Security tab</span></li>
+              </ol>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>security.yml · trivy-code</span></div>
+                <pre class="yaml">    - <span class="y-key">name</span>: <span class="y-val">Trivy filesystem scan</span>
+      <span class="y-key">uses</span>: <span class="y-val">aquasecurity/trivy-action@master</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">scan-type</span>: <span class="y-val">fs</span>
+        <span class="y-key">scan-ref</span>:  <span class="y-str">.</span>
+        <span class="y-key">format</span>:    <span class="y-val">sarif</span>
+        <span class="y-key">output</span>:    <span class="y-val">trivy-fs-results.sarif</span>
+        <span class="y-key">scanners</span>:  <span class="y-val">secret,misconfig,vuln</span>
+        <span class="y-cm"># secret  → clés API/tokens dans le code</span>
+        <span class="y-cm"># misconfig → .env commités, permissions</span>
+        <span class="y-cm"># vuln    → dépendances composer.json</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- gitleaks -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">4</span></div>
+            <div>
+              <div class="job-name">Gitleaks — Détection de secrets</div>
+              <div class="job-id">job: gitleaks</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-active">toujours actif</span>
+              <span class="jb jb-parallel">parallèle</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Scanne <strong>l'intégralité de l'historique git</strong> (tous les commits, pas seulement le dernier) à la recherche de secrets commités par erreur : tokens API, mots de passe, clés privées. Complémentaire à Trivy-code qui ne scanne que l'état actuel.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>fetch-depth: 0</strong> — checkout de l'historique complet. Sans ça, seul le dernier commit est analysé — un secret commité il y a 3 mois puis supprimé dans un commit suivant passerait inaperçu</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>gitleaks-action@v3</strong> — détecte plus de 150 patterns (AWS keys, GitHub tokens, Supabase keys, JWT secrets, mots de passe dans les URLs de connexion…)</span></li>
+              </ol>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>security.yml · gitleaks</span></div>
+                <pre class="yaml"><span class="y-key">gitleaks</span>:
+  <span class="y-key">name</span>: <span class="y-val">Gitleaks — Secret detection</span>
+  <span class="y-key">runs-on</span>: <span class="y-val">ubuntu-latest</span>
+
+  <span class="y-key">steps</span>:
+    - <span class="y-key">name</span>: <span class="y-val">Checkout</span>
+      <span class="y-key">uses</span>: <span class="y-val">actions/checkout@v4</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">fetch-depth</span>: <span class="y-val">0</span>
+        <span class="y-cm"># TOUT l'historique git — pas seulement HEAD</span>
+
+    - <span class="y-key">name</span>: <span class="y-val">Gitleaks scan</span>
+      <span class="y-key">uses</span>: <span class="y-val">gitleaks/gitleaks-action@v3</span>
+      <span class="y-key">env</span>:
+        <span class="y-key">GITHUB_TOKEN</span>: <span class="y-sec">${{ secrets.GITHUB_TOKEN }}</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- owasp -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">5</div>
+            <div>
+              <div class="job-name">OWASP Dependency Check</div>
+              <div class="job-id">job: owasp-dependency-check</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-cond">main push + nuit seulement</span>
+              <span class="jb jb-sec">NIST NVD</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Analyse plus approfondie que <code>composer-audit</code> : consulte la base NIST NVD (National Vulnerability Database) complète pour croiser les dépendances avec toutes les CVE connues, y compris les bibliothèques transitives non déclarées directement dans composer.json.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>Dependency-Check_Action</strong> — télécharge la NVD (5-15 min selon le cache), analyse récursivement toutes les dépendances directes et transitives</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>--failOnCVSS 7</strong> — échoue si une CVE avec un score CVSS ≥ 7.0 (HIGH/CRITICAL) est trouvée. Le score CVSS va de 0 à 10</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>--enableRetired</strong> — inclut aussi les packages retirés (dépréciés), pas seulement ceux avec CVE active</span></li>
+                <li><span class="step-n">4</span><span class="step-txt"><strong>format: ALL</strong> — génère les rapports en HTML, JSON, XML, CSV → uploadés comme artifact</span></li>
+              </ol>
+              <div class="cond-note">
+                <strong>Pourquoi pas sur chaque PR ?</strong> Le téléchargement de la NVD prend 5-15 minutes et génère des milliers de faux positifs non applicables à PHP. <code>composer-audit</code> (5s) + Trivy couvrent les cas critiques. OWASP DC sert de filet de sécurité nocturne plus exhaustif.
+              </div>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>security.yml · owasp-dependency-check</span></div>
+                <pre class="yaml"><span class="y-key">owasp-dependency-check</span>:
+  <span class="y-key">if</span>: <span class="y-val">github.event_name == 'schedule'</span>
+      <span class="y-op">||</span> <span class="y-val">github.ref == 'refs/heads/main'</span>
+  <span class="y-cm"># NVD = 5-15 min de téléchargement</span>
+  <span class="y-cm"># On évite ça sur chaque PR</span>
+
+  <span class="y-key">steps</span>:
+    - <span class="y-key">name</span>: <span class="y-val">OWASP Dependency Check</span>
+      <span class="y-key">uses</span>: <span class="y-val">dependency-check/Dependency-Check_Action@main</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">project</span>: <span class="y-val">ressources_api</span>
+        <span class="y-key">path</span>:    <span class="y-str">.</span>
+        <span class="y-key">format</span>:  <span class="y-val">ALL</span>
+        <span class="y-key">args</span>: >
+          --enableRetired
+          --failOnCVSS 7</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ CD -->
+  <section class="wf-section" id="cd">
+    <div class="wrap">
+
+      <div class="wf-header wf-cd-h">
+        <span class="wf-badge wf-cd-b">CD</span>
+        <div>
+          <div class="wf-name">Build &amp; Deploy</div>
+          <div class="wf-file">cd.yml · 3 jobs · ~5-10 min</div>
+        </div>
+        <div class="wf-triggers">
+          <span class="wf-trig">après CI + Security ✓ sur main</span>
+          <span class="wf-trig">workflow_dispatch (prod)</span>
+        </div>
+      </div>
+
+      <div class="jobs-grid">
+
+        <!-- build -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">1</div>
+            <div>
+              <div class="job-name">Build &amp; Push Docker</div>
+              <div class="job-id">job: build</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-cond">si CI + Security passés</span>
+              <span class="jb jb-cd" style="color:var(--cd);border-color:var(--cd-bord);background:var(--cd-dim);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;border:1px solid;white-space:nowrap;">GHCR</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Construit l'image Docker de production (<code>Dockerfile.prod</code>, multi-stage Alpine) et la pousse sur GitHub Container Registry (GHCR) avec deux tags : le SHA court du commit et <code>:latest</code>. L'image est immuable et traçable.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>Condition workflow_run</strong> — le CD ne démarre que si les workflows CI et Security ont tous les deux terminé avec <code>conclusion == 'success'</code> sur <code>main</code>. Si l'un échoue, le CD ne se lance pas</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>Login GHCR</strong> — <code>docker/login-action</code> avec <code>secrets.GHCR_USERNAME</code> + <code>secrets.GHCR_TOKEN</code>. Le token est un Personal Access Token GitHub avec scope <code>write:packages</code></span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>Docker Buildx</strong> — active le builder multi-platform de Docker (supporte arm64/amd64). Nécessaire pour la compatibilité cross-platform</span></li>
+                <li><span class="step-n">4</span><span class="step-txt"><strong>docker/metadata-action</strong> — génère automatiquement les tags : <code>sha-abc1234f</code> (SHA court) + <code>:latest</code> sur la branche par défaut. Expose <code>steps.meta.outputs.version</code> pour les jobs de déploiement</span></li>
+                <li><span class="step-n">5</span><span class="step-txt"><strong>Build &amp; push</strong> — build depuis <code>Dockerfile.prod</code>, push vers <code>ghcr.io/txmy-elu/ressources_api</code>. Cache GHA utilisé pour réutiliser les layers entre les builds</span></li>
+                <li><span class="step-n">6</span><span class="step-txt"><strong>Output image_tag</strong> — le SHA est passé en <code>outputs.image_tag</code> pour que les jobs de déploiement sachent quelle version déployer</span></li>
+              </ol>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>cd.yml · job: build</span></div>
+                <pre class="yaml"><span class="y-key">on</span>:
+  <span class="y-key">workflow_run</span>:
+    <span class="y-key">workflows</span>:
+      - <span class="y-str">"CI — Tests &amp; Quality"</span>
+      - <span class="y-str">"Security — CVE &amp; OWASP"</span>
+    <span class="y-key">types</span>: <span class="y-val">[completed]</span>
+    <span class="y-key">branches</span>: <span class="y-val">[main]</span>
+
+<span class="y-key">jobs</span>:
+  <span class="y-key">build</span>:
+    <span class="y-key">if</span>: >
+      github.event_name == <span class="y-str">'workflow_dispatch'</span> ||
+      github.event.workflow_run.conclusion == <span class="y-str">'success'</span>
+
+    <span class="y-key">outputs</span>:
+      <span class="y-key">image_tag</span>: <span class="y-sec">${{ steps.meta.outputs.version }}</span>
+
+    <span class="y-key">steps</span>:
+      - <span class="y-key">name</span>: <span class="y-val">Docker metadata</span>
+        <span class="y-key">id</span>: <span class="y-val">meta</span>
+        <span class="y-key">uses</span>: <span class="y-val">docker/metadata-action@v6</span>
+        <span class="y-key">with</span>:
+          <span class="y-key">images</span>: <span class="y-val">ghcr.io/${{ github.repository }}</span>
+          <span class="y-key">tags</span>: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable=<span class="y-sec">{{is_default_branch}}</span>
+
+      - <span class="y-key">name</span>: <span class="y-val">Build &amp; push</span>
+        <span class="y-key">uses</span>: <span class="y-val">docker/build-push-action@v5</span>
+        <span class="y-key">with</span>:
+          <span class="y-key">file</span>:       <span class="y-val">Dockerfile.prod</span>
+          <span class="y-key">push</span>:       <span class="y-val">true</span>
+          <span class="y-key">cache-from</span>: <span class="y-val">type=gha</span>
+          <span class="y-key">cache-to</span>:   <span class="y-val">type=gha,mode=max</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- deploy-preprod -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">2</div>
+            <div>
+              <div class="job-name">Deploy — Préprod</div>
+              <div class="job-id">job: deploy-preprod</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-after">needs: build</span>
+              <span class="jb jb-cond">PREPROD_ENABLED = true</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Se connecte au serveur de préprod en SSH et déploie la nouvelle image Docker sans toucher à la base de données ni aux autres services. Zéro downtime : seul le container PHP est redémarré (<code>--no-deps</code>).</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>environment: preprod</strong> — GitHub Environment avec protection rules optionnelles (reviewers requis, wait timer). Permet de tracer qui a approuvé quel déploiement</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>SSH via appleboy/ssh-action</strong> — utilise <code>secrets.PREPROD_SSH_KEY</code> (clé RSA privée du runner). Le runner se connecte en tant que <code>secrets.PREPROD_USER</code> sur <code>secrets.PREPROD_HOST</code></span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>docker login GHCR</strong> — le VPS doit s'authentifier pour puller l'image privée depuis GHCR</span></li>
+                <li><span class="step-n">4</span><span class="step-txt"><strong>export IMAGE_TAG</strong> — récupère le SHA du commit depuis <code>needs.build.outputs.image_tag</code> pour puller exactement cette version</span></li>
+                <li><span class="step-n">5</span><span class="step-txt"><strong>docker compose pull php</strong> — télécharge uniquement la nouvelle image PHP (pas mysql, nginx, monitoring)</span></li>
+                <li><span class="step-n">6</span><span class="step-txt"><strong>docker compose up -d --no-deps php</strong> — redémarre uniquement le container PHP avec la nouvelle image. La BDD, Nginx et le monitoring restent en place → zéro downtime</span></li>
+                <li><span class="step-n">7</span><span class="step-txt"><strong>doctrine:migrations:migrate</strong> — applique les nouvelles migrations SQL si présentes. <code>--no-interaction</code> pour ne pas attendre de confirmation</span></li>
+                <li><span class="step-n">8</span><span class="step-txt"><strong>docker image prune -f</strong> — supprime les anciennes images pour libérer l'espace disque du VPS</span></li>
+              </ol>
+              <div class="cond-note">
+                <strong>Actuellement désactivé :</strong> <code>PREPROD_ENABLED</code> est à <code>false</code> (Settings › Variables). Pas de VPS dans ce projet académique. Un changement de variable suffit à activer le déploiement automatique.
+              </div>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>cd.yml · deploy-preprod</span></div>
+                <pre class="yaml"><span class="y-key">deploy-preprod</span>:
+  <span class="y-key">needs</span>: <span class="y-val">build</span>
+  <span class="y-key">environment</span>: <span class="y-val">preprod</span>
+  <span class="y-key">if</span>: <span class="y-val">vars.PREPROD_ENABLED == 'true'</span>
+
+  <span class="y-key">steps</span>:
+    - <span class="y-key">name</span>: <span class="y-val">Deploy to preprod via SSH</span>
+      <span class="y-key">uses</span>: <span class="y-val">appleboy/ssh-action@v1</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">host</span>:     <span class="y-sec">${{ secrets.PREPROD_HOST }}</span>
+        <span class="y-key">username</span>: <span class="y-sec">${{ secrets.PREPROD_USER }}</span>
+        <span class="y-key">key</span>:      <span class="y-sec">${{ secrets.PREPROD_SSH_KEY }}</span>
+        <span class="y-key">script</span>: |
+          cd /opt/ressources_api
+          echo <span class="y-sec">${{ secrets.GHCR_TOKEN }}</span> | docker login \
+            ghcr.io -u <span class="y-sec">${{ secrets.GHCR_USERNAME }}</span> \
+            --password-stdin
+          export IMAGE_TAG=<span class="y-sec">${{ needs.build.outputs.image_tag }}</span>
+          docker compose \
+            -f docker-compose.yaml \
+            -f docker-compose.preprod.yaml \
+            pull php
+          docker compose \
+            -f docker-compose.yaml \
+            -f docker-compose.preprod.yaml \
+            up -d --no-deps php
+          docker compose exec -T php \
+            php bin/console doctrine:migrations:migrate \
+            --no-interaction
+          docker image prune -f</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- deploy-production -->
+        <div class="job-card">
+          <div class="job-card-head">
+            <div class="job-num">3</div>
+            <div>
+              <div class="job-name">Deploy — Production</div>
+              <div class="job-id">job: deploy-production</div>
+            </div>
+            <div class="job-badges">
+              <span class="jb jb-after">needs: build + preprod</span>
+              <span class="jb jb-cond">manuel seulement</span>
+            </div>
+          </div>
+          <div class="job-body">
+            <div class="job-desc-col">
+              <p class="job-desc">Identique au déploiement préprod mais sur le serveur de production. <strong>Ne peut jamais se déclencher automatiquement</strong> — requiert un déclenchement manuel (<code>workflow_dispatch</code>) avec le paramètre <code>environment: production</code> explicitement sélectionné. Double protection : le job préprod doit aussi avoir réussi.</p>
+              <ol class="steps">
+                <li><span class="step-n">1</span><span class="step-txt"><strong>needs: [build, deploy-preprod]</strong> — la prod ne peut pas être déployée sans que la préprod l'ait été avec succès. Garantit que l'image a été testée sur un environnement réel avant la prod</span></li>
+                <li><span class="step-n">2</span><span class="step-txt"><strong>Conditions cumulatives</strong> — <code>PROD_ENABLED == 'true'</code> ET <code>workflow_dispatch</code> ET <code>inputs.environment == 'production'</code>. Les trois conditions doivent être vraies simultanément</span></li>
+                <li><span class="step-n">3</span><span class="step-txt"><strong>environment: production</strong> — GitHub Environment séparé avec ses propres secrets (<code>PROD_HOST</code>, <code>PROD_SSH_KEY</code>…) et protection rules potentielles (reviewers obligatoires)</span></li>
+                <li><span class="step-n">4</span><span class="step-txt"><strong>Même script SSH</strong> que preprod, avec les credentials prod. Zéro downtime identique : seul le container PHP est redémarré</span></li>
+              </ol>
+              <div class="cond-note">
+                <strong>Triple garde-fou :</strong> (1) CI + Security doivent passer, (2) préprod doit réussir, (3) déclenchement manuel explicite avec sélection de l'environnement. Un push accidentel sur <code>main</code> ne peut pas atteindre la production.
+              </div>
+            </div>
+            <div class="job-code-col">
+              <div class="code-wrap">
+                <div class="code-label">Extrait YAML <span>cd.yml · deploy-production</span></div>
+                <pre class="yaml"><span class="y-key">deploy-production</span>:
+  <span class="y-key">needs</span>: <span class="y-val">[build, deploy-preprod]</span>
+  <span class="y-key">environment</span>: <span class="y-val">production</span>
+  <span class="y-key">if</span>: >
+    vars.PROD_ENABLED == <span class="y-str">'true'</span>
+    &amp;&amp; github.event_name == <span class="y-str">'workflow_dispatch'</span>
+    &amp;&amp; github.event.inputs.environment == <span class="y-str">'production'</span>
+  <span class="y-cm"># 3 conditions cumulatives — jamais automatique</span>
+
+  <span class="y-key">steps</span>:
+    - <span class="y-key">name</span>: <span class="y-val">Deploy to production via SSH</span>
+      <span class="y-key">uses</span>: <span class="y-val">appleboy/ssh-action@v1</span>
+      <span class="y-key">with</span>:
+        <span class="y-key">host</span>:     <span class="y-sec">${{ secrets.PROD_HOST }}</span>
+        <span class="y-key">username</span>: <span class="y-sec">${{ secrets.PROD_USER }}</span>
+        <span class="y-key">key</span>:      <span class="y-sec">${{ secrets.PROD_SSH_KEY }}</span>
+        <span class="y-key">script</span>: |
+          <span class="y-cm"># Même script que preprod</span>
+          <span class="y-cm"># avec docker-compose.prod.yaml</span>
+          cd /opt/ressources_api
+          export IMAGE_TAG=<span class="y-sec">${{ needs.build.outputs.image_tag }}</span>
+          docker compose \
+            -f docker-compose.yaml \
+            -f docker-compose.prod.yaml \
+            pull php
+          docker compose \
+            -f docker-compose.yaml \
+            -f docker-compose.prod.yaml \
+            up -d --no-deps php
+          docker compose exec -T php \
+            php bin/console \
+            doctrine:migrations:migrate \
+            --no-interaction</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  (RE)Sources Relationnelles — Projet BL3 · 2025-2026 · <a href="index.html" style="color:var(--ci)">← Accueil</a>
+</footer>
+
+</body>
+</html>
