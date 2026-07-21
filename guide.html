@@ -1901,6 +1901,70 @@ Contraintes, liens vers la doc, fichiers concernés.</pre>
       </div>
     </details>
 
+    <details>
+      <summary>Qu'est-ce qu'un multi-stage build Docker et comment l'utilisez-vous ?</summary>
+      <div class="qa-answer">
+        <p>Un <strong>multi-stage build</strong> est une technique Dockerfile qui utilise plusieurs images successives dans le même fichier — chaque <code>FROM</code> démarre un nouveau "stage". L'idée : utiliser des images lourdes (avec compilateurs, outils de build) pour préparer les artefacts, puis copier uniquement ces artefacts dans une image finale légère. Les stages intermédiaires ne sont pas inclus dans l'image finale.</p>
+        <p>Notre <code>Dockerfile.prod</code> contient 2 stages :</p>
+        <ul>
+          <li><strong>Stage 1 — <code>vendor</code> (<code>composer:2</code>) :</strong> installe les dépendances Composer avec <code>--no-dev --optimize-autoloader</code>. L'image Composer contient PHP, git, unzip… On s'en sert uniquement pour générer le dossier <code>vendor/</code> optimisé. Cette image pèse ~300 MB mais n'apparaît jamais en production.</li>
+          <li><strong>Stage 2 — <code>runtime</code> (<code>php:8.4-fpm-alpine</code>) :</strong> image finale. On y copie uniquement le code source et le <code>vendor/</code> compilé depuis le stage 1 via <code>COPY --from=vendor</code>. Aucun Composer, aucun git, aucun Xdebug. On supprime aussi les dossiers inutiles en prod : <code>tests/</code>, <code>.github/</code>, <code>*.md</code>, <code>phpunit.dist.xml</code>.</li>
+        </ul>
+        <p>Résultat concret :</p>
+        <ul>
+          <li><strong>Dockerfile (dev) :</strong> <code>php:8.5-fpm</code> Debian + Xdebug → ~800 MB</li>
+          <li><strong>Dockerfile.prod (prod) :</strong> <code>php:8.4-fpm-alpine</code> sans outils de dev → ~120 MB</li>
+        </ul>
+        <p>Moins de 120 MB en prod = moins de CVE potentielles (Trivy a moins de surface à scanner), pull plus rapide sur le VPS, redémarrage plus rapide en cas d'incident.</p>
+        <pre>FROM composer:2 AS vendor          <span style="color:#6B7A99"># Stage 1 : build</span>
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader
+
+FROM php:8.4-fpm-alpine AS runtime  <span style="color:#6B7A99"># Stage 2 : image finale</span>
+COPY --from=vendor /app/vendor ./vendor  <span style="color:#6B7A99"># uniquement le résultat</span>
+COPY . .
+RUN rm -rf tests/ .github/ *.md</pre>
+        <p>En CI, le pipeline builde uniquement <code>Dockerfile.prod</code> — le <code>Dockerfile</code> n'existe que pour le développement local avec Docker Compose.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Comment mettre concrètement l'application en production sur un VPS ?</summary>
+      <div class="qa-answer">
+        <p>Notre pipeline CD (<code>.github/workflows/cd.yml</code>) est opérationnel. Il attend un VPS avec Docker. Voici les étapes concrètes :</p>
+        <p><strong>1. Préparer le VPS (une seule fois, en SSH)</strong></p>
+        <pre>ssh root@IP_DU_VPS
+adduser deploy && usermod -aG docker deploy
+curl -fsSL https://get.docker.com | sh
+ufw allow 22 && ufw allow 80 && ufw allow 443 && ufw enable</pre>
+        <p><strong>2. Poser les fichiers de configuration</strong></p>
+        <pre>mkdir -p /opt/ressources_api && cd /opt/ressources_api
+git clone https://github.com/TxMy-Elu/ressources_api.git .
+cp .env.prod.example .env.prod
+nano .env.prod         <span style="color:#6B7A99"># remplir DATABASE_URL, JWT_PASSPHRASE, APP_SECRET…</span>
+chmod 600 .env.prod</pre>
+        <p><strong>3. Générer les clés JWT directement sur le serveur</strong></p>
+        <pre>mkdir -p config/jwt
+openssl genrsa -out config/jwt/private.pem -aes256 4096
+openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+chmod 600 config/jwt/private.pem</pre>
+        <p>Les clés ne quittent jamais le serveur — elles ne sont pas dans git, pas dans GitHub Secrets, nulle part ailleurs.</p>
+        <p><strong>4. Remplir les GitHub Secrets</strong> (Settings › Secrets and variables › Actions)</p>
+        <ul>
+          <li><code>PROD_HOST</code> — IP du VPS</li>
+          <li><code>PROD_USER</code> — <code>deploy</code></li>
+          <li><code>PROD_SSH_KEY</code> — clé SSH privée du runner CI</li>
+          <li><code>GHCR_USERNAME</code> / <code>GHCR_TOKEN</code> — accès GHCR</li>
+        </ul>
+        <p>Et dans Settings › Variables : <code>PROD_ENABLED = true</code></p>
+        <p><strong>5. Premier démarrage manuel</strong></p>
+        <pre>docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+docker compose exec php php bin/console doctrine:migrations:migrate</pre>
+        <p><strong>6. Chaque déploiement suivant</strong> est automatique : push sur <code>main</code> → CI passe → CD déclenché → SSH → pull nouvelle image Docker depuis GHCR → restart uniquement du container PHP (<code>--no-deps</code>) → migration auto. La base de données et les autres containers ne sont pas redémarrés → zéro downtime.</p>
+        <p>Actuellement <code>PROD_ENABLED</code> est à <code>false</code> car nous n'avons pas de VPS de production dans ce projet académique, mais toute l'infrastructure est prête — un changement de variable suffit.</p>
+      </div>
+    </details>
+
   </div>
 
   <div class="qa-cat">Outils de sécurité</div>
