@@ -1965,6 +1965,61 @@ docker compose exec php php bin/console doctrine:migrations:migrate</pre>
       </div>
     </details>
 
+    <details>
+      <summary>Quelle stratégie de sauvegarde de la base de données utiliseriez-vous ?</summary>
+      <div class="qa-answer">
+        <p>La stratégie standard pour MySQL en production combine <strong>deux niveaux</strong> : une sauvegarde complète hebdomadaire et des sauvegardes incrémentielles quotidiennes. Ce compromis minimise l'espace disque utilisé tout en limitant la perte maximale de données à quelques heures (RPO).</p>
+
+        <p><strong>Concepts clés :</strong></p>
+        <ul>
+          <li><strong>RPO (Recovery Point Objective) :</strong> perte de données maximale acceptable. Avec un incrémental quotidien à 2h, le RPO est de ~24h — en cas de crash à 23h59, on perd la journée. Pour un RPO plus bas, on peut descendre à des incrémentiels toutes les heures.</li>
+          <li><strong>RTO (Recovery Time Objective) :</strong> temps maximal pour restaurer. Avec mysqldump, restaurer 1 Go prend ~5 min. Avec Percona XtraBackup (physique), c'est quasi-instantané.</li>
+          <li><strong>Sauvegarde complète (full) :</strong> dump de toute la base — export SQL complet. Peut être jouée seule pour restaurer.</li>
+          <li><strong>Sauvegarde incrémentielle :</strong> capture uniquement les changements depuis la dernière sauvegarde. Pour MySQL, on utilise les <strong>binary logs (binlogs)</strong> — fichiers qui enregistrent chaque opération SQL (INSERT, UPDATE, DELETE) dans l'ordre chronologique.</li>
+        </ul>
+
+        <p><strong>Mise en œuvre concrète avec notre stack Docker :</strong></p>
+        <pre><span class="code-cm"># Sauvegarde complète — chaque dimanche à 3h (cron: 0 3 * * 0)</span>
+docker exec resources_db mysqldump \
+  --user=root --password=$DB_ROOT_PASSWORD \
+  --all-databases \
+  --single-transaction \   <span class="code-cm"># snapshot InnoDB cohérent sans verrouiller</span>
+  --flush-logs \           <span class="code-cm"># démarre un nouveau fichier binlog</span>
+  --master-data=2 \        <span class="code-cm"># note la position binlog en commentaire</span>
+  | gzip > /backups/full_$(date +%Y%m%d_%H%M).sql.gz
+
+<span class="code-cm"># Sauvegarde incrémentielle — chaque nuit à 2h (cron: 0 2 * * 1-6)</span>
+docker exec resources_db mysql -uroot -p$DB_ROOT_PASSWORD \
+  -e "FLUSH LOGS;"         <span class="code-cm"># force la rotation du binlog courant</span>
+docker cp resources_db:/var/lib/mysql/binlog.* /backups/incremental/</pre>
+
+        <p><strong>Pour restaurer après un incident :</strong></p>
+        <ol style="padding-left:18px; display:flex; flex-direction:column; gap:5px">
+          <li>Restaurer le dernier dump complet : <code>gunzip -c full_20260120.sql.gz | mysql -uroot -p</code></li>
+          <li>Rejouer les binlogs depuis la position notée jusqu'au moment voulu : <code>mysqlbinlog binlog.000042 binlog.000043 | mysql -uroot -p</code></li>
+        </ol>
+
+        <p><strong>Outils alternatifs :</strong></p>
+        <ul>
+          <li><strong>mysqldump</strong> (notre choix) — outil officiel, produit du SQL lisible, compatible toutes versions. Lent sur de grandes bases (&gt;10 Go) car il lit ligne par ligne.</li>
+          <li><strong>Percona XtraBackup</strong> — copie physique des fichiers InnoDB à chaud (zéro downtime). Beaucoup plus rapide pour les grandes bases. Restauration quasi-instantanée. Recommandé en production sérieuse.</li>
+          <li><strong>mysqlpump</strong> — comme mysqldump mais parallèle (plusieurs tables en simultané). Plus rapide, même format SQL.</li>
+          <li><strong>MySQL Shell (util.dumpSchemas)</strong> — approche moderne, format binaire compressé, parallélisation native. Requiert MySQL 8.0+.</li>
+        </ul>
+
+        <p><strong>Règle 3-2-1 pour le stockage :</strong> 3 copies, sur 2 supports différents, dont 1 hors-site. Concrètement : 1 copie locale sur le VPS, 1 copie distante via <code>rclone</code> vers un bucket S3 (OVH Object Storage, Backblaze B2…), 1 copie hebdomadaire sur un SFTP externe.</p>
+
+        <p><strong>Politique de rétention :</strong></p>
+        <ul>
+          <li>Incrémentiels quotidiens : <strong>7 jours</strong> (une semaine glissante)</li>
+          <li>Complets hebdomadaires : <strong>4 semaines</strong></li>
+          <li>Complets mensuels : <strong>12 mois</strong> (archivage longue durée)</li>
+        </ul>
+
+        <p>Point important souvent oublié : <strong>tester la restauration régulièrement</strong>. Une sauvegarde non testée n'est pas une sauvegarde — elle peut être corrompue, incomplète, ou impossible à rejouer sur la version MySQL cible. On automatise un test de restauration sur un container éphémère une fois par mois.</p>
+      </div>
+    </details>
+
   </div>
 
   <div class="qa-cat">Outils de sécurité</div>
